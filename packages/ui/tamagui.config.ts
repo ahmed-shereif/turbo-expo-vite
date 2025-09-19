@@ -10,6 +10,10 @@ const tamaguiConfig = createTamagui({
     webContainerType: 'normal',
     // Disable problematic features that cause DOM prop issues
     disableSSR: false,
+    // Additional web-specific settings
+    shouldAddPrefersColorThemes: false,
+    // Ensure proper prop filtering for web
+    shouldFixWebFonts: true,
   },
 })
 

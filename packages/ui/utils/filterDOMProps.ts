@@ -8,7 +8,15 @@ const REACT_NATIVE_PROPS = new Set([
   'fontSize',
   'fontWeight',
   'lineHeight',
-  'letterSpacing'
+  'letterSpacing',
+  '&::placeholder',
+  '&:checked',
+  '&:hover',
+  '&:focus',
+  '&:active',
+  'hoverStyle',
+  'pressStyle',
+  'focusStyle'
 ])
 
 const STYLE_PROPS = new Set([

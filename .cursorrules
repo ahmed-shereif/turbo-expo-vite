@@ -75,3 +75,34 @@ pnpm add -w package@exact-version
 - Single-platform feature development
 - Committing code that breaks either web or mobile
 - Implementing features without shared components
+
+## State Management
+- Use a centralized state management library for global state (e.g., Zustand, Redux)
+- Use React Query/TanStack Query for managing server state, caching, and background refetching
+- Do NOT use `useState` for data that needs to be shared across multiple components
+- Always define clear actions/reducers for state modifications
+
+## Type Safety
+- AVOID using `any` type. Define specific types or interfaces for all data structures
+- Use TypeScript generics for creating reusable and type-safe components and functions
+- All function parameters and return values must have explicit types
+- Use `zod` for runtime validation of API responses and forms to ensure type safety
+
+## Turborepo Workflow
+- `pnpm dev` - Start all apps in parallel
+- `pnpm build` - Build all apps and packages
+- `pnpm lint` - Run linting across workspace
+- `pnpm test` - Run tests across workspace
+- Build tasks depend on shared packages building first
+- Test tasks can run independently
+- Lint tasks should run before build in CI
+- Enable remote caching for CI/CD
+- Cache build outputs in dist/ and build/ directories
+- Add new apps to apps/ directory
+- Add new packages to packages/ directory
+- Update turbo.json when adding new tasks
+- Maintain consistent scripts across packages
+- Use turbo run build --filter=[CHANGED] in CI/CD
+- **MANDATORY**: Both web and mobile must build successfully before any deployment
+- **MANDATORY**: Features must be tested on both platforms before merge
+- Deploy both platforms together to maintain feature parity

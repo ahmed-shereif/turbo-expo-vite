@@ -2335,7 +2335,11 @@ var tamaguiConfig = (0, import_core3.createTamagui)({
     // Ensure proper web handling
     webContainerType: "normal",
     // Disable problematic features that cause DOM prop issues
-    disableSSR: false
+    disableSSR: false,
+    // Additional web-specific settings
+    shouldAddPrefersColorThemes: false,
+    // Ensure proper prop filtering for web
+    shouldFixWebFonts: true
   }
 });
 var tamagui_config_default = tamaguiConfig;

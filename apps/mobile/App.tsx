@@ -1,6 +1,6 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import { TamaguiProvider, config, TamaguiTest, TamaguiAdvancedTest } from '@repo/ui';
+import { TamaguiProvider, config, TamaguiTest, MyComponent, CalendarComponent } from '@repo/ui';
 
 export default function App() {
   return (
@@ -8,7 +8,8 @@ export default function App() {
       <View style={styles.container}>
         <Text>Mobile App with Tamagui</Text>
         <TamaguiTest />
-        <TamaguiAdvancedTest />
+        <MyComponent />
+        <CalendarComponent />
         <StatusBar style="auto" />
       </View>
     </TamaguiProvider>
