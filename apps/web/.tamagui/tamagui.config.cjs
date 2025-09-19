@@ -2328,5 +2328,14 @@ var config = {
 
 // ../../packages/ui/tamagui.config.ts
 var import_core3 = require("@tamagui/core");
-var tamaguiConfig = (0, import_core3.createTamagui)(config);
+var tamaguiConfig = (0, import_core3.createTamagui)({
+  ...config,
+  settings: {
+    ...config.settings,
+    // Ensure proper web handling
+    webContainerType: "normal",
+    // Disable problematic features that cause DOM prop issues
+    disableSSR: false
+  }
+});
 var tamagui_config_default = tamaguiConfig;

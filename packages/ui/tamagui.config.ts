@@ -1,7 +1,17 @@
 import { config } from '@tamagui/config/v3'
 import { createTamagui } from '@tamagui/core'
 
-const tamaguiConfig = createTamagui(config)
+// Create config with proper web handling
+const tamaguiConfig = createTamagui({
+  ...config,
+  settings: {
+    ...config.settings,
+    // Ensure proper web handling
+    webContainerType: 'normal',
+    // Disable problematic features that cause DOM prop issues
+    disableSSR: false,
+  },
+})
 
 export default tamaguiConfig
 

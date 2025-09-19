@@ -1,4 +1,4 @@
-import { Button, Text } from '@tamagui/core'
+import { View, Text } from '@tamagui/core'
 
 interface SharedButtonProps {
   title: string
@@ -7,19 +7,17 @@ interface SharedButtonProps {
 
 export function SharedButton({ title, onPress }: SharedButtonProps) {
   return (
-    <Button
+    <View
       backgroundColor="$blue10"
-      color="$white1"
       borderRadius="$4"
       paddingHorizontal="$4"
       paddingVertical="$3"
-      pressStyle={{ backgroundColor: '$blue9' }}
-      hoverStyle={{ backgroundColor: '$blue11' }}
+      cursor="pointer"
       onPress={onPress}
     >
       <Text color="$white1" fontWeight="600">
         {title}
       </Text>
-    </Button>
+    </View>
   )
 }

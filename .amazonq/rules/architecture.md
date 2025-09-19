@@ -25,6 +25,12 @@ turbo-expo-vite/
 - Types: Share in packages/types
 - Constants: Share in packages/constants
 
+## Parallel Development Mandate
+- **CRITICAL**: All features MUST be developed for both web and mobile simultaneously
+- No feature should exist on only one platform
+- Shared packages must be updated before app-specific implementations
+- Both platforms must maintain feature parity
+
 ## Import Rules
 - Never import from other apps directly
 - Always import shared code from packages/

@@ -27,4 +27,6 @@
 - Use turbo run build --filter=[CHANGED]
 - Cache dependencies between runs
 - Run tests in parallel across packages
-- Deploy only changed applications
+- **MANDATORY**: Both web and mobile must build successfully before any deployment
+- **MANDATORY**: Features must be tested on both platforms before merge
+- Deploy both platforms together to maintain feature parity

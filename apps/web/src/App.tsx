@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { TamaguiProvider, Text, View, config, SharedButton } from '@repo/ui'
+import { TamaguiProvider, Text, View, config, SharedButton, TamaguiTest, TamaguiAdvancedTest } from '@repo/ui'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -13,6 +13,8 @@ function App() {
           onPress={() => setCount((count) => count + 1)} 
         />
         <Text color="$gray10">This uses the same design tokens as mobile!</Text>
+        <TamaguiTest />
+        <TamaguiAdvancedTest />
       </View>
     </TamaguiProvider>
   )

@@ -9,8 +9,12 @@
     "dev": "echo 'dev ui'"
   },
   "dependencies": {
-    "@tamagui/core": "^1.132.25",
-    "@tamagui/config": "^1.132.25",
+    "@tamagui/button": "^1.133.0",
+    "@tamagui/card": "^1.133.0",
+    "@tamagui/config": "^1.133.0",
+    "@tamagui/core": "^1.133.0",
+    "@tamagui/input": "^1.133.0",
+    "@tamagui/switch": "^1.133.0",
     "react": "19.1.1",
     "react-native": "0.81.4"
   },

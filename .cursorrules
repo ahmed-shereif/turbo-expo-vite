@@ -37,6 +37,14 @@ pnpm add -w package@exact-version
 - Keep platform-specific code in respective apps
 - Use absolute imports with path mapping
 
+## PARALLEL DEVELOPMENT - MANDATORY
+- ALL features MUST be implemented for BOTH web and mobile simultaneously
+- NEVER develop features for only one platform
+- ALWAYS create shared components in packages/ui first
+- ALWAYS implement business logic in packages/utils
+- ALWAYS test on both platforms before committing
+- Both apps must build successfully together
+
 ## File Naming
 - Components: PascalCase (UserProfile.tsx)
 - Hooks: camelCase with 'use' prefix (useUserData.ts)
@@ -64,3 +72,6 @@ pnpm add -w package@exact-version
 - Prop drilling (use context instead)
 - Inline styles (use styled-components or CSS modules)
 - Any package installation without version checking
+- Single-platform feature development
+- Committing code that breaks either web or mobile
+- Implementing features without shared components
