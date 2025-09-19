@@ -1,0 +1,21 @@
+{
+  "name": "@repo/ui",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "scripts": {
+    "build": "echo 'build ui'",
+    "dev": "echo 'dev ui'"
+  },
+  "dependencies": {
+    "@tamagui/core": "^1.132.25",
+    "@tamagui/config": "^1.132.25",
+    "react": "19.1.1",
+    "react-native": "0.81.4"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.0",
+    "typescript": "~5.9.2"
+  }
+}

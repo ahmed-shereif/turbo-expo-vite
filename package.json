@@ -15,5 +15,13 @@
       "react": "19.1.1",
       "react-dom": "19.1.1"
     }
+  },
+  "dependencies": {
+    "@tamagui/babel-plugin": "^1.132.25",
+    "@tamagui/config": "^1.132.25",
+    "@tamagui/core": "^1.132.25",
+    "@tamagui/static": "^1.132.25",
+    "@tamagui/vite-plugin": "^1.132.25",
+    "react-native-web": "^0.21.1"
   }
 }
