@@ -1,0 +1,66 @@
+# Cursor Rules for Turborepo React/React Native Monorepo
+
+## Package Management - CRITICAL
+- React version is LOCKED at 19.1.1 - NEVER change
+- React DOM version is LOCKED at 19.1.1 - NEVER change
+- NEVER edit package.json dependencies manually
+- ALWAYS use CLI commands for package installation
+- Check existing versions before adding new packages: `pnpm list package-name`
+- Use exact versions, no ^ or ~ for React ecosystem packages
+
+## Installation Commands
+```bash
+# Web app packages
+cd apps/web && pnpm add package@exact-version
+
+# Mobile app packages  
+cd apps/mobile && npx expo install package@exact-version
+
+# Shared packages
+cd packages/utils && pnpm add package@exact-version
+
+# Root workspace packages
+pnpm add -w package@exact-version
+```
+
+## React/React Native Best Practices
+- Use functional components with hooks only
+- Implement TypeScript for all components
+- Create reusable components in packages/ui
+- Use React.memo, useMemo, useCallback for performance
+- Follow single responsibility principle
+
+## Architecture Rules
+- Shared code goes in packages/ directory
+- Use @repo/package-name convention
+- Never import between apps directly
+- Keep platform-specific code in respective apps
+- Use absolute imports with path mapping
+
+## File Naming
+- Components: PascalCase (UserProfile.tsx)
+- Hooks: camelCase with 'use' prefix (useUserData.ts)
+- Utils: camelCase (formatDate.ts)
+- Constants: UPPER_SNAKE_CASE (API_ENDPOINTS.ts)
+
+## Performance Guidelines
+- Lazy load components with React.lazy
+- Use Suspense for loading states
+- Implement proper error boundaries
+- Optimize bundle size with tree shaking
+- Use React DevTools Profiler for optimization
+
+## Code Quality
+- Write unit tests for shared packages
+- Use ESLint and Prettier configurations
+- Follow consistent import ordering
+- Document complex business logic
+- Use meaningful variable and function names
+
+## Forbidden Actions
+- Modifying React/React DOM versions
+- Direct package.json editing
+- Cross-app imports
+- Prop drilling (use context instead)
+- Inline styles (use styled-components or CSS modules)
+- Any package installation without version checking
