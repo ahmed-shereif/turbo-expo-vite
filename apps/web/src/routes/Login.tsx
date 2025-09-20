@@ -5,7 +5,6 @@ import { useNavigate } from 'react-router-dom';
 import { useState } from 'react';
 import { LoginSchema } from '../forms/schemas';
 import { useAuth, AuthClientError } from '../auth/AuthContext';
-import { BrandButton, BrandCard, TextField, View, Text } from '@repo/ui';
 import { notify } from '../lib/notify';
 
 type LoginFormValues = z.infer<typeof LoginSchema>;
@@ -41,54 +40,44 @@ export default function Login() {
   };
 
   return (
-    <View flex={1} minHeight="100vh" backgroundColor="$bgSoft" justifyContent="center" alignItems="center" padding="$6">
-      <BrandCard elevated width={420} maxWidth="94%">
-        <View gap="$4">
-          <Text fontSize="$8" fontWeight="800" color="$textHigh">Login</Text>
-
-          <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 16 }}>
-            <div>
-              <Controller
-                control={control}
-                name="email"
-                render={({ field }) => (
-                  <TextField fullWidth placeholder="Email" {...field} />
-                )}
-              />
-              {errors.email && (
-                <Text color="#ef4444" fontSize="$3">{errors.email.message}</Text>
-              )}
-            </div>
-
-            <div>
-              <Controller
-                control={control}
-                name="password"
-                render={({ field }) => (
-                  <TextField fullWidth placeholder="Password" type="password" {...field} />
-                )}
-              />
-              {errors.password && (
-                <Text color="#ef4444" fontSize="$3">{errors.password.message}</Text>
-              )}
-            </div>
-
-            {serverError && (
-              <Text color="#ef4444" fontSize="$3">{serverError}</Text>
+    <div style={{ padding: 24 }}>
+      <h2>Login</h2>
+      <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 320 }}>
+        <div>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field }) => (
+              <input placeholder="Email" {...field} />
             )}
+          />
+          {errors.email && (
+            <div style={{ color: '#ef4444' }}>{errors.email.message}</div>
+          )}
+        </div>
 
-            <BrandButton fullWidth disabled={isSubmitting}>
-              {isSubmitting ? 'Logging in…' : 'Login'}
-            </BrandButton>
-          </form>
+        <div>
+          <Controller
+            control={control}
+            name="password"
+            render={({ field }) => (
+              <input placeholder="Password" type="password" {...field} />
+            )}
+          />
+          {errors.password && (
+            <div style={{ color: '#ef4444' }}>{errors.password.message}</div>
+          )}
+        </div>
 
-          <View alignItems="center">
-            <BrandButton variant="ghost" onPress={() => navigate('/signup')}>
-              Don't have an account? Sign up
-            </BrandButton>
-          </View>
-        </View>
-      </BrandCard>
-    </View>
+        {serverError && (
+          <div style={{ color: '#ef4444' }}>{serverError}</div>
+        )}
+
+        <button disabled={isSubmitting} type="submit">
+          {isSubmitting ? 'Logging in…' : 'Login'}
+        </button>
+      </form>
+      <button onClick={() => navigate('/signup')}>Don't have an account? Sign up</button>
+    </div>
   );
 }

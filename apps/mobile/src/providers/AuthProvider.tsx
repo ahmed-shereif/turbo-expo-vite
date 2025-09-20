@@ -37,6 +37,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await auth.refresh();
         const me = await auth.me();
         setUser(me);
+        if ((me?.roles || []).includes('PLAYER' as any)) {
+          // On bootstrap success, if on root app stack index, route to player home
+          // Keep simple: always ensure home for PLAYER when bootstrapping
+          // Consumers can route elsewhere if deep-linked
+          // eslint-disable-next-line
+          router.replace('/(player)/home');
+        }
       } catch (error) {
         setUser(null);
       } finally {
@@ -57,6 +64,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await auth.login({ email, password });
     const me = await auth.me();
     setUser(me);
+    if ((me?.roles || []).includes('PLAYER' as any)) {
+      router.replace('/(player)/home');
+    }
   };
 
   const signup = async (

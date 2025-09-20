@@ -8,7 +8,7 @@ import { type ReactNode } from 'react';
 import type { Role, User } from '@repo/auth-client';
 import { auth, AuthClientError } from '../lib/authClient';
 import { notify } from '../lib/notify';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type AuthState = {
   user: User | null;
@@ -31,6 +31,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
   const navigate = useNavigate();
+  const location = useLocation();
 
   useEffect(() => {
     const bootstrap = async () => {
@@ -38,6 +39,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         await auth.refresh();
         const me = await auth.me();
         setUser(me);
+        if ((me?.roles || []).includes('PLAYER' as any)) {
+          // On bootstrap success, if landing on root, redirect to Player Home
+          if (location.pathname === '/') {
+            navigate('/player/home', { replace: true });
+          }
+        }
       } catch (error) {
         setUser(null);
       } finally {
@@ -58,6 +65,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     await auth.login({ email, password });
     const me = await auth.me();
     setUser(me);
+    if ((me?.roles || []).includes('PLAYER' as any)) {
+      navigate('/player/home', { replace: true });
+    }
   };
 
   const signup = async (

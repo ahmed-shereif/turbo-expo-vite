@@ -5,6 +5,10 @@ import Home from './routes/Home';
 import Admin from './routes/Admin';
 import Trainer from './routes/Trainer';
 import { RequireAuth, RequireRole } from './auth/guards';
+import PlayerHome from './player/routes/Home';
+import OpenSessions from './player/routes/OpenSessions';
+import MySessions from './player/routes/MySessions';
+import SessionDetail from './player/routes/SessionDetail';
 
 export function AppRouter() {
   return (
@@ -35,6 +39,46 @@ export function AppRouter() {
           <RequireAuth>
             <RequireRole roles={['TRAINER']}>
               <Trainer />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/player/home"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['PLAYER']}>
+              <PlayerHome />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/player/open"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['PLAYER']}>
+              <OpenSessions />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/player/sessions"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['PLAYER']}>
+              <MySessions />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/player/session/:id"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['PLAYER']}>
+              <SessionDetail />
             </RequireRole>
           </RequireAuth>
         }

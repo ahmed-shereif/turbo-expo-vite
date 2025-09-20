@@ -12,6 +12,7 @@
   "dependencies": {
     "@hookform/resolvers": "^5.2.2",
     "@repo/auth-client": "workspace:*",
+    "@repo/player-api": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.89.0",
     "react": "19.1.1",

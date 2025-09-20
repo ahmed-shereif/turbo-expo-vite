@@ -96,6 +96,10 @@ export class AuthClient {
     this.getNow = getNow;
   }
 
+  getBaseUrl(): string {
+    return this.baseUrl;
+  }
+
   onAuthExpired(listener: () => void): () => void {
     this.authExpiredListeners.push(listener);
     return () => {

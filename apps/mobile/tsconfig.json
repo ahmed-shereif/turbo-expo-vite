@@ -6,7 +6,9 @@
     "paths": {
       "@repo/auth-client": ["../../packages/auth-client/src"],
       "@repo/auth-client/web": ["../../packages/auth-client/src/web"],
-      "@repo/auth-client/mobile": ["../../packages/auth-client/src/mobile"]
+      "@repo/auth-client/mobile": ["../../packages/auth-client/src/mobile"],
+      "@repo/player-api": ["../../packages/player-api/src/index.ts"],
+      "@repo/player-api/*": ["../../packages/player-api/src/*"]
     }
   }
 }

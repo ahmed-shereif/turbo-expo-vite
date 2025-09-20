@@ -2,7 +2,9 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "@repo/auth-client/*": ["../../packages/auth-client/src/*"]
+      "@repo/auth-client/*": ["../../packages/auth-client/src/*"],
+      "@repo/player-api": ["../../packages/player-api/src/index.ts"],
+      "@repo/player-api/*": ["../../packages/player-api/src/*"]
     },
     "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
     "target": "ES2022",
