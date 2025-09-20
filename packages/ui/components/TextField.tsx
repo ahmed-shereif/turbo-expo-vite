@@ -3,6 +3,7 @@ import { Input, type InputProps } from 'tamagui'
 
 export interface TextFieldProps extends InputProps {
   fullWidth?: boolean
+  type?: string
 }
 
 export function TextField({ fullWidth, ...rest }: TextFieldProps) {

@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { LoginSchema } from '../forms/schemas';
 import { useAuth, AuthClientError } from '../auth/AuthContext';
 import { BrandButton, BrandCard, TextField, View, Text } from '@repo/ui';
+import { notify } from '../lib/notify';
 
 type LoginFormValues = z.infer<typeof LoginSchema>;
 
@@ -26,12 +27,15 @@ export default function Login() {
     setServerError(null);
     try {
       await login(data.email, data.password);
+      notify.success('Logged in successfully');
       navigate('/');
     } catch (error) {
       if (error instanceof AuthClientError) {
         setServerError(error.message);
+        notify.error(error.message);
       } else {
         setServerError('An unexpected error occurred. Please try again.');
+        notify.error('Unexpected error. Please try again.');
       }
     }
   };
@@ -73,7 +77,7 @@ export default function Login() {
               <Text color="#ef4444" fontSize="$3">{serverError}</Text>
             )}
 
-            <BrandButton type="submit" fullWidth disabled={isSubmitting}>
+            <BrandButton fullWidth disabled={isSubmitting}>
               {isSubmitting ? 'Logging in…' : 'Login'}
             </BrandButton>
           </form>

@@ -7,6 +7,7 @@ import { YStack, Input, Button, Text, XStack } from 'tamagui';
 import { SignupSchema } from '../../src/forms/schemas';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { AuthClientError } from '../../src/lib/authClient';
+import { notify } from '../../src/lib/notify';
 
 type SignupFormValues = z.infer<typeof SignupSchema>;
 
@@ -20,6 +21,7 @@ export default function Signup() {
     setError,
     formState: { errors, isSubmitting },
   } = useForm<SignupFormValues>({
+    // @ts-expect-error Allow zod resolver version mismatch in mobile app
     resolver: zodResolver(SignupSchema),
   });
 
@@ -35,6 +37,7 @@ export default function Signup() {
       );
       // Auto-login after successful signup
       await login(data.email, data.password);
+      notify.success('Account created');
       // Navigate to role-specific page
       if (data.role === 'TRAINER') {
         router.replace('/(app)/trainer');
@@ -49,11 +52,14 @@ export default function Signup() {
           for (const [field, message] of Object.entries(error.fieldErrors)) {
             setError(field as keyof SignupFormValues, { message });
           }
+          notify.error('Please fix the highlighted fields');
         } else {
           setServerError(error.message);
+          notify.error(error.message);
         }
       } else {
         setServerError('An unexpected error occurred. Please try again.');
+        notify.error('Unexpected error. Please try again.');
       }
     }
   };

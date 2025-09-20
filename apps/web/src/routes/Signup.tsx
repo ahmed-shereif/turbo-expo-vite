@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { SignupSchema } from '../forms/schemas';
 import { useAuth, AuthClientError } from '../auth/AuthContext';
 import { BrandButton, BrandCard, TextField, View, Text } from '@repo/ui';
+import { notify } from '../lib/notify';
 
 type SignupFormValues = z.infer<typeof SignupSchema>;
 
@@ -27,6 +28,7 @@ export default function Signup() {
     try {
       await signup(data.name, data.email, data.phone, data.password, data.role);
       await login(data.email, data.password);
+      notify.success('Account created');
       if (data.role === 'TRAINER') {
         navigate('/trainer', { replace: true });
       } else if (data.role === 'COURT_OWNER') {
@@ -40,11 +42,14 @@ export default function Signup() {
           for (const [field, message] of Object.entries(error.fieldErrors)) {
             setError(field as keyof SignupFormValues, { message });
           }
+          notify.error('Please fix the highlighted fields');
         } else {
           setServerError(error.message);
+          notify.error(error.message);
         }
       } else {
         setServerError('An unexpected error occurred. Please try again.');
+        notify.error('Unexpected error. Please try again.');
       }
     }
   };
@@ -129,21 +134,18 @@ export default function Signup() {
                 render={({ field: { value, onChange } }) => (
                   <View gap="$3" flexDirection="row">
                     <BrandButton
-                      type="button"
                       variant={value === 'PLAYER' ? 'primary' : 'outline'}
                       onPress={() => onChange('PLAYER')}
                     >
                       Player
                     </BrandButton>
                     <BrandButton
-                      type="button"
                       variant={value === 'COURT_OWNER' ? 'primary' : 'outline'}
                       onPress={() => onChange('COURT_OWNER')}
                     >
                       Court owner
                     </BrandButton>
                     <BrandButton
-                      type="button"
                       variant={value === 'TRAINER' ? 'primary' : 'outline'}
                       onPress={() => onChange('TRAINER')}
                     >
@@ -161,7 +163,7 @@ export default function Signup() {
               <Text color="#ef4444" fontSize="$3">{serverError}</Text>
             )}
 
-            <BrandButton type="submit" fullWidth disabled={isSubmitting}>
+            <BrandButton fullWidth disabled={isSubmitting}>
               {isSubmitting ? 'Signing up…' : 'Sign up'}
             </BrandButton>
           </form>

@@ -7,6 +7,8 @@ import React, {
 } from 'react';
 import { User, Role } from '@repo/auth-client';
 import { auth } from '../lib/authClient';
+import { notify } from '../lib/notify';
+import { router } from 'expo-router';
 
 type AuthState = {
   user: User | null;
@@ -43,6 +45,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     bootstrap();
+    const unsubscribe = auth.onAuthExpired(() => {
+      setUser(null);
+      notify.error('Session expired. Please sign in again.');
+      router.replace('/(auth)/login');
+    });
+    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {

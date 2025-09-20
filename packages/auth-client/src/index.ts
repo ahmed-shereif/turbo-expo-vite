@@ -88,11 +88,29 @@ export class AuthClient {
   private baseUrl: string;
   private storage: Storage;
   private getNow: () => number;
+  private authExpiredListeners: Array<() => void> = [];
 
   constructor({ baseUrl, storage, getNow = Date.now }: AuthClientConfig) {
     this.baseUrl = baseUrl;
     this.storage = storage;
     this.getNow = getNow;
+  }
+
+  onAuthExpired(listener: () => void): () => void {
+    this.authExpiredListeners.push(listener);
+    return () => {
+      this.authExpiredListeners = this.authExpiredListeners.filter((l) => l !== listener);
+    };
+  }
+
+  private emitAuthExpired(): void {
+    for (const listener of this.authExpiredListeners) {
+      try {
+        listener();
+      } catch (_) {
+        // ignore listener errors
+      }
+    }
   }
 
   private setAccess(accessToken: string, expiresInSec: number): void {
@@ -178,6 +196,7 @@ export class AuthClient {
     const refreshToken = await this.getRefresh();
     if (!refreshToken) {
       await this.clear();
+      this.emitAuthExpired();
       throw new AuthClientError('No refresh token', 401);
     }
 
@@ -196,6 +215,7 @@ export class AuthClient {
       await this.setRefresh(tokens.refreshToken);
     } catch (e) {
       await this.clear();
+      this.emitAuthExpired();
       throw e;
     }
   }
@@ -245,6 +265,7 @@ export class AuthClient {
           return await fn(headers); // retry
         } catch (refreshError) {
           await this.clear(); // force logout on refresh failure
+          this.emitAuthExpired();
           throw refreshError; // re-throw refresh error
         }
       }

@@ -7,6 +7,8 @@ import {
 import { type ReactNode } from 'react';
 import type { Role, User } from '@repo/auth-client';
 import { auth, AuthClientError } from '../lib/authClient';
+import { notify } from '../lib/notify';
+import { useNavigate } from 'react-router-dom';
 
 type AuthState = {
   user: User | null;
@@ -28,6 +30,7 @@ const AuthContext = createContext<AuthState | undefined>(undefined);
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [isBootstrapping, setIsBootstrapping] = useState(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const bootstrap = async () => {
@@ -43,6 +46,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     };
 
     bootstrap();
+    const unsubscribe = auth.onAuthExpired(() => {
+      setUser(null);
+      notify.error('Session expired. Please sign in again.');
+      navigate('/login', { replace: true });
+    });
+    return () => unsubscribe();
   }, []);
 
   const login = async (email: string, password: string) => {

@@ -7,6 +7,7 @@ import { YStack, Input, Button, Text } from 'tamagui';
 import { LoginSchema } from '../../src/forms/schemas';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { AuthClientError } from '../../src/lib/authClient';
+import { notify } from '../../src/lib/notify';
 
 type LoginFormValues = z.infer<typeof LoginSchema>;
 
@@ -19,6 +20,7 @@ export default function Login() {
     handleSubmit,
     formState: { errors, isSubmitting },
   } = useForm<LoginFormValues>({
+    // @ts-expect-error Allow zod resolver version mismatch in mobile app
     resolver: zodResolver(LoginSchema),
   });
 
@@ -26,12 +28,15 @@ export default function Login() {
     setServerError(null);
     try {
       await login(data.email, data.password);
+      notify.success('Logged in successfully');
       router.replace('/(app)');
     } catch (error) {
       if (error instanceof AuthClientError) {
         setServerError(error.message);
+        notify.error(error.message);
       } else {
         setServerError('An unexpected error occurred. Please try again.');
+        notify.error('Unexpected error. Please try again.');
       }
     }
   };
