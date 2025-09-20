@@ -1,6 +1,12 @@
 {
   "extends": "expo/tsconfig.base",
   "compilerOptions": {
-    "strict": true
+    "strict": true,
+    "baseUrl": ".",
+    "paths": {
+      "@repo/auth-client": ["../../packages/auth-client/src"],
+      "@repo/auth-client/web": ["../../packages/auth-client/src/web"],
+      "@repo/auth-client/mobile": ["../../packages/auth-client/src/mobile"]
+    }
   }
 }

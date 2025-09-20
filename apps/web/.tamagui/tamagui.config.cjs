@@ -2328,17 +2328,46 @@ var config = {
 
 // ../../packages/ui/tamagui.config.ts
 var import_core3 = require("@tamagui/core");
+var tokens3 = {
+  ...config.tokens,
+  color: {
+    ...config.tokens.color,
+    primary: "#1E90FF",
+    primaryContrast: "#FFFFFF",
+    secondary: "#34D399",
+    accent: "#F59E0B",
+    bgSoft: "#F9FAFB",
+    surface: "#FFFFFF",
+    textHigh: "#111827",
+    textMuted: "#6B7280"
+  },
+  radius: {
+    ...config.tokens.radius,
+    1: 4,
+    2: 6,
+    3: 8,
+    4: 12,
+    5: 16,
+    round: 9999
+  },
+  shadow: {
+    ...config.tokens.shadow,
+    soft: "0 2px 8px rgba(0,0,0,0.08)",
+    medium: "0 4px 16px rgba(0,0,0,0.12)",
+    strong: "0 8px 24px rgba(0,0,0,0.16)"
+  }
+};
 var tamaguiConfig = (0, import_core3.createTamagui)({
   ...config,
+  tokens: tokens3,
+  themes: {
+    ...config.themes
+  },
   settings: {
     ...config.settings,
-    // Ensure proper web handling
     webContainerType: "normal",
-    // Disable problematic features that cause DOM prop issues
     disableSSR: false,
-    // Additional web-specific settings
     shouldAddPrefersColorThemes: false,
-    // Ensure proper prop filtering for web
     shouldFixWebFonts: true
   }
 });
