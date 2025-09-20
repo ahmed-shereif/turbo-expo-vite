@@ -10,9 +10,9 @@ export const Seats = z.object({
 
 export const Pricing = z
   .object({
-    currency: z.literal('EGP'),
-    courtPriceHourlyLE: z.number(),
-    trainerPriceHourlyLE: z.number(),
+    currency: z.literal('EGP').optional(),
+    courtPriceHourlyLE: z.number().optional(),
+    trainerPriceHourlyLE: z.number().optional(),
     appFeeHourlyLE: z.number().optional(),
   })
   .optional();
@@ -28,14 +28,16 @@ export const SessionSummary = z.object({
   court: z.object({
     id: z.string(),
     name: z.string(),
-    area: z.string(),
-    priceHourlyLE: z.number(),
+    area: z.string().optional(),
+    address: z.string().optional(),
+    priceHourlyLE: z.number().optional(),
+    facilities: z.array(z.string()).optional(),
   }),
   trainer: z.object({
     id: z.string(),
-    name: z.string(),
-    maxLevel: z.number(),
-    priceHourlyLE: z.number(),
+    name: z.string().optional(),
+    maxLevel: z.coerce.number().optional(),
+    priceHourlyLE: z.number().optional(),
   }),
   pricing: Pricing,
   creator: z.object({ playerId: z.string() }).optional(),
@@ -52,20 +54,25 @@ export type SessionSummary = z.infer<typeof SessionSummary>;
 export const OpenSessionItem = SessionSummary;
 export type OpenSessionItem = z.infer<typeof OpenSessionItem>;
 
+export const Member = z.object({
+  playerId: z.string(),
+  role: z.enum(['CREATOR', 'PARTICIPANT']),
+  name: z.string().optional(),
+  rank: Rank.optional(),
+  avatarUrl: z.string().url().optional(),
+  joinedAt: z.string().optional(),
+});
+export type Member = z.infer<typeof Member>;
+
 export const SessionDetail = SessionSummary.extend({
-  members: z.array(
-    z.object({
-      playerId: z.string(),
-      role: z.enum(['CREATOR', 'PARTICIPANT']),
-    }),
-  ),
+  members: z.array(Member).default([]),
 });
 export type SessionDetail = z.infer<typeof SessionDetail>;
 
 export const CourtConfirmation = z.object({
   status: z.enum(['PENDING', 'CONFIRMED']),
-  requestedAt: z.string(),
-  respondedAt: z.string().nullable(),
+  requestedAt: z.string().optional(),
+  respondedAt: z.string().nullable().optional(),
   deadlineAt: z.string().optional(),
 });
 export type CourtConfirmation = z.infer<typeof CourtConfirmation>;

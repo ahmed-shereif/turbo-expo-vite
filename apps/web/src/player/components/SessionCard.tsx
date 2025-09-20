@@ -58,6 +58,9 @@ export default function SessionCard({ item }: { item: any }) {
           {item.pricing && <div>Your share now: {formatEGP(yourShare)}</div>}
         </div>
         <div>
+          <button onClick={() => navigate(`/player/session/${item.id || item.sessionId}`)} style={{ marginRight: 8 }}>
+            View details
+          </button>
           <button disabled={eligible === false || loading} onClick={handleJoin} title={eligible === false ? "Your rank doesn’t meet the minimum" : undefined}>
             {eligible === false ? 'Not eligible' : (loading ? 'Joining...' : 'Join Session')}
           </button>

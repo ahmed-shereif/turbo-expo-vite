@@ -17,7 +17,6 @@ export const rankOrder: Record<RankT, number> = {
 };
 
 export function isEligible(playerRank?: RankT, minRank?: RankT): boolean {
-  console.log('isEligible', playerRank, minRank);
   if (!minRank) return true;
   if (!playerRank) return false;
   return rankOrder[playerRank] >= rankOrder[minRank];
@@ -168,7 +167,26 @@ export async function fetchSession(auth: AuthLike, id: string) {
       (error.status = status), (error.body = body);
       throw error;
     }
-    return unwrapApi(body);
+    const raw = unwrapApi<any>(body);
+    // Defensive normalize for partial fields
+    const normalized = {
+      ...raw,
+      court: {
+        id: raw?.court?.id ?? '',
+        name: raw?.court?.name ?? '',
+        area: raw?.court?.area ?? raw?.court?.district ?? undefined,
+        address: raw?.court?.address ?? undefined,
+        priceHourlyLE: isFinite(Number(raw?.court?.priceHourlyLE)) ? Number(raw?.court?.priceHourlyLE) : undefined,
+        facilities: Array.isArray(raw?.court?.facilities) ? raw.court.facilities : undefined,
+      },
+      trainer: {
+        id: raw?.trainer?.id ?? '',
+        name: raw?.trainer?.name ?? undefined,
+        maxLevel: isFinite(Number(raw?.trainer?.maxLevel)) ? Number(raw?.trainer?.maxLevel) : undefined,
+        priceHourlyLE: isFinite(Number(raw?.trainer?.priceHourlyLE)) ? Number(raw?.trainer?.priceHourlyLE) : undefined,
+      },
+    };
+    return normalized;
   });
   return SessionDetail.parse(data);
 }
@@ -259,5 +277,39 @@ export async function fetchMySessions(
   });
   return MySessionsResp.parse(data);
 }
+export async function leaveSession(
+  auth: AuthLike,
+  id: string,
+  playerId: string,
+  reason = 'player_left',
+) {
+  const data = await auth.withAuth(async (headers: Record<string, string>) => {
+    const sessionId = ensureSessionId(id);
+    const res = await fetch(`${base(auth)}/sessions/${sessionId}/cancel`, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ playerId, reason }),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const message = body?.error?.message || 'Unexpected error. Please try again.';
+      const status = res.status;
+      const error = new Error(message) as any;
+      (error.status = status), (error.body = body);
+      throw error;
+    }
+    return unwrapApi(body);
+  });
+  return z
+    .object({ status: z.string(), refund: z.enum(['FULL', 'NONE', 'PARTIAL']).optional() })
+    .parse(data);
+}
 
-
+export function formatEGP(amountLE?: number) {
+  if (amountLE == null) return '';
+  return new Intl.NumberFormat('en-EG', {
+    style: 'currency',
+    currency: 'EGP',
+    maximumFractionDigits: 0,
+  }).format(amountLE);
+}
