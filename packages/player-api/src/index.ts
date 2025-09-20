@@ -17,6 +17,7 @@ export const rankOrder: Record<RankT, number> = {
 };
 
 export function isEligible(playerRank?: RankT, minRank?: RankT): boolean {
+  console.log('isEligible', playerRank, minRank);
   if (!minRank) return true;
   if (!playerRank) return false;
   return rankOrder[playerRank] >= rankOrder[minRank];
@@ -43,7 +44,19 @@ type AuthLike = {
 };
 
 function base(auth: AuthLike): string {
-  return (auth.getBaseUrl && auth.getBaseUrl()) || auth.baseUrl || '';
+  const raw = (auth.getBaseUrl && auth.getBaseUrl()) || auth.baseUrl || '';
+  // Ensure no trailing slash to avoid accidental double slashes when composing URLs
+  return raw.replace(/\/+$/, '');
+}
+
+function ensureSessionId(id: string): string {
+  const trimmed = (id ?? '').toString().trim();
+  if (!trimmed) {
+    const error = new Error('Missing session id') as any;
+    (error.status = 400);
+    throw error;
+  }
+  return encodeURIComponent(trimmed);
 }
 
 function buildQuery(params: Record<string, unknown>): string {
@@ -140,7 +153,8 @@ export async function fetchOpenSessions(auth: AuthLike, params: OpenSessionsPara
 
 export async function fetchSession(auth: AuthLike, id: string) {
   const data = await auth.withAuth(async (headers: Record<string, string>) => {
-    const res = await fetch(`${base(auth)}/sessions/${id}`, { headers });
+    const sessionId = ensureSessionId(id);
+    const res = await fetch(`${base(auth)}/sessions/${sessionId}`, { headers });
     const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       const message = body?.error?.message || 'Unexpected error. Please try again.';
@@ -156,7 +170,8 @@ export async function fetchSession(auth: AuthLike, id: string) {
 
 export async function joinSession(auth: AuthLike, id: string) {
   const data = await auth.withAuth(async (headers: Record<string, string>) => {
-    const res = await fetch(`${base(auth)}/sessions/${id}/join`, {
+    const sessionId = ensureSessionId(id);
+    const res = await fetch(`${base(auth)}/sessions/${sessionId}/join`, {
       method: 'POST',
       headers: { ...headers, 'Content-Type': 'application/json' },
     });
@@ -177,7 +192,8 @@ export async function joinSession(auth: AuthLike, id: string) {
 
 export async function confirmWithCurrent(auth: AuthLike, id: string) {
   const data = await auth.withAuth(async (headers: Record<string, string>) => {
-    const res = await fetch(`${base(auth)}/sessions/${id}/confirm-with-current`, {
+    const sessionId = ensureSessionId(id);
+    const res = await fetch(`${base(auth)}/sessions/${sessionId}/confirm-with-current`, {
       method: 'POST',
       headers: { ...headers, 'Content-Type': 'application/json' },
     });
@@ -202,7 +218,8 @@ export async function confirmWithCurrent(auth: AuthLike, id: string) {
 
 export async function getCourtConfirmation(auth: AuthLike, id: string) {
   const data = await auth.withAuth(async (headers: Record<string, string>) => {
-    const res = await fetch(`${base(auth)}/sessions/${id}/court-confirmation`, {
+    const sessionId = ensureSessionId(id);
+    const res = await fetch(`${base(auth)}/sessions/${sessionId}/court-confirmation`, {
       headers,
     });
     const body = await res.json().catch(() => ({}));

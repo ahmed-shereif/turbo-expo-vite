@@ -17,10 +17,15 @@ export default function SessionCard({ item }: { item: any }) {
   const totalSeats = item.seats.total;
   const pricingTotal = (item.pricing?.courtPriceHourlyLE ?? 0) + (item.pricing?.trainerPriceHourlyLE ?? 0) + (item.pricing?.appFeeHourlyLE ?? 0);
   const yourShare = totalSeats > 0 ? Math.ceil(pricingTotal / totalSeats) : 0;
-  const eligible = isEligible(rank as Rank | undefined, item.minRank as Rank | undefined);
+  const minRank = item.minRank as Rank | undefined;
+  const eligible = isEligible(rank as Rank | undefined, minRank);
 
   const handleJoin = async () => {
     if (!eligible) return;
+    if (!item?.id) {
+      notify.error('Unable to join: invalid session. Please refresh and try again.');
+      return;
+    }
     setLoading(true);
     try {
       await joinSession(auth as any, item.id);
@@ -46,12 +51,12 @@ export default function SessionCard({ item }: { item: any }) {
           <div>Trainer: {item.trainer.name}</div>
           <div>Start: {formatLocal(item.startAt)}</div>
           <div>Seats: {item.seats.filled}/{item.seats.total}</div>
-          {item.minRank && <div>Min Rank: {item.minRank}</div>}
+          {minRank && <div>Min Rank: {minRank}</div>}
           {item.pricing && <div>Your share now: {formatEGP(yourShare)}</div>}
         </div>
         <div>
-          <button disabled={!eligible || loading} onClick={handleJoin} title={!eligible ? "Your rank doesn’t meet the minimum" : undefined}>
-            {eligible ? (loading ? 'Joining...' : 'Join Session') : 'Not eligible'}
+          <button disabled={eligible === false || loading} onClick={handleJoin} title={eligible === false ? "Your rank doesn’t meet the minimum" : undefined}>
+            {eligible === false ? 'Not eligible' : (loading ? 'Joining...' : 'Join Session')}
           </button>
         </div>
       </div>

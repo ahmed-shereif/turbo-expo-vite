@@ -18,6 +18,9 @@ describe('isEligible', () => {
     { player: 'MID_D', min: 'MID_D', ok: true },
     { player: 'HIGH_D', min: undefined, ok: true },
     { player: undefined, min: 'LOW_D', ok: false },
+    // Equality cases
+    { player: 'LOW_D', min: 'LOW_D', ok: true },
+    { player: 'HIGH_D', min: 'HIGH_D', ok: true },
   ];
 
   for (const c of cases) {

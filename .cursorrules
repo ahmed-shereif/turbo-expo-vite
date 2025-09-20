@@ -106,3 +106,75 @@ pnpm add -w package@exact-version
 - **MANDATORY**: Both web and mobile must build successfully before any deployment
 - **MANDATORY**: Features must be tested on both platforms before merge
 - Deploy both platforms together to maintain feature parity
+
+## UI/UX Design Rules — Paddle Training App (Web & Mobile)
+
+- Visual Direction
+  - Sporty, energetic, optimistic. Use brand tokens from `packages/ui/tamagui.config.ts`.
+  - Primary actions use `color.primary` with `primaryContrast` text. Reserve `accent` for highlights and promotions.
+  - Backgrounds: `bgSoft` for app surfaces, `surface` for cards and interactive containers.
+
+- Layout & Spacing
+  - Use an 8px spacing scale (tokens radius 1–5 already aligned). Minimum touch target: 44×44 px.
+  - Content max-width on web: 1200px. Use responsive containers; avoid full-width long measure text.
+  - Group related controls within `BrandCard` sections; avoid dense, ungrouped lists.
+
+- Typography
+  - Use `SafeText` and shared typography styles from `@repo/ui`. Maintain 1.4–1.6 line-height for body text.
+  - Titles: concise, action-oriented (e.g., “Book a Session”). Avoid all caps; prefer Title Case.
+
+- Components & Patterns
+  - Always prefer shared components in `@repo/ui` (`BrandButton`, `TextField`, `BrandCard`, `ErrorFallback`). Add new primitives there first.
+  - Forms use `react-hook-form` with `TextField`. Show inline field errors and a toast via notify on submit errors.
+  - Buttons: one primary per view; secondary/tertiary for less-critical actions. Destructive actions use confirm flows.
+
+- Navigation
+  - Web: use `react-router-dom`. Keep top-level routes shallow and descriptive: `/sessions`, `/trainers`, `/courts`, `/book`, `/profile`.
+  - Mobile: bottom tabs for primary sections; stack for details. Avoid more than 2 nested levels.
+  - Preserve scroll/position on route changes; deep links must resolve to the correct detail view.
+
+- States (Loading/Empty/Error/Success)
+  - Loading: skeletons for lists and buttons’ built-in loading states; no spinner-only screens.
+  - Empty states: friendly copy + primary CTA (e.g., “No sessions yet. Explore sessions”).
+  - Errors: rely on Error Boundaries for unexpected; for recoverable, show inline message + `notify.error(...)`.
+  - Success: show concise confirmation with next-step CTA and `notify.success(...)`.
+
+- Accessibility
+  - Maintain 4.5:1 contrast for text; ensure focus outlines are visible. Provide text alternatives for icons.
+  - Support keyboard navigation on web; ensure tab order follows DOM order. Don’t block pinch-zoom.
+
+- Motion & Feedback
+  - Use subtle 150–250ms transitions; keep motion purposeful (state change, navigation). Avoid parallax/overuse.
+  - Provide immediate feedback on interactions: button loading, optimistic UI where safe.
+
+- Copy & Tone
+  - Friendly, concise, motivational. Avoid jargon. Examples: “Let’s play!”, “Great choice!”, “You’re all set”.
+  - Avoid technical error details; map to user-friendly language per apps/.cursorrules Error Handling Policy.
+
+- Domain-specific Patterns
+  - Session Discovery: persistent filters (area, date, rank, price), infinite list with `react-virtual` on web.
+  - Booking Flow: 4 clear steps — Pick session → Choose court/time → Confirm participants & price → Pay.
+  - Trainer Profiles: show rank, price/hour, coverage areas, ratings, availability; primary CTA: “Request Trainer”.
+  - Court Selection: map/list toggle; show distance, availability slots; confirm with summary.
+  - Payments: show fees and totals clearly; support card and cash-like flows; handle 3DS/retries gracefully.
+  - Ratings: 1–5 with short tags; nudge after sessions with a non-blocking prompt.
+
+- Error Handling Alignment
+  - Use `apps/web/src/lib/notify.ts` and `apps/mobile/src/lib/notify.ts`. Never expose raw server errors.
+  - For queries/mutations: `useErrorBoundary: (e) => (e as any)?.status >= 500`; `onError: (e) => notify.error(parseMessage(e))`.
+
+- Responsiveness
+  - Design mobile-first; ensure breakpoints support small tablets. Avoid horizontal scrolling.
+  - Use Flex layouts compatible with `react-native-web` in shared UI.
+
+- Design Review Checklist (Per Screen)
+  - Clear primary CTA, minimal cognitive load, correct tokens, accessible contrast.
+  - Proper loading/empty/error states wired, graceful auth-expired handling.
+  - Keyboard/gesture friendliness, performance on low-end devices, parity across web/mobile.
+
+- Do / Don’t
+  - DO build new UI primitives in `@repo/ui` first. DON’T duplicate styles in apps.
+  - DO keep copy short and encouraging. DON’T use technical or negative language.
+  - DO use skeletons and optimistic updates. DON’T block UI without feedback.
+
+Reference: full guidelines in `packages/ui/UX_GUIDELINES.md` and checklists in `packages/ui/UX_CHECKLISTS.md`.
