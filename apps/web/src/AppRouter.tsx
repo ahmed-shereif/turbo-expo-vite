@@ -10,7 +10,7 @@ import OpenSessions from './player/routes/OpenSessions';
 import MySessions from './player/routes/MySessions';
 import SessionDetail from './player/routes/SessionDetail';
 
-export function AppRouter() {
+function AppRouter() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />
@@ -87,3 +87,5 @@ export function AppRouter() {
     </Routes>
   );
 }
+
+export { AppRouter };

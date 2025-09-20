@@ -123,8 +123,13 @@ export async function fetchOpenSessions(auth: AuthLike, params: OpenSessionsPara
 
   const mapped = items.map((it: any) => {
     const trainerMax = Number(it?.trainer?.maxLevel);
+    // Handle both possible field names for session ID
+    const sessionId = it.sessionId ?? it.id ?? '';
+    if (!sessionId) {
+      console.warn('Session item missing ID:', it);
+    }
     return {
-      id: it.sessionId ?? it.id ?? '',
+      id: sessionId,
       type: 'OPEN',
       status: 'PENDING',
       startAt: it.startAt,

@@ -22,14 +22,17 @@ export default function SessionCard({ item }: { item: any }) {
 
   const handleJoin = async () => {
     if (!eligible) return;
-    if (!item?.id) {
+    // Check for both possible field names
+    const sessionId = item?.id || item?.sessionId;
+    if (!sessionId) {
+      console.error('Session item missing ID:', item);
       notify.error('Unable to join: invalid session. Please refresh and try again.');
       return;
     }
     setLoading(true);
     try {
-      await joinSession(auth as any, item.id);
-      navigate(`/player/session/${item.id}`);
+      await joinSession(auth as any, sessionId);
+      navigate(`/player/session/${sessionId}`);
     } catch (e: any) {
       const status = e?.status;
       const message: string = e?.message || '';
