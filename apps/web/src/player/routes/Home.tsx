@@ -6,7 +6,8 @@ export default function PlayerHome() {
     <Screen>
       <BrandCard>
         <h2>Player Home</h2>
-        <div style={{ display: 'flex', gap: 12 }}>
+        <div style={{ display: 'flex', gap: 12, flexWrap: 'wrap' }}>
+          <Link to="/player/create"><BrandButton>Create Session</BrandButton></Link>
           <Link to="/player/open"><BrandButton variant="outline">Find Open Sessions</BrandButton></Link>
           <Link to="/player/sessions"><BrandButton variant="outline">My Sessions</BrandButton></Link>
         </div>

@@ -1,0 +1,196 @@
+/* Enhanced animations and styles for the Player Create Wizard */
+
+/* Smooth fade-in animation for step transitions */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInRight {
+  from {
+    opacity: 0;
+    transform: translateX(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: calc(200px + 100%) 0;
+  }
+}
+
+/* Step content animations */
+.wizard-step-content {
+  animation: fadeInUp 0.5s ease-out;
+}
+
+.wizard-card {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.wizard-card:hover {
+  transform: translateY(-2px);
+}
+
+/* Enhanced button hover effects */
+.wizard-button {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.wizard-button::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.2),
+    transparent
+  );
+  transition: left 0.5s;
+}
+
+.wizard-button:hover::before {
+  left: 100%;
+}
+
+/* Loading shimmer effect */
+.shimmer {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0px,
+    #e0e0e0 40px,
+    #f0f0f0 80px
+  );
+  background-size: 200px;
+  animation: shimmer 1.5s infinite;
+}
+
+/* Progress bar enhancements */
+.progress-step {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.progress-step.completed {
+  animation: pulse 0.6s ease-in-out;
+}
+
+/* Card selection effects */
+.selectable-card {
+  cursor: pointer;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.selectable-card::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border-radius: inherit;
+  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  transition: box-shadow 0.3s ease;
+}
+
+.selectable-card:hover::after {
+  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+}
+
+.selectable-card.selected::after {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+}
+
+/* Time slot grid enhancements */
+.time-slot {
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+}
+
+.time-slot:hover {
+  transform: scale(1.05);
+}
+
+.time-slot.available {
+  animation: slideInRight 0.3s ease-out;
+}
+
+/* Confirmation animations */
+.confirmation-card {
+  animation: fadeInUp 0.6s ease-out;
+}
+
+.success-icon {
+  animation: pulse 1s ease-in-out infinite;
+}
+
+/* Responsive enhancements */
+@media (max-width: 768px) {
+  .wizard-step-content {
+    animation: fadeInUp 0.3s ease-out;
+  }
+  
+  .wizard-card:hover {
+    transform: none;
+  }
+}
+
+/* Focus states for accessibility */
+.wizard-button:focus,
+.selectable-card:focus,
+.time-slot:focus {
+  outline: 2px solid #3b82f6;
+  outline-offset: 2px;
+}
+
+/* Dark mode support (if needed) */
+@media (prefers-color-scheme: dark) {
+  .shimmer {
+    background: linear-gradient(
+      90deg,
+      #374151 0px,
+      #4b5563 40px,
+      #374151 80px
+    );
+  }
+}
+
+/* Print styles */
+@media print {
+  .wizard-step-content {
+    animation: none;
+  }
+  
+  .wizard-card {
+    box-shadow: none !important;
+    border: 1px solid #e5e7eb !important;
+  }
+}

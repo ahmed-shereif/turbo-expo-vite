@@ -39,14 +39,7 @@ export default function Signup() {
       // Auto-login after successful signup
       await login(data.email, data.password);
       notify.success('Account created');
-      // Navigate to role-specific page
-      if (data.role === 'TRAINER') {
-        router.replace('/(app)/trainer');
-      } else if (data.role === 'COURT_OWNER') {
-        router.replace('/(app)/court-owner');
-      } else {
-        router.replace('/(app)');
-      }
+      // Navigation is handled by the login function in AuthProvider based on user role
     } catch (error) {
       if (error instanceof AuthClientError) {
         if (error.fieldErrors) {

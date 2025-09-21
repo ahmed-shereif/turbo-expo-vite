@@ -28,7 +28,7 @@ export default function Login() {
     try {
       await login(data.email, data.password);
       notify.success('Logged in successfully');
-      navigate('/');
+      // Navigation is handled by the login function in AuthContext based on user role
     } catch (error) {
       if (error instanceof AuthClientError) {
         setServerError(error.message);

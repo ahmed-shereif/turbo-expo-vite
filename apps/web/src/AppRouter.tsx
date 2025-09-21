@@ -9,6 +9,7 @@ import PlayerHome from './player/routes/Home';
 import OpenSessions from './player/routes/OpenSessions';
 import MySessions from './player/routes/MySessions';
 import SessionDetail from './player/routes/SessionDetail';
+import { Wizard } from './player/create/Wizard';
 
 function AppRouter() {
   return (
@@ -79,6 +80,16 @@ function AppRouter() {
           <RequireAuth>
             <RequireRole roles={['PLAYER']}>
               <SessionDetail />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/player/create"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['PLAYER']}>
+              <Wizard />
             </RequireRole>
           </RequireAuth>
         }

@@ -30,7 +30,7 @@ export default function Login() {
     try {
       await login(data.email, data.password);
       notify.success('Logged in successfully');
-      router.replace('/(app)');
+      // Navigation is handled by the login function in AuthProvider based on user role
     } catch (error) {
       if (error instanceof AuthClientError) {
         setServerError(error.message);

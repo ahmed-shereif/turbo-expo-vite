@@ -5,7 +5,14 @@ import {
   SessionDetail,
   CourtConfirmation,
   MySessionsResp,
+  Court,
+  Trainer,
+  AvailabilityCheck,
+  CreateSessionPayload,
+  CreateSessionResponse,
 } from './schemas';
+
+export type { Court, Trainer };
 
 export type { RankT as Rank };
 
@@ -38,12 +45,11 @@ type OpenSessionsParams = {
 
 type AuthLike = {
   withAuth<T>(fn: (headers: Record<string, string>) => Promise<T>): Promise<T>;
-  baseUrl?: string;
-  getBaseUrl?: () => string;
+  getBaseUrl(): string;
 };
 
 function base(auth: AuthLike): string {
-  const raw = (auth.getBaseUrl && auth.getBaseUrl()) || auth.baseUrl || '';
+  const raw = auth.getBaseUrl();
   // Ensure no trailing slash to avoid accidental double slashes when composing URLs
   return raw.replace(/\/+$/, '');
 }
@@ -317,4 +323,223 @@ export function formatEGP(amountLE?: number) {
     currency: 'EGP',
     maximumFractionDigits: 0,
   }).format(amountLE);
+}
+
+// Create Session Wizard API Functions
+
+export async function fetchCourts(
+  auth: AuthLike,
+  q: {
+    area?: string;
+    priceMin?: number;
+    priceMax?: number;
+    facilities?: string[];
+    page?: number;
+    pageSize?: number;
+    sort?: 'price' | 'rating' | 'name';
+  }
+): Promise<Court[]> {
+  const qs = buildQuery({
+    area: q.area,
+    priceMin: q.priceMin,
+    priceMax: q.priceMax,
+    facilities: q.facilities,
+    page: q.page,
+    pageSize: q.pageSize,
+    sort: q.sort,
+  });
+  
+  const data = await auth.withAuth(async (headers: Record<string, string>) => {
+    const res = await fetch(`${base(auth)}/courts${qs}`, { headers });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const message = body?.error?.message || 'Unexpected error. Please try again.';
+      const status = res.status;
+      const error = new Error(message) as any;
+      error.status = status;
+      error.body = body;
+      throw error;
+    }
+    return unwrapApi(body);
+  });
+
+  let items: any[] = [];
+  if (Array.isArray(data)) {
+    items = data;
+  } else if (data && Array.isArray((data as any).courts)) {
+    items = (data as any).courts;
+  } else if (data && Array.isArray((data as any).items)) {
+    items = (data as any).items;
+  } else {
+    throw Object.assign(new Error('Unexpected response from server'), { status: 500, body: data });
+  }
+
+  const mapped = items.map((item: any) => ({
+    id: item.id ?? '',
+    name: item.name ?? '',
+    area: item.area ?? undefined,
+    address: item.address ?? undefined,
+    priceHourlyLE: Number(item.hourlyPrice ?? item.priceHourlyLE ?? 0),
+    facilities: Array.isArray(item.facilities) ? item.facilities : undefined,
+  }));
+
+  return z.array(Court).parse(mapped);
+}
+
+export async function quickCheckCourt(
+  auth: AuthLike,
+  courtId: string,
+  startAtISO: string,
+  durationMinutes: number
+): Promise<AvailabilityCheck> {
+  const data = await auth.withAuth(async (headers: Record<string, string>) => {
+    const res = await fetch(
+      `${base(auth)}/calendar/COURT/${encodeURIComponent(courtId)}/availability/check?startAt=${encodeURIComponent(startAtISO)}&durationMinutes=${durationMinutes}`,
+      { headers }
+    );
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const message = body?.error?.message || 'Unexpected error. Please try again.';
+      const status = res.status;
+      const error = new Error(message) as any;
+      error.status = status;
+      error.body = body;
+      throw error;
+    }
+    return unwrapApi(body);
+  });
+
+  return AvailabilityCheck.parse(data);
+}
+
+export async function fetchTrainers(
+  auth: AuthLike,
+  q: {
+    area?: string;
+    maxLevel?: RankT;
+    priceMin?: number;
+    priceMax?: number;
+    page?: number;
+    pageSize?: number;
+    sort?: 'price' | 'rating' | 'name';
+  }
+): Promise<Trainer[]> {
+  const qs = buildQuery({
+    area: q.area,
+    maxLevel: q.maxLevel,
+    priceMin: q.priceMin,
+    priceMax: q.priceMax,
+    page: q.page,
+    pageSize: q.pageSize,
+    sort: q.sort,
+  });
+  
+  const data = await auth.withAuth(async (headers: Record<string, string>) => {
+    const res = await fetch(`${base(auth)}/trainers${qs}`, { headers });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const message = body?.error?.message || 'Unexpected error. Please try again.';
+      const status = res.status;
+      const error = new Error(message) as any;
+      error.status = status;
+      error.body = body;
+      throw error;
+    }
+    return unwrapApi(body);
+  });
+
+  let items: any[] = [];
+  if (Array.isArray(data)) {
+    items = data;
+  } else if (data && Array.isArray((data as any).trainers)) {
+    items = (data as any).trainers;
+  } else if (data && Array.isArray((data as any).items)) {
+    items = (data as any).items;
+  } else {
+    throw Object.assign(new Error('Unexpected response from server'), { status: 500, body: data });
+  }
+
+  const mapped = items.map((item: any) => ({
+    id: item.id ?? '',
+    name: item.name ?? '',
+    maxLevel: isFinite(Number(item.maxLevel)) ? Number(item.maxLevel) : undefined,
+    priceHourlyLE: isFinite(Number(item.priceHourlyLE)) ? Number(item.priceHourlyLE) : undefined,
+    areasCovered: Array.isArray(item.areasCovered) ? item.areasCovered : undefined,
+  }));
+
+  return z.array(Trainer).parse(mapped);
+}
+
+export async function quickCheckTrainer(
+  auth: AuthLike,
+  trainerId: string,
+  startAtISO: string,
+  durationMinutes: number
+): Promise<AvailabilityCheck> {
+  const data = await auth.withAuth(async (headers: Record<string, string>) => {
+    const res = await fetch(
+      `${base(auth)}/calendar/TRAINER/${encodeURIComponent(trainerId)}/availability/check?startAt=${encodeURIComponent(startAtISO)}&durationMinutes=${durationMinutes}`,
+      { headers }
+    );
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const message = body?.error?.message || 'Unexpected error. Please try again.';
+      const status = res.status;
+      const error = new Error(message) as any;
+      error.status = status;
+      error.body = body;
+      throw error;
+    }
+    return unwrapApi(body);
+  });
+
+  return AvailabilityCheck.parse(data);
+}
+
+export async function createSession(
+  auth: AuthLike,
+  payload: CreateSessionPayload
+): Promise<CreateSessionResponse> {
+  const data = await auth.withAuth(async (headers: Record<string, string>) => {
+    const res = await fetch(`${base(auth)}/sessions`, {
+      method: 'POST',
+      headers: { ...headers, 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload),
+    });
+    const body = await res.json().catch(() => ({}));
+    if (!res.ok) {
+      const message = body?.error?.message || 'Unexpected error. Please try again.';
+      const status = res.status;
+      const error = new Error(message) as any;
+      error.status = status;
+      error.body = body;
+      throw error;
+    }
+    return unwrapApi(body);
+  });
+
+  return CreateSessionResponse.parse(data);
+}
+
+// Utility functions
+export function toUTCISO(dateLocal: Date): string {
+  return dateLocal.toISOString();
+}
+
+export function combineDayAndTime(dayISO: string, timeHHmm: string): string {
+  // Combine day (YYYY-MM-DD) and time (HH:mm) and convert to UTC ISO
+  const localDateTime = new Date(`${dayISO}T${timeHHmm}:00`);
+  return localDateTime.toISOString();
+}
+
+export function estimateIntendedShareLE(
+  courtPriceLE?: number,
+  trainerPriceLE?: number,
+  seatsTotal: number = 4,
+  appFeeLE: number = 0
+): number {
+  const courtShare = (courtPriceLE ?? 0) / seatsTotal;
+  const trainerShare = (trainerPriceLE ?? 0) / seatsTotal;
+  const appFeeShare = appFeeLE / seatsTotal;
+  return Math.round(courtShare + trainerShare + appFeeShare);
 }

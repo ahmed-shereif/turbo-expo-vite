@@ -22,14 +22,12 @@
     "test": "vitest run"
   },
   "dependencies": {
-    "zod": "^3.25.76",
-    "@repo/auth-client": "workspace:*"
+    "@repo/auth-client": "workspace:*",
+    "zod": "^3.25.76"
   },
   "devDependencies": {
+    "@types/node": "^22.7.5",
     "typescript": "~5.9.2",
-    "vitest": "^2.1.5",
-    "@types/node": "^22.7.5"
+    "vitest": "^2.1.9"
   }
 }
-
-

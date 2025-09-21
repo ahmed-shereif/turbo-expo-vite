@@ -24,7 +24,7 @@ export const SessionSummary = z.object({
   startAt: z.string(),
   durationMinutes: z.number(),
   seats: Seats,
-  minRank: Rank.optional(),
+  minRank: Rank.nullable().optional().transform(val => val === null ? undefined : val),
   court: z.object({
     id: z.string(),
     name: z.string(),
@@ -58,7 +58,7 @@ export const Member = z.object({
   playerId: z.string(),
   role: z.enum(['CREATOR', 'PARTICIPANT']),
   name: z.string().optional(),
-  rank: Rank.optional(),
+  rank: Rank.nullable().optional().transform(val => val === null ? undefined : val),
   avatarUrl: z.string().url().optional(),
   joinedAt: z.string().optional(),
 });
@@ -87,5 +87,74 @@ export const MySessionsResp = z.object({
   hasPreviousPage: z.boolean(),
 });
 export type MySessionsResp = z.infer<typeof MySessionsResp>;
+
+// Create Session Wizard Schemas
+export const Court = z.object({
+  id: z.string(),
+  name: z.string(),
+  area: z.string().optional(),
+  address: z.string().optional(),
+  priceHourlyLE: z.number(),
+  facilities: z.array(z.string()).optional(),
+});
+export type Court = z.infer<typeof Court>;
+
+export const Trainer = z.object({
+  id: z.string(),
+  name: z.string(),
+  maxLevel: z.coerce.number().optional(),
+  priceHourlyLE: z.number().optional(),
+  areasCovered: z.array(z.string()).optional(),
+});
+export type Trainer = z.infer<typeof Trainer>;
+
+export const AvailabilityCheck = z.object({
+  available: z.boolean(),
+  reason: z.string().optional(),
+  conflicts: z.array(z.string()).optional(),
+});
+export type AvailabilityCheck = z.infer<typeof AvailabilityCheck>;
+
+export const CreateSessionPayload = z.object({
+  entryFlow: z.literal('COURT_FIRST'),
+  courtId: z.string(),
+  trainerId: z.string(),
+  startAt: z.string(),
+  durationMinutes: z.number(),
+  type: z.enum(['OPEN', 'PRIVATE']),
+  seatsTotal: z.union([z.literal(2), z.literal(3), z.literal(4)]),
+  minRank: Rank.nullable().optional().transform(val => val === null ? undefined : val),
+});
+export type CreateSessionPayload = z.infer<typeof CreateSessionPayload>;
+
+export const CreateSessionResponse = z.object({
+  session: z.object({
+    id: z.string(),
+    creatorId: z.string(),
+    courtId: z.string(),
+    trainerId: z.string(),
+    status: z.string(),
+    type: z.string(),
+    startAt: z.string(),
+    durationMinutes: z.number(),
+    seatsTotal: z.number(),
+    seatsFilled: z.number(),
+    minRank: Rank.nullable().optional(),
+    lockedAfterPayNow: z.boolean(),
+    createdAt: z.string(),
+    updatedAt: z.string(),
+    approvedAt: z.string().nullable().optional(),
+    paymentGraceEndsAt: z.string().nullable().optional(),
+  }),
+  pricing: z.object({
+    currency: z.string(),
+    courtPriceHourlyLE: z.number(),
+    trainerPriceHourlyLE: z.number(),
+    appFeeHourlyLE: z.number(),
+    intendedShareLE: z.number(),
+  }),
+  note: z.string().optional(),
+});
+export type CreateSessionResponse = z.infer<typeof CreateSessionResponse>;
 
 

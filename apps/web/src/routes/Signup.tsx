@@ -30,13 +30,7 @@ export default function Signup() {
       await signup(data.name, data.email, data.phone, data.password, data.role);
       await login(data.email, data.password);
       notify.success('Account created');
-      if (data.role === 'TRAINER') {
-        navigate('/trainer', { replace: true });
-      } else if (data.role === 'COURT_OWNER') {
-        navigate('/', { replace: true }); // Placeholder, add court-owner route if available
-      } else {
-        navigate('/', { replace: true });
-      }
+      // Navigation is handled by the login function in AuthContext based on user role
     } catch (error) {
       if (error instanceof AuthClientError) {
         if (error.fieldErrors) {

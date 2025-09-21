@@ -178,3 +178,31 @@ pnpm add -w package@exact-version
   - DO use skeletons and optimistic updates. DON’T block UI without feedback.
 
 Reference: full guidelines in `packages/ui/UX_GUIDELINES.md` and checklists in `packages/ui/UX_CHECKLISTS.md`.
+
+## Styling Policy - MANDATORY
+
+**NEVER use Tailwind CSS or any other CSS framework. Use ONLY Tamagui.**
+
+- UI Library: Tamagui ONLY
+  - ALL styling must use Tamagui components and tokens from `@repo/ui`
+  - Use `tamagui.config.ts` tokens for colors, spacing, typography, and shadows
+  - NEVER import or use Tailwind CSS classes, utilities, or configuration
+  - NEVER add `tailwindcss` to any package.json
+
+- Styling Rules
+  - Use Tamagui styled components: `styled(View, { ... })`
+  - Use Tamagui tokens: `$color.primary`, `$space.4`, `$fontSize.lg`
+  - For custom styles, extend Tamagui themes in `packages/ui/tamagui.config.ts`
+  - Use Tamagui responsive props: `width={{ xs: 100, md: 200 }}`
+
+- Forbidden Styling
+  - NEVER use `className` with Tailwind classes
+  - NEVER use CSS-in-JS libraries other than Tamagui
+  - NEVER use inline styles that bypass Tamagui tokens
+  - NEVER install or configure Tailwind CSS, PostCSS, or similar
+
+- Component Creation
+  - Build all UI components in `packages/ui` using Tamagui
+  - Export styled components from `@repo/ui`
+  - Use Tamagui's `createTamagui` for theme configuration
+  - Leverage Tamagui's built-in responsive and theme system
