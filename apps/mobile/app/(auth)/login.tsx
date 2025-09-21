@@ -3,7 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { YStack, Input, Button, Text } from 'tamagui';
+import { YStack, Text } from 'tamagui';
+import { Screen, BrandCard, BrandButton, TextField } from '@repo/ui'
 import { LoginSchema } from '../../src/forms/schemas';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { AuthClientError } from '../../src/lib/authClient';
@@ -42,46 +43,50 @@ export default function Login() {
   };
 
   return (
-    <YStack space padding="$4">
-      <Text fontSize="$6">Login</Text>
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Email"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            autoCapitalize="none"
-            keyboardType="email-address"
+    <Screen>
+      <BrandCard>
+        <Text fontSize="$6">Login</Text>
+        <YStack space>
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextField
+                placeholder="Email"
+                onBlur={onBlur as any}
+                onChangeText={onChange}
+                value={value}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+            )}
           />
-        )}
-      />
-      {errors.email && <Text color="red">{errors.email.message}</Text>}
+          {errors.email && <Text color="red">{errors.email.message}</Text>}
 
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Password"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            secureTextEntry
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextField
+                placeholder="Password"
+                onBlur={onBlur as any}
+                onChangeText={onChange}
+                value={value}
+                secureTextEntry
+              />
+            )}
           />
-        )}
-      />
-      {errors.password && <Text color="red">{errors.password.message}</Text>}
+          {errors.password && <Text color="red">{errors.password.message}</Text>}
 
-      <Button onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
-        {isSubmitting ? 'Logging in...' : 'Login'}
-      </Button>
-      {serverError && <Text color="red">{serverError}</Text>}
-      <Button onPress={() => router.push('/(auth)/signup')}>
-        Don't have an account? Sign up
-      </Button>
-    </YStack>
+          <BrandButton icon="LogIn" onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
+            {isSubmitting ? 'Logging in...' : 'Login'}
+          </BrandButton>
+          {serverError && <Text color="red">{serverError}</Text>}
+          <BrandButton variant="outline" icon="UserPlus" onPress={() => router.push('/(auth)/signup')}>
+            Don't have an account? Sign up
+          </BrandButton>
+        </YStack>
+      </BrandCard>
+    </Screen>
   );
 }

@@ -1,3 +1,11 @@
+import { Screen, BrandCard } from '@repo/ui'
+
 export default function Trainer() {
-  return <div>Trainer Area</div>;
+  return (
+    <Screen>
+      <BrandCard>
+        Trainer Area
+      </BrandCard>
+    </Screen>
+  );
 }

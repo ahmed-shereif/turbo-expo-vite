@@ -1,5 +1,6 @@
 import React from 'react'
-import { Button, type ButtonProps } from 'tamagui'
+import { Button, type ButtonProps, XStack, Text } from 'tamagui'
+import { Icon, type IconName } from './Icon'
 
 type BrandVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
 
@@ -7,6 +8,10 @@ export interface BrandButtonProps extends Omit<ButtonProps, 'size'> {
   variant?: BrandVariant
   fullWidth?: boolean
   size?: 'sm' | 'md' | 'lg'
+  type?: 'button' | 'submit' | 'reset'
+  loading?: boolean
+  icon?: IconName
+  iconAfter?: IconName
 }
 
 const getColorsForVariant = (variant: BrandVariant) => {
@@ -40,10 +45,24 @@ export function BrandButton({
   variant = 'primary',
   fullWidth,
   size = 'md',
+  loading,
+  icon,
+  iconAfter,
   ...rest
 }: BrandButtonProps) {
   const { bg, color, border } = getColorsForVariant(variant)
   const { px, py, fontSize } = getPaddingsForSize(size)
+  const iconSize = size === 'sm' ? 14 : size === 'lg' ? 18 : 16
+
+  const content = (
+    <XStack alignItems="center" justifyContent="center" gap={6}>
+      {icon && <Icon name={icon} size={iconSize} color={color} />}
+      <Text color={color} fontSize={fontSize} fontWeight="700" textTransform="uppercase" letterSpacing={0.5}>
+        {loading ? 'Please wait…' : children}
+      </Text>
+      {iconAfter && <Icon name={iconAfter} size={iconSize} color={color} />}
+    </XStack>
+  )
 
   return (
     <Button
@@ -55,16 +74,12 @@ export function BrandButton({
       borderRadius="$5"
       paddingHorizontal={px}
       paddingVertical={py}
-      fontSize={fontSize}
-      fontWeight="700"
-      textTransform="uppercase"
-      letterSpacing={0.5}
       animation="quick"
       hoverStyle={{ opacity: 0.95 }}
       pressStyle={{ scale: 0.98, opacity: 0.9 }}
       {...rest}
     >
-      {children}
+      {content}
     </Button>
   )
 }

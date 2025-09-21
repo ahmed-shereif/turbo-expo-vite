@@ -1,4 +1,5 @@
 import { View, Text, Pressable, FlatList } from 'react-native';
+import { Screen, BrandCard, BrandButton } from '@repo/ui'
 import { AuthGate, RoleGate } from '../../src/navigation/guards';
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -22,27 +23,33 @@ export default function Sessions() {
   return (
     <AuthGate>
       <RoleGate roles={['PLAYER']}>
-        <View style={{ padding: 16 }}>
+        <Screen>
           <Text style={{ fontSize: 20, marginBottom: 8 }}>My Sessions</Text>
-          <View style={{ flexDirection: 'row', gap: 8 }}>
-            <Pressable onPress={() => setTab('UPCOMING')}><Text>Upcoming</Text></Pressable>
-            <Pressable onPress={() => setTab('PAST')}><Text>Past</Text></Pressable>
+          <View style={{ flexDirection: 'row', gap: 8, marginBottom: 8 }}>
+            <BrandButton icon="Clock" variant={tab === 'UPCOMING' ? 'primary' : 'outline'} onPress={() => setTab('UPCOMING')}>Upcoming</BrandButton>
+            <BrandButton icon="History" variant={tab === 'PAST' ? 'primary' : 'outline'} onPress={() => setTab('PAST')}>Past</BrandButton>
           </View>
-          {q.isLoading && <Text>Loading...</Text>}
-          {q.isSuccess && (
-            <FlatList
-              data={q.data.sessions}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <Pressable onPress={() => router.push(`/(player)/session/${item.id}`)} style={{ padding: 12, borderWidth: 1, marginTop: 8 }}>
-                  <Text>{item.court.name} — {item.court.area}</Text>
-                  <Text>Trainer: {item.trainer.name}</Text>
-                  <Text>Seats: {item.seats.filled}/{item.seats.total}</Text>
-                </Pressable>
-              )}
-            />
+          {q.isLoading && (
+            <BrandCard>
+              <Text>Loading your sessions…</Text>
+            </BrandCard>
           )}
-        </View>
+          {q.isSuccess && (
+            <BrandCard>
+              <FlatList
+                data={q.data.sessions}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <Pressable onPress={() => router.push(`/(player)/session/${item.id}`)} style={{ padding: 12, borderWidth: 1, marginTop: 8 }}>
+                    <Text>{item.court.name} — {item.court.area}</Text>
+                    <Text>Trainer: {item.trainer.name}</Text>
+                    <Text>Seats: {item.seats.filled}/{item.seats.total}</Text>
+                  </Pressable>
+                )}
+              />
+            </BrandCard>
+          )}
+        </Screen>
       </RoleGate>
     </AuthGate>
   );

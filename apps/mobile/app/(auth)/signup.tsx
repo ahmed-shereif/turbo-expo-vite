@@ -3,7 +3,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { router } from 'expo-router';
 import { useState } from 'react';
-import { YStack, Input, Button, Text, XStack } from 'tamagui';
+import { YStack, Text, XStack } from 'tamagui';
+import { Screen, BrandCard, BrandButton, TextField } from '@repo/ui'
 import { SignupSchema } from '../../src/forms/schemas';
 import { useAuth } from '../../src/providers/AuthProvider';
 import { AuthClientError } from '../../src/lib/authClient';
@@ -65,120 +66,127 @@ export default function Signup() {
   };
 
   return (
-    <YStack space padding="$4">
-      <Text fontSize="$6">Sign Up</Text>
-      <Controller
-        control={control}
-        name="name"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Name"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+    <Screen>
+      <BrandCard>
+        <Text fontSize="$6">Sign Up</Text>
+        <YStack space>
+          <Controller
+            control={control}
+            name="name"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextField
+                placeholder="Name"
+                onBlur={onBlur as any}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
           />
-        )}
-      />
-      {errors.name && <Text color="red">{errors.name.message}</Text>}
+          {errors.name && <Text color="red">{errors.name.message}</Text>}
 
-      <Controller
-        control={control}
-        name="phone"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Phone (+201234567890)"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            keyboardType="phone-pad"
+          <Controller
+            control={control}
+            name="phone"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextField
+                placeholder="Phone (+201234567890)"
+                onBlur={onBlur as any}
+                onChangeText={onChange}
+                value={value}
+                keyboardType="phone-pad"
+              />
+            )}
           />
-        )}
-      />
-      {errors.phone && <Text color="red">{errors.phone.message}</Text>}
+          {errors.phone && <Text color="red">{errors.phone.message}</Text>}
 
-      <Controller
-        control={control}
-        name="email"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Email"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            autoCapitalize="none"
-            keyboardType="email-address"
+          <Controller
+            control={control}
+            name="email"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextField
+                placeholder="Email"
+                onBlur={onBlur as any}
+                onChangeText={onChange}
+                value={value}
+                autoCapitalize="none"
+                keyboardType="email-address"
+              />
+            )}
           />
-        )}
-      />
-      {errors.email && <Text color="red">{errors.email.message}</Text>}
+          {errors.email && <Text color="red">{errors.email.message}</Text>}
 
-      <Controller
-        control={control}
-        name="password"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Password"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
-            secureTextEntry
+          <Controller
+            control={control}
+            name="password"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextField
+                placeholder="Password"
+                onBlur={onBlur as any}
+                onChangeText={onChange}
+                value={value}
+                secureTextEntry
+              />
+            )}
           />
-        )}
-      />
-      {errors.password && <Text color="red">{errors.password.message}</Text>}
+          {errors.password && <Text color="red">{errors.password.message}</Text>}
 
-      <Controller
-        control={control}
-        name="birthday"
-        render={({ field: { onChange, onBlur, value } }) => (
-          <Input
-            placeholder="Birthday (YYYY-MM-DD)"
-            onBlur={onBlur}
-            onChangeText={onChange}
-            value={value}
+          <Controller
+            control={control}
+            name="birthday"
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextField
+                placeholder="Birthday (YYYY-MM-DD)"
+                onBlur={onBlur as any}
+                onChangeText={onChange}
+                value={value}
+              />
+            )}
           />
-        )}
-      />
-      {errors.birthday && <Text color="red">{errors.birthday.message}</Text>}
+          {errors.birthday && <Text color="red">{errors.birthday.message}</Text>}
 
-      <Text>You are a</Text>
-      <XStack space>
-        <Controller
-          control={control}
-          name="role"
-          render={({ field: { value, onChange } }) => (
-            <>
-              <Button
-                theme={value === 'PLAYER' ? 'active' : undefined}
-                onPress={() => onChange('PLAYER')}
-              >
-                Player
-              </Button>
-              <Button
-                theme={value === 'COURT_OWNER' ? 'active' : undefined}
-                onPress={() => onChange('COURT_OWNER')}
-              >
-                Court Owner
-              </Button>
-              <Button
-                theme={value === 'TRAINER' ? 'active' : undefined}
-                onPress={() => onChange('TRAINER')}
-              >
-                Trainer
-              </Button>
-            </>
-          )}
-        />
-      </XStack>
-      {errors.role && <Text color="red">{(errors as any).role?.message}</Text>}
+          <Text>You are a</Text>
+          <XStack space>
+            <Controller
+              control={control}
+              name="role"
+              render={({ field: { value, onChange } }) => (
+                <>
+                  <BrandButton
+                    icon="User"
+                    variant={value === 'PLAYER' ? 'primary' : 'outline'}
+                    onPress={() => onChange('PLAYER')}
+                  >
+                    Player
+                  </BrandButton>
+                  <BrandButton
+                    icon="Building"
+                    variant={value === 'COURT_OWNER' ? 'primary' : 'outline'}
+                    onPress={() => onChange('COURT_OWNER')}
+                  >
+                    Court Owner
+                  </BrandButton>
+                  <BrandButton
+                    icon="Dumbbell"
+                    variant={value === 'TRAINER' ? 'primary' : 'outline'}
+                    onPress={() => onChange('TRAINER')}
+                  >
+                    Trainer
+                  </BrandButton>
+                </>
+              )}
+            />
+          </XStack>
+          {errors.role && <Text color="red">{(errors as any).role?.message}</Text>}
 
-      <Button onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
-        {isSubmitting ? 'Signing up...' : 'Sign Up'}
-      </Button>
-      {serverError && <Text color="red">{serverError}</Text>}
-      <Button onPress={() => router.back()}>
-        Already have an account? Log in
-      </Button>
-    </YStack>
+          <BrandButton icon="UserPlus" onPress={handleSubmit(onSubmit)} disabled={isSubmitting}>
+            {isSubmitting ? 'Signing up...' : 'Sign Up'}
+          </BrandButton>
+          {serverError && <Text color="red">{serverError}</Text>}
+          <BrandButton variant="outline" icon="ArrowLeft" onPress={() => router.back()}>
+            Already have an account? Log in
+          </BrandButton>
+        </YStack>
+      </BrandCard>
+    </Screen>
   );
 }

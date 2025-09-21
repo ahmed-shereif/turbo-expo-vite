@@ -1,4 +1,5 @@
 import { View, Text, TextInput, Pressable, FlatList } from 'react-native';
+import { Screen, BrandCard, BrandButton } from '@repo/ui'
 import { AuthGate, RoleGate } from '../../src/navigation/guards';
 import { useState, useMemo } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -38,40 +39,46 @@ export default function Open() {
   return (
     <AuthGate>
       <RoleGate roles={['PLAYER']}>
-        <View style={{ padding: 16 }}>
+        <Screen>
           <Text style={{ fontSize: 20, marginBottom: 8 }}>Open Sessions</Text>
-          <View style={{ gap: 8 }}>
-            <Text>Area</Text>
-            <TextInput value={area} onChangeText={setArea} placeholder="Area" style={{ borderWidth: 1, padding: 8 }} />
-            <Text>Date From (ISO)</Text>
-            <TextInput value={dateFrom} onChangeText={setDateFrom} placeholder="YYYY-MM-DDTHH:mm" style={{ borderWidth: 1, padding: 8 }} />
-            <Text>Date To (ISO)</Text>
-            <TextInput value={dateTo} onChangeText={setDateTo} placeholder="YYYY-MM-DDTHH:mm" style={{ borderWidth: 1, padding: 8 }} />
-            <Text>Eligible only: {eligibleOnly ? 'Yes' : 'No'}</Text>
-            <Pressable onPress={() => setEligibleOnly((v) => !v)} style={{ borderWidth: 1, padding: 8 }}>
-              <Text>Toggle Eligible</Text>
-            </Pressable>
-            <Text>Price Min</Text>
-            <TextInput keyboardType="numeric" value={priceMin} onChangeText={setPriceMin} style={{ borderWidth: 1, padding: 8 }} />
-            <Text>Price Max</Text>
-            <TextInput keyboardType="numeric" value={priceMax} onChangeText={setPriceMax} style={{ borderWidth: 1, padding: 8 }} />
-          </View>
+          <BrandCard>
+            <View style={{ gap: 8 }}>
+              <Text>Area</Text>
+              <TextInput value={area} onChangeText={setArea} placeholder="Area" style={{ borderWidth: 1, padding: 8 }} />
+              <Text>Date From (ISO)</Text>
+              <TextInput value={dateFrom} onChangeText={setDateFrom} placeholder="YYYY-MM-DDTHH:mm" style={{ borderWidth: 1, padding: 8 }} />
+              <Text>Date To (ISO)</Text>
+              <TextInput value={dateTo} onChangeText={setDateTo} placeholder="YYYY-MM-DDTHH:mm" style={{ borderWidth: 1, padding: 8 }} />
+              <Text>Eligible only: {eligibleOnly ? 'Yes' : 'No'}</Text>
+              <BrandButton variant="outline" icon="ShieldCheck" onPress={() => setEligibleOnly((v) => !v)}>Toggle Eligible</BrandButton>
+              <Text>Price Min</Text>
+              <TextInput keyboardType="numeric" value={priceMin} onChangeText={setPriceMin} style={{ borderWidth: 1, padding: 8 }} />
+              <Text>Price Max</Text>
+              <TextInput keyboardType="numeric" value={priceMax} onChangeText={setPriceMax} style={{ borderWidth: 1, padding: 8 }} />
+            </View>
+          </BrandCard>
 
-          {q.isLoading && <Text>Loading...</Text>}
-          {q.isSuccess && (
-            <FlatList
-              data={q.data}
-              keyExtractor={(item) => item.id}
-              renderItem={({ item }) => (
-                <Pressable onPress={() => router.push(`/(player)/session/${item.id}`)} style={{ padding: 12, borderWidth: 1, marginTop: 8 }}>
-                  <Text>{item.court.name} — {item.court.area}</Text>
-                  <Text>Trainer: {item.trainer.name}</Text>
-                  <Text>Seats: {item.seats.filled}/{item.seats.total}</Text>
-                </Pressable>
-              )}
-            />
+          {q.isLoading && (
+            <BrandCard>
+              <Text>Loading sessions…</Text>
+            </BrandCard>
           )}
-        </View>
+          {q.isSuccess && (
+            <BrandCard>
+              <FlatList
+                data={q.data}
+                keyExtractor={(item) => item.id}
+                renderItem={({ item }) => (
+                  <Pressable onPress={() => router.push(`/(player)/session/${item.id}`)} style={{ padding: 12, borderWidth: 1, marginTop: 8 }}>
+                    <Text>{item.court.name} — {item.court.area}</Text>
+                    <Text>Trainer: {item.trainer.name}</Text>
+                    <Text>Seats: {item.seats.filled}/{item.seats.total}</Text>
+                  </Pressable>
+                )}
+              />
+            </BrandCard>
+          )}
+        </Screen>
       </RoleGate>
     </AuthGate>
   );

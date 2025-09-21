@@ -157,9 +157,12 @@ export async function fetchOpenSessions(auth: AuthLike, params: OpenSessionsPara
 
 export async function fetchSession(auth: AuthLike, id: string) {
   const data = await auth.withAuth(async (headers: Record<string, string>) => {
+    // console.log("data=>>",data)
     const sessionId = ensureSessionId(id);
     const res = await fetch(`${base(auth)}/sessions/${sessionId}`, { headers });
+    console.log('🧛', res)
     const body = await res.json().catch(() => ({}));
+    console.log('🙆‍♂️body ', body)
     if (!res.ok) {
       const message = body?.error?.message || 'Unexpected error. Please try again.';
       const status = res.status;
@@ -168,6 +171,7 @@ export async function fetchSession(auth: AuthLike, id: string) {
       throw error;
     }
     const raw = unwrapApi<any>(body);
+    console.log('🧖‍♀️=> ', raw)
     // Defensive normalize for partial fields
     const normalized = {
       ...raw,
@@ -265,6 +269,7 @@ export async function fetchMySessions(
   const qs = buildQuery({ status: q.status, page: q.page, pageSize: q.pageSize });
   const data = await auth.withAuth(async (headers: Record<string, string>) => {
     const res = await fetch(`${base(auth)}/me/sessions${qs}`, { headers });
+    console.log('💆‍♂️me/sessions =>?', res)
     const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       const message = body?.error?.message || 'Unexpected error. Please try again.';

@@ -4,6 +4,7 @@ import { fetchMySessions } from '@repo/player-api';
 import { auth } from '../../lib/authClient';
 import { notify } from '../../lib/notify';
 import SessionCard from '../components/SessionCard';
+import { Screen, BrandCard, BrandButton, Skeleton } from '@repo/ui'
 
 export default function MySessions() {
   const [tab, setTab] = useState<'UPCOMING' | 'PAST'>('UPCOMING');
@@ -21,26 +22,39 @@ export default function MySessions() {
   }, [q.isError, q.error]);
 
   return (
-    <div>
+    <Screen>
       <h2>My Sessions</h2>
       <div style={{ display: 'flex', gap: 8, marginBottom: 8 }}>
-        <button onClick={() => setTab('UPCOMING')} disabled={tab === 'UPCOMING'}>
+        <BrandButton icon="Clock" variant={tab === 'UPCOMING' ? 'primary' : 'outline'} onPress={() => setTab('UPCOMING')}>
           Upcoming
-        </button>
-        <button onClick={() => setTab('PAST')} disabled={tab === 'PAST'}>
+        </BrandButton>
+        <BrandButton icon="History" variant={tab === 'PAST' ? 'primary' : 'outline'} onPress={() => setTab('PAST')}>
           Past
-        </button>
+        </BrandButton>
       </div>
-      {q.isLoading && <div>Loading...</div>}
+      {q.isLoading && (
+        <BrandCard>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i}>
+                <Skeleton height={18} />
+                <Skeleton height={14} style={{ marginTop: 8 }} />
+              </div>
+            ))}
+          </div>
+        </BrandCard>
+      )}
       {q.isSuccess && (q.data as any).sessions.length === 0 && <div>No sessions.</div>}
       {q.isSuccess && (
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
-          {(q.data as any).sessions.map((item: any) => (
-            <SessionCard key={item.id} item={item} />
-          ))}
-        </div>
+        <BrandCard>
+          <div style={{ display: 'grid', gridTemplateColumns: '1fr', gap: 12 }}>
+            {(q.data as any).sessions.map((item: any) => (
+              <SessionCard key={item.id} item={item} />
+            ))}
+          </div>
+        </BrandCard>
       )}
-    </div>
+    </Screen>
   );
 }
 

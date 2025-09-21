@@ -8,6 +8,7 @@ import { notify } from '../../lib/notify';
 import { auth } from '../../lib/authClient';
 import { joinSession } from '@repo/player-api';
 import { useState } from 'react';
+import { BrandCard, BrandButton } from '@repo/ui'
 
 export default function SessionCard({ item }: { item: any }) {
   const rank = usePlayerRank();
@@ -47,8 +48,8 @@ export default function SessionCard({ item }: { item: any }) {
   };
 
   return (
-    <div style={{ border: '1px solid #ddd', padding: 12, borderRadius: 8 }}>
-      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+    <BrandCard>
+      <div style={{ display: 'flex', justifyContent: 'space-between', gap: 12 }}>
         <div>
           <div><strong>{item.court.name}</strong> — {item.court.area}</div>
           <div>Trainer: {item.trainer.name}</div>
@@ -57,16 +58,16 @@ export default function SessionCard({ item }: { item: any }) {
           {minRank && <div>Min Rank: {minRank}</div>}
           {item.pricing && <div>Your share now: {formatEGP(yourShare)}</div>}
         </div>
-        <div>
-          <button onClick={() => navigate(`/player/session/${item.id || item.sessionId}`)} style={{ marginRight: 8 }}>
+        <div style={{ display: 'flex', gap: 8 ,flexDirection:'column'}}>
+          <BrandButton icon="Eye" variant="outline" onPress={() => navigate(`/player/session/${item.id || item.sessionId}`)}>
             View details
-          </button>
-          <button disabled={eligible === false || loading} onClick={handleJoin} title={eligible === false ? "Your rank doesn’t meet the minimum" : undefined}>
+          </BrandButton>
+          <BrandButton icon="CalendarPlus" disabled={eligible === false || loading} onPress={handleJoin}>
             {eligible === false ? 'Not eligible' : (loading ? 'Joining...' : 'Join Session')}
-          </button>
+          </BrandButton>
         </div>
       </div>
-    </div>
+    </BrandCard>
   );
 }
 

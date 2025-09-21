@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { LoginSchema } from '../forms/schemas';
 import { useAuth, AuthClientError } from '../auth/AuthContext';
 import { notify } from '../lib/notify';
+import { Screen, BrandCard, BrandButton, TextField } from '@repo/ui'
 
 type LoginFormValues = z.infer<typeof LoginSchema>;
 
@@ -40,44 +41,50 @@ export default function Login() {
   };
 
   return (
-    <div style={{ padding: 24 }}>
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 12, width: 320 }}>
-        <div>
-          <Controller
-            control={control}
-            name="email"
-            render={({ field }) => (
-              <input placeholder="Email" {...field} />
+    <Screen containerMaxWidth={640}>
+      <BrandCard style={{ alignSelf: 'center', width: '100%' }}>
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', maxWidth: 480 }}>
+          <div>
+            <Controller
+              control={control}
+              name="email"
+              render={({ field }) => (
+                <TextField placeholder="Email" fullWidth {...field} />
+              )}
+            />
+            {errors.email && (
+              <div style={{ color: '#ef4444' }}>{errors.email.message}</div>
             )}
-          />
-          {errors.email && (
-            <div style={{ color: '#ef4444' }}>{errors.email.message}</div>
-          )}
-        </div>
+          </div>
 
-        <div>
-          <Controller
-            control={control}
-            name="password"
-            render={({ field }) => (
-              <input placeholder="Password" type="password" {...field} />
+          <div>
+            <Controller
+              control={control}
+              name="password"
+              render={({ field }) => (
+                <TextField placeholder="Password" type="password" fullWidth {...field} />
+              )}
+            />
+            {errors.password && (
+              <div style={{ color: '#ef4444' }}>{errors.password.message}</div>
             )}
-          />
-          {errors.password && (
-            <div style={{ color: '#ef4444' }}>{errors.password.message}</div>
+          </div>
+
+          {serverError && (
+            <div style={{ color: '#ef4444' }}>{serverError}</div>
           )}
+
+          <BrandButton disabled={isSubmitting} onPress={handleSubmit(onSubmit)} fullWidth icon="LogIn">
+            {isSubmitting ? 'Logging in…' : 'Login'}
+          </BrandButton>
+        </form>
+        <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>
+          <BrandButton variant="outline" onPress={() => navigate('/signup')} fullWidth icon="UserPlus">
+            Don't have an account? Sign up
+          </BrandButton>
         </div>
-
-        {serverError && (
-          <div style={{ color: '#ef4444' }}>{serverError}</div>
-        )}
-
-        <button disabled={isSubmitting} type="submit">
-          {isSubmitting ? 'Logging in…' : 'Login'}
-        </button>
-      </form>
-      <button onClick={() => navigate('/signup')}>Don't have an account? Sign up</button>
-    </div>
+      </BrandCard>
+    </Screen>
   );
 }

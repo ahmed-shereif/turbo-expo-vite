@@ -1,4 +1,5 @@
 import { View, Text, Pressable, Modal, FlatList, Alert } from 'react-native';
+import { Screen, BrandCard, BrandButton } from '@repo/ui'
 import { useLocalSearchParams, router } from 'expo-router';
 import { AuthGate, RoleGate } from '../../../src/navigation/guards';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
@@ -96,79 +97,83 @@ export default function SessionScreen() {
   return (
     <AuthGate>
       <RoleGate roles={['PLAYER']}>
-        <View style={{ padding: 16 }}>
+        <Screen>
           {sessionQ.isLoading && <Text>Loading...</Text>}
           {sessionQ.isSuccess && (
             <View>
               <Text style={{ fontSize: 20, marginBottom: 8 }}>Session Detail</Text>
-              <Text>Court: {sessionQ.data.court.name} — {sessionQ.data.court.area}</Text>
-              <Text>Trainer: {sessionQ.data.trainer.name}</Text>
-              <Text>Seats: {sessionQ.data.seats.filled}/{sessionQ.data.seats.total}</Text>
-              {courtQ.isSuccess && (
-                <Text>
-                  {courtQ.data.status === 'PENDING'
-                    ? 'Awaiting court confirmation'
-                    : 'Court confirmed'}
-                </Text>
-              )}
-              <Text style={{ marginTop: 8, fontWeight: '600' }}>Players in this session</Text>
-              <FlatList
-                data={sessionQ.data.members}
-                keyExtractor={(m) => m.playerId}
-                renderItem={({ item }) => (
-                  <View testID={`member-item-${item.playerId}`} style={{ paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: '#eee' }}>
-                    <Text>
-                      {(item.name || '•••')} {item.playerId === (user?.id || '') ? '(You)' : ''} — {item.role}
-                      {item.rank ? ` — Rank: ${item.rank}` : ''}
-                    </Text>
-                    {item.joinedAt ? <Text style={{ color: '#666', fontSize: 12 }}>Joined: {new Date(item.joinedAt).toLocaleString()}</Text> : null}
-                  </View>
+              <BrandCard>
+                <Text>Court: {sessionQ.data.court.name} — {sessionQ.data.court.area}</Text>
+                <Text>Trainer: {sessionQ.data.trainer.name}</Text>
+                <Text>Seats: {sessionQ.data.seats.filled}/{sessionQ.data.seats.total}</Text>
+                {courtQ.isSuccess && (
+                  <Text>
+                    {courtQ.data.status === 'PENDING'
+                      ? 'Awaiting court confirmation'
+                      : 'Court confirmed'}
+                  </Text>
                 )}
-              />
-              {!sessionQ.data.members.some((m) => m.playerId === (user?.id || '')) &&
-                isEligible(user?.rank as Rank | undefined, sessionQ.data.minRank as Rank | undefined) &&
-                sessionQ.data.seats.filled < sessionQ.data.seats.total && (
-                  <Pressable onPress={() => joinMut.mutate()} style={{ padding: 12, borderWidth: 1, marginTop: 8 }}>
-                    <Text>Join Session</Text>
-                  </Pressable>
+              </BrandCard>
+              <BrandCard>
+                <Text style={{ marginTop: 8, fontWeight: '600' }}>Players in this session</Text>
+                <FlatList
+                  data={sessionQ.data.members}
+                  keyExtractor={(m) => m.playerId}
+                  renderItem={({ item }) => (
+                    <View testID={`member-item-${item.playerId}`} style={{ paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: '#eee' }}>
+                      <Text>
+                        {(item.name || '•••')} {item.playerId === (user?.id || '') ? '(You)' : ''} — {item.role}
+                        {item.rank ? ` — Rank: ${item.rank}` : ''}
+                      </Text>
+                      {item.joinedAt ? <Text style={{ color: '#666', fontSize: 12 }}>Joined: {new Date(item.joinedAt).toLocaleString()}</Text> : null}
+                    </View>
+                  )}
+                />
+                {!sessionQ.data.members.some((m) => m.playerId === (user?.id || '')) &&
+                  isEligible(user?.rank as Rank | undefined, sessionQ.data.minRank as Rank | undefined) &&
+                  sessionQ.data.seats.filled < sessionQ.data.seats.total && (
+                    <BrandButton icon="CalendarPlus" onPress={() => joinMut.mutate()}>
+                      Join Session
+                    </BrandButton>
+                  )}
+                {sessionQ.data.members.some((m) => m.playerId === (user?.id || '')) &&
+                  sessionQ.data.seats.filled < sessionQ.data.seats.total && (
+                    <BrandButton icon="Users" onPress={() => confirmMut.mutate()}>
+                      Confirm with Current Players
+                    </BrandButton>
+                  )}
+                {isMember && (
+                  <BrandButton
+                    testID="leave-session-button"
+                    onPress={() =>
+                      Alert.alert(
+                        'Leave Session',
+                        'Are you sure you want to leave this session?\n\n• >24h before start: Full refund if you already paid.\n• <24h before start: No refund; your payment is redistributed to remaining players.\n\nContinue?',
+                        [
+                          { text: 'Cancel', style: 'cancel' },
+                          { text: 'Leave', style: 'destructive', onPress: () => leaveMut.mutate() },
+                        ],
+                      )
+                    }
+                    variant="outline"
+                  >
+                    <Text style={{ color: '#f00' }}>{leaveMut.isPending ? 'Leaving…' : 'Leave Session'}</Text>
+                  </BrandButton>
                 )}
-              {sessionQ.data.members.some((m) => m.playerId === (user?.id || '')) &&
-                sessionQ.data.seats.filled < sessionQ.data.seats.total && (
-                  <Pressable onPress={() => confirmMut.mutate()} style={{ padding: 12, borderWidth: 1, marginTop: 8 }}>
-                    <Text>Confirm with Current Players</Text>
-                  </Pressable>
-                )}
-              {isMember && (
-                <Pressable
-                  testID="leave-session-button"
-                  onPress={() =>
-                    Alert.alert(
-                      'Leave Session',
-                      'Are you sure you want to leave this session?\n\n• >24h before start: Full refund if you already paid.\n• <24h before start: No refund; your payment is redistributed to remaining players.\n\nContinue?',
-                      [
-                        { text: 'Cancel', style: 'cancel' },
-                        { text: 'Leave', style: 'destructive', onPress: () => leaveMut.mutate() },
-                      ],
-                    )
-                  }
-                  style={{ padding: 12, borderWidth: 1, marginTop: 8, borderColor: '#f00' }}
-                >
-                  <Text style={{ color: '#f00' }}>{leaveMut.isPending ? 'Leaving…' : 'Leave Session'}</Text>
-                </Pressable>
-              )}
+              </BrandCard>
             </View>
           )}
           <Modal visible={visible} transparent animationType="fade">
             <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.4)' }}>
               <View style={{ backgroundColor: 'white', padding: 16, width: '80%' }}>
                 <Text>{modalText}</Text>
-                <Pressable onPress={() => setVisible(false)} style={{ marginTop: 12, borderWidth: 1, padding: 8 }}>
-                  <Text>Close</Text>
-                </Pressable>
+                <BrandButton onPress={() => setVisible(false)} variant="outline" style={{ marginTop: 12 }}>
+                  Close
+                </BrandButton>
               </View>
             </View>
           </Modal>
-        </View>
+        </Screen>
       </RoleGate>
     </AuthGate>
   );

@@ -30,10 +30,9 @@ function setupRoute(id: string) {
 
 describe('SessionDetail leave flow', () => {
   it('calls leaveSession with correct ids', async () => {
-    const userId = 'u1';
-    // Mock auth context via window injection used in component? Instead, mock hook.
-    vi.mock('../auth/AuthContext', async () => ({
-      useAuth: () => ({ user: { id: userId, roles: ['PLAYER'] } }),
+    // Mock auth context via hook
+    vi.mock('../../auth/AuthContext', async () => ({
+      useAuth: () => ({ user: { id: 'u1', roles: ['PLAYER'] } }),
     }));
 
     (playerApi.fetchSession as any).mockResolvedValue({
@@ -47,8 +46,8 @@ describe('SessionDetail leave flow', () => {
       trainer: { id: 't1', name: 'Trainer A', maxLevel: 3, priceHourlyLE: 150 },
       pricing: { currency: 'EGP', courtPriceHourlyLE: 200, trainerPriceHourlyLE: 150, appFeeHourlyLE: 0 },
       minRank: 'LOW_D',
-      members: [{ playerId: userId, role: 'PARTICIPANT', name: 'User One' }],
-      creator: { playerId: userId },
+      members: [{ playerId: 'u1', role: 'PARTICIPANT', name: 'User One' }],
+      creator: { playerId: 'u1' },
     });
     (playerApi.leaveSession as any).mockResolvedValue({ status: 'OK', refund: 'FULL' });
 
@@ -66,7 +65,7 @@ describe('SessionDetail leave flow', () => {
     fireEvent.click(confirmBtn);
 
     await waitFor(() => {
-      expect(playerApi.leaveSession).toHaveBeenCalledWith(expect.anything(), 's1', userId);
+      expect(playerApi.leaveSession).toHaveBeenCalledWith(expect.anything(), 's1', 'u1');
     });
   });
 });

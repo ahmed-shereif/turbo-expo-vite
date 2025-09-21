@@ -1,3 +1,11 @@
+import { Screen, BrandCard } from '@repo/ui'
+
 export default function Admin() {
-  return <div>Admin Area</div>;
+  return (
+    <Screen>
+      <BrandCard>
+        Admin Area
+      </BrandCard>
+    </Screen>
+  );
 }

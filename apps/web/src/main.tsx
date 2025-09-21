@@ -8,38 +8,42 @@ import { BrowserRouter } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext';
 import { AppRouter } from './AppRouter';
 import { Toaster } from 'react-hot-toast'
-import { ErrorFallback } from './components/ErrorFallback'
+import { ErrorFallback } from '@repo/ui'
+import { TamaguiProvider } from 'tamagui'
+import tamaguiConfig from '../tamagui.config'
 
 const queryClient = new QueryClient();
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <QueryErrorResetBoundary>
-        {({ reset }) => (
-          <ErrorBoundary
-            fallbackRender={({ error, resetErrorBoundary }) => (
-              <ErrorFallback
-                error={error}
-                resetErrorBoundary={() => {
-                  reset()
-                  resetErrorBoundary()
-                }}
-              />
-            )}
-            onReset={() => {
-              // Let react-query retry failed queries on reset
-            }}
-          >
-            <BrowserRouter>
-              <AuthProvider>
-                <AppRouter />
-              </AuthProvider>
-            </BrowserRouter>
-          </ErrorBoundary>
-        )}
-      </QueryErrorResetBoundary>
-      <Toaster position="top-right" gutter={12} />
-    </QueryClientProvider>
+    <TamaguiProvider config={tamaguiConfig}>
+      <QueryClientProvider client={queryClient}>
+        <QueryErrorResetBoundary>
+          {({ reset }) => (
+            <ErrorBoundary
+              fallbackRender={({ error, resetErrorBoundary }) => (
+                <ErrorFallback
+                  error={error}
+                  resetErrorBoundary={() => {
+                    reset()
+                    resetErrorBoundary()
+                  }}
+                />
+              )}
+              onReset={() => {
+                // Let react-query retry failed queries on reset
+              }}
+            >
+              <BrowserRouter>
+                <AuthProvider>
+                  <AppRouter />
+                </AuthProvider>
+              </BrowserRouter>
+            </ErrorBoundary>
+          )}
+        </QueryErrorResetBoundary>
+        <Toaster position="top-right" gutter={12} />
+      </QueryClientProvider>
+    </TamaguiProvider>
   </StrictMode>,
 )

@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { TextField, BrandButton } from '@repo/ui'
 
 type Facilities = {
   lighting: boolean;
@@ -45,29 +46,35 @@ export default function Filters() {
   };
 
   return (
-    <div style={{ border: '1px solid #eee', padding: 12, marginBottom: 12 }}>
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 8 }}>
+    <div>
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))',
+          gap: 12,
+        }}
+      >
         <div>
           <label>Area</label>
-          <input value={area} onChange={(e) => setArea(e.target.value)} />
+          <TextField value={area} onChange={(e: any) => setArea(e.target.value)} placeholder="Area" fullWidth />
         </div>
         <div>
           <label>Date From</label>
-          <input type="datetime-local" value={dateFrom} onChange={(e) => setDateFrom(e.target.value)} />
+          <TextField type="datetime-local" value={dateFrom} onChange={(e: any) => setDateFrom(e.target.value)} fullWidth />
         </div>
         <div>
           <label>Date To</label>
-          <input type="datetime-local" value={dateTo} onChange={(e) => setDateTo(e.target.value)} />
+          <TextField type="datetime-local" value={dateTo} onChange={(e: any) => setDateTo(e.target.value)} fullWidth />
         </div>
         <div>
           <label>Eligible only</label>
           <input type="checkbox" checked={eligible} onChange={(e) => setEligible(e.target.checked)} />
         </div>
-        <div>
+        <div style={{ gridColumn: '1 / -1' }}>
           <label>Facilities</label>
           <div>
             {(['lighting', 'locker', 'parking', 'balls'] as const).map((k) => (
-              <label key={k} style={{ marginRight: 8 }}>
+              <label key={k} style={{ marginRight: 12 }}>
                 <input
                   type="checkbox"
                   checked={fac[k]}
@@ -80,11 +87,11 @@ export default function Filters() {
         </div>
         <div>
           <label>Price Min</label>
-          <input type="number" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} />
+          <TextField type="number" value={priceMin} onChange={(e: any) => setPriceMin(e.target.value)} fullWidth />
         </div>
         <div>
           <label>Price Max</label>
-          <input type="number" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} />
+          <TextField type="number" value={priceMax} onChange={(e: any) => setPriceMax(e.target.value)} fullWidth />
         </div>
         <div>
           <label>Sort</label>
@@ -95,8 +102,8 @@ export default function Filters() {
           </select>
         </div>
       </div>
-      <div style={{ marginTop: 8 }}>
-        <button onClick={apply}>Apply</button>
+      <div style={{ marginTop: 12 }}>
+        <BrandButton icon="Search" onPress={apply}>Apply</BrandButton>
       </div>
     </div>
   );

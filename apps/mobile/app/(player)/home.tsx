@@ -1,4 +1,5 @@
 import { View, Text, Pressable } from 'react-native';
+import { Screen, BrandCard, BrandButton } from '@repo/ui'
 import { router } from 'expo-router';
 import { AuthGate, RoleGate } from '../../src/navigation/guards';
 
@@ -6,15 +7,15 @@ export default function PlayerHome() {
   return (
     <AuthGate>
       <RoleGate roles={['PLAYER']}>
-        <View style={{ padding: 16 }}>
-          <Text style={{ fontSize: 20, marginBottom: 12 }}>Player Home</Text>
-          <Pressable onPress={() => router.push('/(player)/open')} style={{ marginBottom: 8 }}>
-            <Text>Find Open Sessions</Text>
-          </Pressable>
-          <Pressable onPress={() => router.push('/(player)/sessions')}>
-            <Text>My Sessions</Text>
-          </Pressable>
-        </View>
+        <Screen>
+          <BrandCard>
+            <Text style={{ fontSize: 20, marginBottom: 12 }}>Player Home</Text>
+            <View style={{ gap: 8 }}>
+              <BrandButton variant="outline" icon="Search" onPress={() => router.push('/(player)/open')}>Find Open Sessions</BrandButton>
+              <BrandButton variant="outline" icon="Calendar" onPress={() => router.push('/(player)/sessions')}>My Sessions</BrandButton>
+            </View>
+          </BrandCard>
+        </Screen>
       </RoleGate>
     </AuthGate>
   );
