@@ -327,28 +327,28 @@ export function Step2_CourtTime({
   }
 
   return (
-    <YStack gap="$8" maxWidth={1200} width="100%" marginHorizontal="auto" paddingHorizontal="$4">
+    <YStack gap="$5" maxWidth={800} width="100%" marginHorizontal="auto" paddingHorizontal="$3">
       {/* Header */}
-      <YStack alignItems="center" paddingVertical="$6">
+      <YStack alignItems="center" paddingVertical="$4">
         <View
-          width={80}
-          height={80}
+          width={56}
+          height={56}
           backgroundColor="$primary"
           borderRadius="$round"
           alignItems="center"
           justifyContent="center"
-          marginBottom="$6"
+          marginBottom="$4"
           shadowColor="$primary"
-          shadowOffset={{ width: 0, height: 4 }}
+          shadowOffset={{ width: 0, height: 3 }}
           shadowOpacity={0.2}
-          shadowRadius={12}
+          shadowRadius={8}
         >
-          <Icon name="Building" size={32} color="white" />
+          <Icon name="Building" size={24} color="white" />
         </View>
-        <Text fontSize="$10" fontWeight="800" color="$textHigh" marginBottom="$3" textAlign="center" letterSpacing={-0.5}>
+        <Text fontSize="$7" fontWeight="800" color="$textHigh" marginBottom="$2" textAlign="center" letterSpacing={-0.5}>
           Pick Court & Time
         </Text>
-        <Text color="$textMuted" fontSize="$6" textAlign="center" lineHeight="$6" maxWidth={500}>
+        <Text color="$textMuted" fontSize="$4" textAlign="center" lineHeight="$5" maxWidth={400}>
           Choose your preferred court and time slot for the perfect game experience
         </Text>
       </YStack>
@@ -356,40 +356,40 @@ export function Step2_CourtTime({
       {/* Filters Section */}
       <BrandCard 
         backgroundColor="$surface" 
-        padding="$8"
+        padding="$5"
         borderWidth={1}
         borderColor="$color4"
         shadowColor="$color8"
         shadowOffset={{ width: 0, height: 2 }}
         shadowOpacity={0.08}
-        shadowRadius={8}
+        shadowRadius={6}
       >
-        <YStack gap="$8">
-          <YStack alignItems="center" marginBottom="$2">
-            <Text fontSize="$7" fontWeight="700" color="$textHigh" marginBottom="$1">
+        <YStack gap="$5">
+          <YStack alignItems="center" marginBottom="$1">
+            <Text fontSize="$5" fontWeight="700" color="$textHigh" marginBottom="$1">
               Filter & Preferences
             </Text>
-            <Text color="$textMuted" fontSize="$4">
+            <Text color="$textMuted" fontSize="$3">
               Customize your search to find the perfect court
             </Text>
           </YStack>
           
-          <XStack gap="$8" $md={{ flexDirection: 'column', gap: '$6' }}>
+          <XStack gap="$5" $md={{ flexDirection: 'column', gap: '$4' }}>
             {/* Area Filter */}
             <YStack flex={1}>
-              <XStack alignItems="center" marginBottom="$4">
+              <XStack alignItems="center" marginBottom="$3">
                 <View
-                  width={32}
-                  height={32}
+                  width={24}
+                  height={24}
                   backgroundColor="$primary"
                   borderRadius="$3"
                   alignItems="center"
                   justifyContent="center"
-                  marginRight="$3"
+                  marginRight="$2"
                 >
-                  <Icon name="MapPin" size={16} color="white" />
+                  <Icon name="MapPin" size={12} color="white" />
                 </View>
-                <Text fontSize="$5" fontWeight="700" color="$textHigh">Filter by Area</Text>
+                <Text fontSize="$4" fontWeight="700" color="$textHigh">Filter by Area</Text>
               </XStack>
               <TextField
                 fullWidth
@@ -412,19 +412,19 @@ export function Step2_CourtTime({
 
             {/* Duration Selector */}
             <YStack flex={1}>
-              <XStack alignItems="center" marginBottom="$4">
+              <XStack alignItems="center" marginBottom="$3">
                 <View
-                  width={32}
-                  height={32}
+                  width={24}
+                  height={24}
                   backgroundColor="$secondary"
                   borderRadius="$3"
                   alignItems="center"
                   justifyContent="center"
-                  marginRight="$3"
+                  marginRight="$2"
                 >
-                  <Icon name="Clock" size={16} color="white" />
+                  <Icon name="Clock" size={12} color="white" />
                 </View>
-                <Text fontSize="$5" fontWeight="700" color="$textHigh">Session Duration</Text>
+                <Text fontSize="$4" fontWeight="700" color="$textHigh">Session Duration</Text>
               </XStack>
               <XStack gap="$3" flexWrap="wrap">
                 {durationOptions.map(option => (
@@ -458,35 +458,35 @@ export function Step2_CourtTime({
       </BrandCard>
 
       {/* Courts List */}
-      <YStack gap="$6">
+      <YStack gap="$4">
         {displayedCourts.length === 0 ? (
           <BrandCard 
             backgroundColor="$color2" 
-            padding="$12"
+            padding="$8"
             alignItems="center"
             borderWidth={1}
             borderColor="$color4"
             borderStyle="dashed"
           >
             <View
-              width={96}
-              height={96}
+              width={72}
+              height={72}
               backgroundColor="$color4"
               borderRadius="$round"
               alignItems="center"
               justifyContent="center"
-              marginBottom="$6"
+              marginBottom="$4"
               shadowColor="$color8"
               shadowOffset={{ width: 0, height: 2 }}
               shadowOpacity={0.1}
-              shadowRadius={8}
+              shadowRadius={6}
             >
-              <Icon name="Building2" size={40} color="$color8" />
+              <Icon name="Building2" size={32} color="$color8" />
             </View>
-            <Text color="$textHigh" fontSize="$7" fontWeight="700" marginBottom="$2" textAlign="center">
+            <Text color="$textHigh" fontSize="$5" fontWeight="700" marginBottom="$2" textAlign="center">
               No Courts Found
             </Text>
-            <Text color="$textMuted" fontSize="$5" textAlign="center" marginBottom="$4" maxWidth={400}>
+            <Text color="$textMuted" fontSize="$4" textAlign="center" marginBottom="$3" maxWidth={400}>
               We couldn't find any courts in this area. Try adjusting your search criteria or location.
             </Text>
             <BrandButton
@@ -499,9 +499,9 @@ export function Step2_CourtTime({
           </BrandCard>
         ) : (
           <ScrollView
-            height={600}
-            $md={{ height: 500 }}
-            $sm={{ height: 400 }}
+            height={500}
+            $md={{ height: 400 }}
+            $sm={{ height: 350 }}
             onScroll={(event) => {
               const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
               const isCloseToBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 100;
@@ -512,7 +512,7 @@ export function Step2_CourtTime({
             scrollEventThrottle={400}
             showsVerticalScrollIndicator={false}
           >
-            <YStack gap="$6" paddingBottom="$8">
+            <YStack gap="$4" paddingBottom="$6">
               {displayedCourts.map(courtItem => {
                 const isExpanded = expandedCourtId === courtItem.id;
                 const isSelected = selectedSlot?.courtId === courtItem.id;
@@ -521,23 +521,23 @@ export function Step2_CourtTime({
                   <BrandCard 
                     key={courtItem.id} 
                     elevated 
-                    padding="$8"
+                    padding="$5"
                     backgroundColor={isSelected ? '$primary' : '$surface'}
                     borderColor={isSelected ? '$primary' : '$color4'}
-                    borderWidth={isSelected ? 3 : 1}
+                    borderWidth={isSelected ? 2 : 1}
                     shadowColor={isSelected ? '$primary' : '$color8'}
-                    shadowOffset={isSelected ? { width: 0, height: 6 } : { width: 0, height: 2 }}
-                    shadowOpacity={isSelected ? 0.25 : 0.08}
-                    shadowRadius={isSelected ? 12 : 8}
-                    borderRadius="$6"
+                    shadowOffset={isSelected ? { width: 0, height: 4 } : { width: 0, height: 2 }}
+                    shadowOpacity={isSelected ? 0.2 : 0.08}
+                    shadowRadius={isSelected ? 8 : 6}
+                    borderRadius="$5"
                     animation="quick"
                     hoverStyle={{ 
-                      scale: 1.02,
-                      shadowOffset: { width: 0, height: 4 },
-                      shadowOpacity: 0.15,
-                      shadowRadius: 10
+                      scale: 1.01,
+                      shadowOffset: { width: 0, height: 3 },
+                      shadowOpacity: 0.12,
+                      shadowRadius: 8
                     }}
-                    pressStyle={{ scale: 0.98 }}
+                    pressStyle={{ scale: 0.99 }}
                   >
                     {/* Court Basic Info - Always Visible */}
                     <Button
@@ -551,17 +551,17 @@ export function Step2_CourtTime({
                       accessibilityRole="button"
                       accessibilityHint={isExpanded ? 'Tap to collapse time slots' : 'Tap to expand time slots'}
                     >
-                      <YStack width="100%" gap="$4">
+                      <YStack width="100%" gap="$3">
                         {/* Header Row with Court Name, Price, and Expand Button */}
                         <XStack 
                           alignItems="center" 
                           justifyContent="space-between" 
                           width="100%"
-                          $sm={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$3' }}
+                          $sm={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$2' }}
                         >
-                          <XStack alignItems="center" gap="$3" flex={1}>
+                          <XStack alignItems="center" gap="$2" flex={1}>
                             <Text 
-                              fontSize="$8" 
+                              fontSize="$6" 
                               fontWeight="800" 
                               color={isSelected ? 'white' : '$textHigh'}
                               letterSpacing={-0.5}
@@ -584,29 +584,29 @@ export function Step2_CourtTime({
                             )}
                           </XStack>
                           
-                          <XStack alignItems="center" gap="$4">
+                          <XStack alignItems="center" gap="$3">
                             {/* Price Tag */}
                             <View 
                               backgroundColor={isSelected ? 'white' : '$secondary'} 
-                              paddingHorizontal="$4" 
-                              paddingVertical="$3" 
-                              borderRadius="$5"
+                              paddingHorizontal="$3" 
+                              paddingVertical="$2" 
+                              borderRadius="$4"
                               shadowColor={isSelected ? '$primary' : '$secondary'}
-                              shadowOffset={{ width: 0, height: 2 }}
+                              shadowOffset={{ width: 0, height: 1 }}
                               shadowOpacity={0.2}
-                              shadowRadius={4}
-                              minWidth={120}
+                              shadowRadius={3}
+                              minWidth={100}
                               alignItems="center"
                             >
                               <Text 
-                                fontSize="$7" 
+                                fontSize="$5" 
                                 fontWeight="800" 
                                 color={isSelected ? '$primary' : 'white'}
                               >
                                 {courtItem.priceHourlyLE}
                               </Text>
                               <Text 
-                                fontSize="$3" 
+                                fontSize="$2" 
                                 fontWeight="600" 
                                 color={isSelected ? '$primary' : 'white'}
                                 opacity={0.8}
@@ -617,10 +617,10 @@ export function Step2_CourtTime({
                             
                             {/* Expand Button */}
                             <View
-                              width={40}
-                              height={40}
+                              width={32}
+                              height={32}
                               backgroundColor={isSelected ? 'white' : '$color4'}
-                              borderRadius="$4"
+                              borderRadius="$3"
                               alignItems="center"
                               justifyContent="center"
                               shadowColor={isSelected ? '$primary' : '$color8'}
@@ -629,30 +629,30 @@ export function Step2_CourtTime({
                               shadowRadius={2}
                             >
                               {isExpanded ? (
-                                <Icon name="ChevronUp" size={18} color={isSelected ? '$primary' : '$textMuted'} />
+                                <Icon name="ChevronUp" size={14} color={isSelected ? '$primary' : '$textMuted'} />
                               ) : (
-                                <Icon name="ChevronDown" size={18} color={isSelected ? '$primary' : '$textMuted'} />
+                                <Icon name="ChevronDown" size={14} color={isSelected ? '$primary' : '$textMuted'} />
                               )}
                             </View>
                           </XStack>
                         </XStack>
 
                         {/* Location Information */}
-                        <YStack gap="$2">
+                        <YStack gap="$1">
                           {courtItem.area && (
                             <XStack alignItems="center" gap="$2">
                               <View
-                                width={20}
-                                height={20}
+                                width={16}
+                                height={16}
                                 backgroundColor={isSelected ? 'white' : '$color4'}
                                 borderRadius="$2"
                                 alignItems="center"
                                 justifyContent="center"
                               >
-                                <Icon name="MapPin" size={12} color={isSelected ? '$primary' : '$textMuted'} />
+                                <Icon name="MapPin" size={10} color={isSelected ? '$primary' : '$textMuted'} />
                               </View>
                               <Text 
-                                fontSize="$5" 
+                                fontSize="$4" 
                                 color={isSelected ? 'white' : '$textMuted'}
                                 fontWeight="500"
                               >
@@ -663,17 +663,17 @@ export function Step2_CourtTime({
                           {courtItem.address && (
                             <XStack alignItems="center" gap="$2">
                               <View
-                                width={20}
-                                height={20}
+                                width={16}
+                                height={16}
                                 backgroundColor={isSelected ? 'white' : '$color4'}
                                 borderRadius="$2"
                                 alignItems="center"
                                 justifyContent="center"
                               >
-                                <Icon name="MapPin" size={12} color={isSelected ? '$primary' : '$textMuted'} />
+                                <Icon name="MapPin" size={10} color={isSelected ? '$primary' : '$textMuted'} />
                               </View>
                               <Text 
-                                fontSize="$4" 
+                                fontSize="$3" 
                                 color={isSelected ? 'rgba(255,255,255,0.8)' : '$color8'}
                                 fontWeight="400"
                               >
@@ -687,15 +687,14 @@ export function Step2_CourtTime({
 
                     {/* Facilities - Always Visible */}
                     {courtItem.facilities && courtItem.facilities.length > 0 && (
-                      <YStack marginTop="$4">
+                      <YStack marginTop="$3">
                         <Text 
-                          fontSize="$5" 
+                          fontSize="$4" 
                           fontWeight="700" 
                           color={isSelected ? 'white' : '$textMuted'} 
-                          marginBottom="$4"
-                          marginTop="$10"
-
-                          >
+                          marginBottom="$3"
+                          marginTop="$6"
+                        >
                           Facilities
                         </Text>
                         <XStack flexWrap="wrap" gap="$2">
@@ -703,14 +702,14 @@ export function Step2_CourtTime({
                             <View
                               key={facility}
                               backgroundColor={isSelected ? 'white' : '$color3'}
-                              paddingHorizontal="$3"
-                              paddingVertical="$2"
-                              borderRadius="$4"
+                              paddingHorizontal="$2"
+                              paddingVertical="$1"
+                              borderRadius="$3"
                               borderWidth={1}
                               borderColor={isSelected ? 'rgba(255,255,255,0.3)' : '$color5'}
                             >
                               <Text 
-                                fontSize="$4" 
+                                fontSize="$3" 
                                 color={isSelected ? '$primary' : '$textHigh'} 
                                 fontWeight="600"
                               >
@@ -725,22 +724,22 @@ export function Step2_CourtTime({
                     {/* Time Slots - Only Visible When Expanded */}
                     {isExpanded && (
                       <YStack 
-                        borderTopWidth={2} 
+                        borderTopWidth={1} 
                         borderTopColor={isSelected ? 'rgba(255,255,255,0.2)' : '$color4'} 
-                        paddingTop="$8" 
-                        marginTop="$6"
+                        paddingTop="$4" 
+                        marginTop="$4"
                         backgroundColor={isSelected ? 'rgba(255,255,255,0.05)' : '$color2'}
-                        borderRadius="$4"
-                        padding="$6"
+                        borderRadius="$3"
+                        padding="$4"
                       >
                         <XStack 
                           alignItems="center" 
                           justifyContent="space-between" 
-                          marginBottom="$6"
-                          $sm={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$4' }}
+                          marginBottom="$4"
+                          $sm={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$3' }}
                         >
                           <Text 
-                            fontSize="$6" 
+                            fontSize="$5" 
                             fontWeight="700" 
                             color={isSelected ? 'white' : '$textHigh'}
                           >
@@ -883,12 +882,12 @@ export function Step2_CourtTime({
                                 key={timeSlot}
                                 onPress={() => handleTimeSlotClick(courtItem.id, timeSlot)}
                                 disabled={status === 'loading'}
-                                paddingHorizontal="$4"
-                                paddingVertical="$3"
-                                borderRadius="$4"
-                                fontSize="$5"
-                                minWidth={70}
-                                height={48}
+                                paddingHorizontal="$3"
+                                paddingVertical="$2"
+                                borderRadius="$3"
+                                fontSize="$4"
+                                minWidth={60}
+                                height={40}
                                 animation="quick"
                                 accessibilityLabel={`${timeSlot} time slot, ${status === 'available' ? 'available' : status === 'busy' ? 'booked' : status === 'loading' ? 'checking availability' : 'not checked'}`}
                                 accessibilityRole="button"
@@ -908,8 +907,8 @@ export function Step2_CourtTime({
                               >
                                 {status === 'loading' ? (
                                   <View 
-                                    width={20} 
-                                    height={20} 
+                                    width={16} 
+                                    height={16} 
                                     borderWidth={2} 
                                     borderColor="$color6" 
                                     borderTopColor="$color9" 
@@ -917,7 +916,7 @@ export function Step2_CourtTime({
                                   />
                                 ) : (
                                   <Text 
-                                    fontSize="$5" 
+                                    fontSize="$4" 
                                     fontWeight={getButtonProps().fontWeight}
                                     color={getButtonProps().color}
                                   >
@@ -975,21 +974,21 @@ export function Step2_CourtTime({
       {selectedSlot && court && (
         <BrandCard
           backgroundColor="$primary"
-          borderWidth={3}
+          borderWidth={2}
           borderColor="$primary"
-          padding="$8"
-          marginTop="$6"
+          padding="$5"
+          marginTop="$4"
           shadowColor="$primary"
-          shadowOffset={{ width: 0, height: 6 }}
-          shadowOpacity={0.25}
-          shadowRadius={12}
-          borderRadius="$6"
+          shadowOffset={{ width: 0, height: 4 }}
+          shadowOpacity={0.2}
+          shadowRadius={8}
+          borderRadius="$5"
           animation="quick"
         >
-          <XStack alignItems="center" gap="$6" $md={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+          <XStack alignItems="center" gap="$4" $md={{ flexDirection: 'column', alignItems: 'flex-start' }}>
             <View
-              width={64}
-              height={64}
+              width={48}
+              height={48}
               backgroundColor="white"
               borderRadius="$round"
               alignItems="center"
@@ -997,48 +996,48 @@ export function Step2_CourtTime({
               shadowColor="white"
               shadowOffset={{ width: 0, height: 2 }}
               shadowOpacity={0.3}
-              shadowRadius={4}
+              shadowRadius={3}
             >
-              <Icon name="Check" size={28} color="$primary" />
+              <Icon name="Check" size={20} color="$primary" />
             </View>
-            <YStack flex={1} gap="$3">
-              <Text fontSize="$6" fontWeight="800" color="white" marginBottom="$1">
+            <YStack flex={1} gap="$2">
+              <Text fontSize="$5" fontWeight="800" color="white" marginBottom="$1">
                 Perfect! You're all set
               </Text>
-              <Text fontSize="$7" fontWeight="700" color="white" marginBottom="$2">
+              <Text fontSize="$6" fontWeight="700" color="white" marginBottom="$1">
                 {court.name}
               </Text>
-              <Text fontSize="$6" color="rgba(255,255,255,0.9)" marginBottom="$3" fontWeight="600">
+              <Text fontSize="$4" color="rgba(255,255,255,0.9)" marginBottom="$2" fontWeight="600">
                 {selectedSlot.startTime} - {getEndTime(selectedSlot.startTime, selectedSlot.duration)}
               </Text>
-              <XStack gap="$6" flexWrap="wrap" $md={{ flexDirection: 'column', gap: '$3' }}>
+              <XStack gap="$4" flexWrap="wrap" $md={{ flexDirection: 'column', gap: '$2' }}>
                 <XStack alignItems="center" gap="$2">
                   <View
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                     backgroundColor="rgba(255,255,255,0.2)"
-                    borderRadius="$3"
+                    borderRadius="$2"
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Icon name="Clock" size={14} color="white" />
+                    <Icon name="Clock" size={12} color="white" />
                   </View>
-                  <Text fontSize="$4" color="rgba(255,255,255,0.9)" fontWeight="600">
+                  <Text fontSize="$3" color="rgba(255,255,255,0.9)" fontWeight="600">
                     {selectedSlot.duration / 60} hour{selectedSlot.duration / 60 > 1 ? 's' : ''} session
                   </Text>
                 </XStack>
                 <XStack alignItems="center" gap="$2">
                   <View
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                     backgroundColor="rgba(255,255,255,0.2)"
-                    borderRadius="$3"
+                    borderRadius="$2"
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Icon name="DollarSign" size={14} color="white" />
+                    <Icon name="DollarSign" size={12} color="white" />
                   </View>
-                  <Text fontSize="$4" color="rgba(255,255,255,0.9)" fontWeight="600">
+                  <Text fontSize="$3" color="rgba(255,255,255,0.9)" fontWeight="600">
                     {Math.round(court.priceHourlyLE * selectedSlot.duration / 60)} EGP total
                   </Text>
                 </XStack>

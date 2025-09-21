@@ -411,28 +411,28 @@ export function Step3_Trainer({
   }
 
   return (
-    <YStack gap="$8" maxWidth={1200} width="100%" marginHorizontal="auto" paddingHorizontal="$4">
+    <YStack gap="$5" maxWidth={800} width="100%" marginHorizontal="auto" paddingHorizontal="$3">
       {/* Header */}
-      <YStack alignItems="center" paddingVertical="$6">
+      <YStack alignItems="center" paddingVertical="$4">
         <View
-          width={80}
-          height={80}
+          width={56}
+          height={56}
           backgroundColor="$primary"
           borderRadius="$round"
           alignItems="center"
           justifyContent="center"
-          marginBottom="$6"
+          marginBottom="$4"
           shadowColor="$primary"
-          shadowOffset={{ width: 0, height: 4 }}
+          shadowOffset={{ width: 0, height: 3 }}
           shadowOpacity={0.2}
-          shadowRadius={12}
+          shadowRadius={8}
         >
-          <Icon name="User" size={32} color="white" />
+          <Icon name="User" size={24} color="white" />
         </View>
-        <Text fontSize="$10" fontWeight="800" color="$textHigh" marginBottom="$3" textAlign="center" letterSpacing={-0.5}>
+        <Text fontSize="$7" fontWeight="800" color="$textHigh" marginBottom="$2" textAlign="center" letterSpacing={-0.5}>
           Pick Your Trainer
         </Text>
-        <Text color="$textMuted" fontSize="$6" textAlign="center" lineHeight="$6" maxWidth={500}>
+        <Text color="$textMuted" fontSize="$4" textAlign="center" lineHeight="$5" maxWidth={400}>
           Choose the perfect trainer to guide your session
         </Text>
       </YStack>
@@ -440,31 +440,31 @@ export function Step3_Trainer({
       {/* Session Summary */}
       <BrandCard
         backgroundColor="$color2"
-        padding="$8"
+        padding="$5"
         borderWidth={2}
         borderColor="$primary"
         shadowColor="$primary"
-        shadowOffset={{ width: 0, height: 4 }}
+        shadowOffset={{ width: 0, height: 3 }}
         shadowOpacity={0.15}
-        shadowRadius={8}
+        shadowRadius={6}
       >
-        <YStack alignItems="center" gap="$4">
-          <XStack alignItems="center" gap="$3">
+        <YStack alignItems="center" gap="$3">
+          <XStack alignItems="center" gap="$2">
             <View
-              width={32}
-              height={32}
+              width={24}
+              height={24}
               backgroundColor="$primary"
               borderRadius="$3"
               alignItems="center"
               justifyContent="center"
             >
-              <Icon name="CheckCircle" size={16} color="white" />
+              <Icon name="CheckCircle" size={12} color="white" />
             </View>
-            <Text fontSize="$6" fontWeight="700" color="$primary">Session Details</Text>
+            <Text fontSize="$5" fontWeight="700" color="$primary">Session Details</Text>
           </XStack>
-          <YStack alignItems="center" gap="$2">
-            <Text fontSize="$8" fontWeight="800" color="$textHigh">{court.name}</Text>
-            <Text fontSize="$6" color="$primary" fontWeight="600">
+          <YStack alignItems="center" gap="$1">
+            <Text fontSize="$6" fontWeight="800" color="$textHigh">{court.name}</Text>
+            <Text fontSize="$4" color="$primary" fontWeight="600">
               {startTimeHHmm} • {durationMinutes} minutes
             </Text>
           </YStack>
@@ -474,40 +474,40 @@ export function Step3_Trainer({
       {/* Filters Section */}
       <BrandCard
         backgroundColor="$surface"
-        padding="$8"
+        padding="$5"
         borderWidth={1}
         borderColor="$color4"
         shadowColor="$color8"
         shadowOffset={{ width: 0, height: 2 }}
         shadowOpacity={0.08}
-        shadowRadius={8}
+        shadowRadius={6}
       >
-        <YStack gap="$8">
-          <YStack alignItems="center" marginBottom="$2">
-            <Text fontSize="$7" fontWeight="700" color="$textHigh" marginBottom="$1">
+        <YStack gap="$5">
+          <YStack alignItems="center" marginBottom="$1">
+            <Text fontSize="$5" fontWeight="700" color="$textHigh" marginBottom="$1">
               Filter & Search
             </Text>
-            <Text color="$textMuted" fontSize="$4">
+            <Text color="$textMuted" fontSize="$3">
               Find the perfect trainer for your needs
             </Text>
           </YStack>
 
-          <XStack gap="$8" $md={{ flexDirection: 'column', gap: '$6' }}>
+          <XStack gap="$5" $md={{ flexDirection: 'column', gap: '$4' }}>
             {/* Search Filter */}
             <YStack flex={1}>
-              <XStack alignItems="center" marginBottom="$4">
+              <XStack alignItems="center" marginBottom="$3">
                 <View
-                  width={32}
-                  height={32}
+                  width={24}
+                  height={24}
                   backgroundColor="$primary"
                   borderRadius="$3"
                   alignItems="center"
                   justifyContent="center"
-                  marginRight="$3"
+                  marginRight="$2"
                 >
-                  <Icon name="Search" size={16} color="white" />
+                  <Icon name="Search" size={12} color="white" />
                 </View>
-                <Text fontSize="$5" fontWeight="700" color="$textHigh">Search Trainers</Text>
+                <Text fontSize="$4" fontWeight="700" color="$textHigh">Search Trainers</Text>
               </XStack>
               <TextField
                 fullWidth
@@ -530,19 +530,19 @@ export function Step3_Trainer({
 
             {/* Rank Filter */}
             <YStack flex={1}>
-              <XStack alignItems="center" marginBottom="$4">
+              <XStack alignItems="center" marginBottom="$3">
                 <View
-                  width={32}
-                  height={32}
+                  width={24}
+                  height={24}
                   backgroundColor="$secondary"
                   borderRadius="$3"
                   alignItems="center"
                   justifyContent="center"
-                  marginRight="$3"
+                  marginRight="$2"
                 >
-                  <Icon name="Award" size={16} color="white" />
+                  <Icon name="Award" size={12} color="white" />
                 </View>
-                <Text fontSize="$5" fontWeight="700" color="$textHigh">Rank Level</Text>
+                <Text fontSize="$4" fontWeight="700" color="$textHigh">Rank Level</Text>
               </XStack>
               <XStack gap="$3" flexWrap="wrap">
                 <BrandButton
@@ -573,35 +573,35 @@ export function Step3_Trainer({
       </BrandCard>
 
       {/* Trainers List */}
-      <YStack gap="$6">
+      <YStack gap="$4">
         {filteredTrainers().length === 0 ? (
           <BrandCard
             backgroundColor="$color2"
-            padding="$12"
+            padding="$8"
             alignItems="center"
             borderWidth={1}
             borderColor="$color4"
             borderStyle="dashed"
           >
             <View
-              width={96}
-              height={96}
+              width={72}
+              height={72}
               backgroundColor="$color4"
               borderRadius="$round"
               alignItems="center"
               justifyContent="center"
-              marginBottom="$6"
+              marginBottom="$4"
               shadowColor="$color8"
               shadowOffset={{ width: 0, height: 2 }}
               shadowOpacity={0.1}
-              shadowRadius={8}
+              shadowRadius={6}
             >
-              <Icon name="Users" size={40} color="$color8" />
+              <Icon name="Users" size={32} color="$color8" />
             </View>
-            <Text color="$textHigh" fontSize="$7" fontWeight="700" marginBottom="$2" textAlign="center">
+            <Text color="$textHigh" fontSize="$5" fontWeight="700" marginBottom="$2" textAlign="center">
               No Trainers Found
             </Text>
-            <Text color="$textMuted" fontSize="$5" textAlign="center" marginBottom="$4" maxWidth={400}>
+            <Text color="$textMuted" fontSize="$4" textAlign="center" marginBottom="$3" maxWidth={400}>
               We couldn't find any trainers matching your criteria. Try adjusting your search or filters.
             </Text>
             <BrandButton
@@ -619,9 +619,9 @@ export function Step3_Trainer({
           </BrandCard>
         ) : (
           <ScrollView
-            height={600}
-            $md={{ height: 500 }}
-            $sm={{ height: 400 }}
+            height={500}
+            $md={{ height: 400 }}
+            $sm={{ height: 350 }}
             onScroll={(event) => {
               const { contentOffset, contentSize, layoutMeasurement } = event.nativeEvent;
               const isCloseToBottom = contentOffset.y + layoutMeasurement.height >= contentSize.height - 100;
@@ -632,7 +632,7 @@ export function Step3_Trainer({
             scrollEventThrottle={400}
             showsVerticalScrollIndicator={false}
           >
-            <YStack gap="$6" paddingBottom="$8">
+            <YStack gap="$4" paddingBottom="$6">
               {filteredTrainers().map(trainerItem => {
                 const status = getTrainerStatus(trainerItem.id);
                 const isSelected = isTrainerSelected(trainerItem.id);
@@ -641,36 +641,36 @@ export function Step3_Trainer({
                   <BrandCard
                     key={trainerItem.id}
                     elevated
-                    padding="$8"
+                    padding="$5"
                     backgroundColor={isSelected ? '$primary' : '$surface'}
                     borderColor={isSelected ? '$primary' : '$color4'}
-                    borderWidth={isSelected ? 3 : 1}
+                    borderWidth={isSelected ? 2 : 1}
                     shadowColor={isSelected ? '$primary' : '$color8'}
-                    shadowOffset={isSelected ? { width: 0, height: 6 } : { width: 0, height: 2 }}
-                    shadowOpacity={isSelected ? 0.25 : 0.08}
-                    shadowRadius={isSelected ? 12 : 8}
-                    borderRadius="$6"
+                    shadowOffset={isSelected ? { width: 0, height: 4 } : { width: 0, height: 2 }}
+                    shadowOpacity={isSelected ? 0.2 : 0.08}
+                    shadowRadius={isSelected ? 8 : 6}
+                    borderRadius="$5"
                     animation="quick"
                     hoverStyle={{
-                      scale: 1.02,
-                      shadowOffset: { width: 0, height: 4 },
-                      shadowOpacity: 0.15,
-                      shadowRadius: 10
+                      scale: 1.01,
+                      shadowOffset: { width: 0, height: 3 },
+                      shadowOpacity: 0.12,
+                      shadowRadius: 8
                     }}
-                    pressStyle={{ scale: 0.98 }}
+                    pressStyle={{ scale: 0.99 }}
                   >
-                    <YStack width="100%" gap="$4">
+                    <YStack width="100%" gap="$3">
                       {/* Header Row with Trainer Name, Rank, and Price */}
                       <XStack
                         alignItems="center"
                         justifyContent="space-between"
                         width="100%"
-                        $sm={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$3' }}
+                        $sm={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$2' }}
                       >
-                        <XStack alignItems="center" gap="$3" flex={1}>
+                        <XStack alignItems="center" gap="$2" flex={1}>
                           <View
-                            width={60}
-                            height={60}
+                            width={48}
+                            height={48}
                             backgroundColor={isSelected ? 'white' : getRankColor(trainerItem.maxLevel as Rank)}
                             borderRadius="$round"
                             alignItems="center"
@@ -678,17 +678,17 @@ export function Step3_Trainer({
                             shadowColor={isSelected ? '$primary' : getRankColor(trainerItem.maxLevel as Rank)}
                             shadowOffset={{ width: 0, height: 2 }}
                             shadowOpacity={0.2}
-                            shadowRadius={4}
+                            shadowRadius={3}
                           >
                             <Icon
                               name={getRankIcon(trainerItem.maxLevel as Rank)}
-                              size={24}
+                              size={20}
                               color={isSelected ? '$primary' : 'white'}
                             />
                           </View>
-                          <YStack gap="$2">
+                          <YStack gap="$1">
                             <Text
-                              fontSize="$8"
+                              fontSize="$6"
                               fontWeight="800"
                               color={isSelected ? 'white' : '$textHigh'}
                               letterSpacing={-0.5}
@@ -698,8 +698,8 @@ export function Step3_Trainer({
                             {trainerItem.maxLevel !== undefined && (
                               <XStack alignItems="center" gap="$2">
                                 <View
-                                  width={20}
-                                  height={20}
+                                  width={16}
+                                  height={16}
                                   backgroundColor={isSelected ? 'rgba(255,255,255,0.2)' : getRankColor(trainerItem.maxLevel as Rank)}
                                   borderRadius="$2"
                                   alignItems="center"
@@ -707,12 +707,12 @@ export function Step3_Trainer({
                                 >
                                   <Icon
                                     name={getRankIcon(trainerItem.maxLevel as Rank)}
-                                    size={12}
+                                    size={10}
                                     color={isSelected ? 'white' : 'white'}
                                   />
                                 </View>
                                 <Text
-                                  fontSize="$5"
+                                  fontSize="$4"
                                   color={isSelected ? 'rgba(255,255,255,0.9)' : '$textMuted'}
                                   fontWeight="600"
                                 >
@@ -737,30 +737,30 @@ export function Step3_Trainer({
                           )}
                         </XStack>
 
-                        <XStack alignItems="center" gap="$4">
+                        <XStack alignItems="center" gap="$3">
                           {/* Price Tag */}
                           {trainerItem.priceHourlyLE && (
                             <View
                               backgroundColor={isSelected ? 'white' : '$secondary'}
-                              paddingHorizontal="$4"
-                              paddingVertical="$3"
-                              borderRadius="$5"
+                              paddingHorizontal="$3"
+                              paddingVertical="$2"
+                              borderRadius="$4"
                               shadowColor={isSelected ? '$primary' : '$secondary'}
-                              shadowOffset={{ width: 0, height: 2 }}
+                              shadowOffset={{ width: 0, height: 1 }}
                               shadowOpacity={0.2}
-                              shadowRadius={4}
-                              minWidth={120}
+                              shadowRadius={3}
+                              minWidth={100}
                               alignItems="center"
                             >
                               <Text
-                                fontSize="$7"
+                                fontSize="$5"
                                 fontWeight="800"
                                 color={isSelected ? '$primary' : 'white'}
                               >
                                 {trainerItem.priceHourlyLE}
                               </Text>
                               <Text
-                                fontSize="$3"
+                                fontSize="$2"
                                 fontWeight="600"
                                 color={isSelected ? '$primary' : 'white'}
                                 opacity={0.8}
@@ -774,9 +774,9 @@ export function Step3_Trainer({
 
                       {/* Areas Covered */}
                       {trainerItem.areasCovered && trainerItem.areasCovered.length > 0 && (
-                        <YStack gap="$2">
+                        <YStack gap="$1">
                           <Text
-                            fontSize="$5"
+                            fontSize="$4"
                             fontWeight="700"
                             color={isSelected ? 'white' : '$textMuted'}
                             marginBottom="$2"
@@ -788,14 +788,14 @@ export function Step3_Trainer({
                               <View
                                 key={area}
                                 backgroundColor={isSelected ? 'white' : '$color3'}
-                                paddingHorizontal="$3"
-                                paddingVertical="$2"
-                                borderRadius="$4"
+                                paddingHorizontal="$2"
+                                paddingVertical="$1"
+                                borderRadius="$3"
                                 borderWidth={1}
                                 borderColor={isSelected ? 'rgba(255,255,255,0.3)' : '$color5'}
                               >
                                 <Text
-                                  fontSize="$4"
+                                  fontSize="$3"
                                   color={isSelected ? '$primary' : '$textHigh'}
                                   fontWeight="600"
                                 >
@@ -809,18 +809,18 @@ export function Step3_Trainer({
 
                       {/* Availability Status */}
                       <YStack
-                        borderTopWidth={2}
+                        borderTopWidth={1}
                         borderTopColor={isSelected ? 'rgba(255,255,255,0.2)' : '$color4'}
-                        paddingTop="$6"
-                        marginTop="$4"
+                        paddingTop="$4"
+                        marginTop="$3"
                       >
                         <XStack
                           alignItems="center"
                           justifyContent="space-between"
-                          marginBottom="$4"
+                          marginBottom="$3"
                         >
                           <Text
-                            fontSize="$6"
+                            fontSize="$5"
                             fontWeight="700"
                             color={isSelected ? 'white' : '$textHigh'}
                           >
@@ -938,21 +938,21 @@ export function Step3_Trainer({
       {trainer && (
         <BrandCard
           backgroundColor="$primary"
-          borderWidth={3}
+          borderWidth={2}
           borderColor="$primary"
-          padding="$8"
-          marginTop="$6"
+          padding="$5"
+          marginTop="$4"
           shadowColor="$primary"
-          shadowOffset={{ width: 0, height: 6 }}
-          shadowOpacity={0.25}
-          shadowRadius={12}
-          borderRadius="$6"
+          shadowOffset={{ width: 0, height: 4 }}
+          shadowOpacity={0.2}
+          shadowRadius={8}
+          borderRadius="$5"
           animation="quick"
         >
-          <XStack alignItems="center" gap="$6" $md={{ flexDirection: 'column', alignItems: 'flex-start' }}>
+          <XStack alignItems="center" gap="$4" $md={{ flexDirection: 'column', alignItems: 'flex-start' }}>
             <View
-              width={64}
-              height={64}
+              width={48}
+              height={48}
               backgroundColor="white"
               borderRadius="$round"
               alignItems="center"
@@ -960,49 +960,49 @@ export function Step3_Trainer({
               shadowColor="white"
               shadowOffset={{ width: 0, height: 2 }}
               shadowOpacity={0.3}
-              shadowRadius={4}
+              shadowRadius={3}
             >
-              <Icon name="Check" size={28} color="$primary" />
+              <Icon name="Check" size={20} color="$primary" />
             </View>
-            <YStack flex={1} gap="$3">
-              <Text fontSize="$6" fontWeight="800" color="white" marginBottom="$1">
+            <YStack flex={1} gap="$2">
+              <Text fontSize="$5" fontWeight="800" color="white" marginBottom="$1">
                 Excellent Choice!
               </Text>
-              <Text fontSize="$7" fontWeight="700" color="white" marginBottom="$2">
+              <Text fontSize="$6" fontWeight="700" color="white" marginBottom="$1">
                 {trainer.name}
               </Text>
-              <Text fontSize="$6" color="rgba(255,255,255,0.9)" marginBottom="$3" fontWeight="600">
+              <Text fontSize="$4" color="rgba(255,255,255,0.9)" marginBottom="$2" fontWeight="600">
                 {startTimeHHmm} • {durationMinutes} minutes
               </Text>
-              <XStack gap="$6" flexWrap="wrap" $md={{ flexDirection: 'column', gap: '$3' }}>
+              <XStack gap="$4" flexWrap="wrap" $md={{ flexDirection: 'column', gap: '$2' }}>
                 <XStack alignItems="center" gap="$2">
                   <View
-                    width={24}
-                    height={24}
+                    width={20}
+                    height={20}
                     backgroundColor="rgba(255,255,255,0.2)"
-                    borderRadius="$3"
+                    borderRadius="$2"
                     alignItems="center"
                     justifyContent="center"
                   >
-                    <Icon name="Clock" size={14} color="white" />
+                    <Icon name="Clock" size={12} color="white" />
                   </View>
-                  <Text fontSize="$4" color="rgba(255,255,255,0.9)" fontWeight="600">
+                  <Text fontSize="$3" color="rgba(255,255,255,0.9)" fontWeight="600">
                     {(durationMinutes / 60)} hour{(durationMinutes / 60) > 1 ? 's' : ''} session
                   </Text>
                 </XStack>
                 {trainer.priceHourlyLE && (
                   <XStack alignItems="center" gap="$2">
                     <View
-                      width={24}
-                      height={24}
+                      width={20}
+                      height={20}
                       backgroundColor="rgba(255,255,255,0.2)"
-                      borderRadius="$3"
+                      borderRadius="$2"
                       alignItems="center"
                       justifyContent="center"
                     >
-                      <Icon name="DollarSign" size={14} color="white" />
+                      <Icon name="DollarSign" size={12} color="white" />
                     </View>
-                    <Text fontSize="$4" color="rgba(255,255,255,0.9)" fontWeight="600">
+                    <Text fontSize="$3" color="rgba(255,255,255,0.9)" fontWeight="600">
                       {Math.round((trainer.priceHourlyLE * durationMinutes) / 60)} EGP total
                     </Text>
                   </XStack>

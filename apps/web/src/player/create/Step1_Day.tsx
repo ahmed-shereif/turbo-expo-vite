@@ -9,20 +9,20 @@ interface Step1_DayProps {
 
 // Styled components using Tamagui
 const Container = styled(View, {
-  padding: '$4',
-  gap: '$6',
-  maxWidth: 1200,
+  padding: '$3',
+  gap: '$4',
+  maxWidth: 800,
   marginHorizontal: 'auto',
 });
 
 const Header = styled(View, {
   alignItems: 'center',
-  gap: '$3',
+  gap: '$2',
 });
 
 const IconContainer = styled(View, {
-  width: 64,
-  height: 64,
+  width: 48,
+  height: 48,
   borderRadius: '$round',
   backgroundColor: '$primary',
   alignItems: 'center',
@@ -30,21 +30,21 @@ const IconContainer = styled(View, {
   shadowColor: '$primary',
   shadowOffset: { width: 0, height: 2 },
   shadowOpacity: 0.2,
-  shadowRadius: 8,
+  shadowRadius: 6,
 });
 
 const Title = styled(Text, {
-  fontSize: '$8',
+  fontSize: '$6',
   fontWeight: '700',
   color: '$textHigh',
   textAlign: 'center',
 });
 
 const Subtitle = styled(Text, {
-  fontSize: '$5',
+  fontSize: '$4',
   color: '$textMuted',
   textAlign: 'center',
-  lineHeight: '$6',
+  lineHeight: '$5',
 });
 
 const InputContainer = styled(View, {
@@ -57,7 +57,7 @@ const Label = styled(Text, {
   fontSize: '$3',
   fontWeight: '600',
   color: '$textHigh',
-  marginBottom: '$3',
+  marginBottom: '$2',
 });
 
 const DateInputContainer = styled(View, {
@@ -68,7 +68,7 @@ const DateInputContainer = styled(View, {
 const InfoText = styled(Text, {
   fontSize: '$2',
   color: '$textMuted',
-  marginTop: '$2',
+  marginTop: '$1',
   flexDirection: 'row',
   alignItems: 'center',
   gap: '$2',
@@ -79,14 +79,14 @@ const ConfirmationCard = styled(BrandCard, {
   alignSelf: 'center',
   backgroundColor: '$secondary',
   borderColor: '$secondary',
-  padding: '$5',
+  padding: '$4',
   alignItems: 'center',
-  gap: '$3',
+  gap: '$2',
 });
 
 const CheckIconContainer = styled(View, {
-  width: 48,
-  height: 48,
+  width: 36,
+  height: 36,
   borderRadius: '$round',
   backgroundColor: '$primaryContrast',
   alignItems: 'center',
@@ -94,19 +94,19 @@ const CheckIconContainer = styled(View, {
 });
 
 const ConfirmationTitle = styled(Text, {
-  fontSize: '$5',
+  fontSize: '$4',
   fontWeight: '600',
   color: '$textHigh',
 });
 
 const ConfirmationDate = styled(Text, {
-  fontSize: '$4',
+  fontSize: '$3',
   color: '$primaryContrast',
   fontWeight: '500',
 });
 
 const QuickOptionsContainer = styled(View, {
-  maxWidth: 600,
+  maxWidth: 500,
   alignSelf: 'center',
   width: '100%',
 });
@@ -115,14 +115,14 @@ const QuickOptionsLabel = styled(Text, {
   fontSize: '$3',
   fontWeight: '500',
   color: '$textHigh',
-  marginBottom: '$4',
+  marginBottom: '$3',
   textAlign: 'center',
 });
 
 const QuickOptionsGrid = styled(View, {
   flexDirection: 'row',
   flexWrap: 'wrap',
-  gap: '$3',
+  gap: '$2',
   justifyContent: 'center',
 });
 
@@ -140,7 +140,7 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
       {/* Header */}
       <Header>
         <IconContainer>
-          <Icon name="Calendar" size={24} color="$primaryContrast" />
+          <Icon name="Calendar" size={20} color="$primaryContrast" />
         </IconContainer>
         <Title>Choose Your Day</Title>
         <Subtitle>When would you like to play? Select your preferred date.</Subtitle>
@@ -158,10 +158,10 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
             min={today}
             style={{
               width: '100%',
-              padding: '16px',
-              fontSize: '18px',
+              padding: '12px',
+              fontSize: '16px',
               border: '2px solid #F3F4F6',
-              borderRadius: '12px',
+              borderRadius: '8px',
               backgroundColor: '#FFFFFF',
               color: '#111827',
               transition: 'all 200ms ease',
@@ -189,7 +189,7 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
           />
         </DateInputContainer>
         <InfoText>
-          <Icon name="Info" size={16} color="$textMuted" />
+          <Icon name="Info" size={14} color="$textMuted" />
           You can book sessions from today onwards
         </InfoText>
       </InputContainer>
@@ -198,7 +198,7 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
       {dayISO && (
         <ConfirmationCard>
           <CheckIconContainer>
-            <Icon name="Check" size={20} color="$primary" />
+            <Icon name="Check" size={16} color="$primary" />
           </CheckIconContainer>
           <ConfirmationTitle>Perfect Choice!</ConfirmationTitle>
           <ConfirmationDate>
@@ -227,14 +227,14 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
                 key={i}
                 onClick={() => onDayChange(dateISO)}
                 style={{
-                  padding: '16px',
-                  borderRadius: '12px',
+                  padding: '12px',
+                  borderRadius: '8px',
                   border: '2px solid',
-                  minWidth: '120px',
+                  minWidth: '100px',
                   display: 'flex',
                   flexDirection: 'column',
                   alignItems: 'center',
-                  gap: '8px',
+                  gap: '6px',
                   transition: 'all 200ms ease',
                   cursor: 'pointer',
                   backgroundColor: isSelected ? '#1E90FF' : '#FFFFFF',
@@ -256,7 +256,7 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
               >
                 <div
                   style={{
-                    fontSize: '12px',
+                    fontSize: '11px',
                     fontWeight: '500',
                     opacity: 0.75,
                     color: isSelected ? '#FFFFFF' : '#6B7280',
@@ -266,7 +266,7 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
                 </div>
                 <div
                   style={{
-                    fontSize: '14px',
+                    fontSize: '13px',
                     fontWeight: '700',
                     color: isSelected ? '#FFFFFF' : '#111827',
                   }}
