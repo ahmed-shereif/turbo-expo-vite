@@ -25,6 +25,7 @@ export const SessionSummary = z.object({
   durationMinutes: z.number(),
   seats: Seats,
   minRank: Rank.nullable().optional().transform(val => val === null ? undefined : val),
+  isJoined: z.boolean().optional(),
   court: z.object({
     id: z.string(),
     name: z.string(),

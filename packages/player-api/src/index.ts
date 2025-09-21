@@ -141,6 +141,7 @@ export async function fetchOpenSessions(auth: AuthLike, params: OpenSessionsPara
       durationMinutes: it.durationMinutes,
       seats: it.seats ?? { filled: 0, total: 0 },
       minRank: it.minRank,
+      isJoined: it.isJoined ?? false,
       court: {
         id: it.court?.id ?? '',
         name: it.court?.name ?? '',
