@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { auth } from '../../lib/authClient';
 import { createSession, combineDayAndTime, estimateIntendedShareLE } from '@repo/player-api';
@@ -71,7 +71,7 @@ export function Wizard() {
         minRank: state.minRank,
       };
 
-      const result = await createSession(auth, payload);
+      await createSession(auth, payload);
       
       notify.success('Session created successfully!');
       navigate('/player/home');
@@ -239,7 +239,7 @@ export function Wizard() {
                   variant="outline"
                   onPress={handleBack}
                   disabled={isSubmitting}
-                  icon="chevron-left"
+                  icon="ChevronLeft"
                   size="lg"
                 >
                   Back
@@ -266,7 +266,7 @@ export function Wizard() {
                     (currentStep === 3 && !canProceedToStep4) ||
                     isSubmitting
                   }
-                  iconAfter="chevron-right"
+                  iconAfter="ChevronRight"
                   size="lg"
                 >
                   Continue
@@ -276,7 +276,7 @@ export function Wizard() {
                   onPress={handleSubmit}
                   disabled={!canSubmit || isSubmitting}
                   loading={isSubmitting}
-                  icon="check"
+                  icon="Check"
                   size="lg"
                 >
                   Create Session

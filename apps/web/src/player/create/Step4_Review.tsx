@@ -1,5 +1,5 @@
 import type { WizardState } from './types';
-import { Icon, BrandCard, BrandButton } from '@repo/ui';
+import { Icon, BrandCard } from '@repo/ui';
 import { YStack, XStack, Text, View, Button, H4, H5, H6 } from 'tamagui';
 import { formatEGP, type Rank } from '@repo/player-api';
 
