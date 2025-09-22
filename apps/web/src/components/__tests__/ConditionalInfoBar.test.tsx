@@ -73,3 +73,4 @@ describe('ConditionalInfoBar', () => {
     expect(screen.getByTestId('info-bar')).toBeInTheDocument()
   })
 })
+

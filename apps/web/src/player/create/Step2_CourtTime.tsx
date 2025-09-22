@@ -1,6 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import { auth } from '../../lib/authClient';
-import { fetchCourts, quickCheckCourt, combineDayAndTime } from '@repo/player-api';
+import { fetchCourts, combineDayAndTime } from '@repo/player-api';
 import { notify } from '../../lib/notify';
 import { BrandCard, Skeleton, Icon, BrandButton, TextField } from '@repo/ui';
 import { YStack, XStack, Text, View, Button, ScrollView } from 'tamagui';
@@ -9,6 +9,33 @@ import { YStack, XStack, Text, View, Button, ScrollView } from 'tamagui';
 const authWrapper = {
   withAuth: auth.withAuth.bind(auth),
   getBaseUrl: auth.getBaseUrl.bind(auth),
+};
+
+// API function to get all available slots for a court on a specific day
+const getCourtAvailability = async (courtId: string, dayISO: string, durationMinutes: number) => {
+  const response = await authWrapper.withAuth(async (headers: Record<string, string>) => {
+    // Create start and end times for the entire day
+    const startOfDay = `${dayISO}T00:00:00Z`;
+    const endOfDay = `${dayISO}T23:59:59Z`;
+    
+    const url = `${authWrapper.getBaseUrl()}/calendar/COURT/${courtId}/availability?dateFromUTC=${encodeURIComponent(startOfDay)}&dateToUTC=${encodeURIComponent(endOfDay)}&slotMinutes=${durationMinutes}&stepMinutes=30`;
+    
+    const res = await fetch(url, {
+      method: 'GET',
+      headers: {
+        ...headers,
+        'Content-Type': 'application/json',
+      },
+    });
+
+    if (!res.ok) {
+      throw new Error(`HTTP error! status: ${res.status}`);
+    }
+
+    return res.json();
+  });
+
+  return response;
 };
 
 // Define Court type locally since it's not exported
@@ -64,6 +91,7 @@ export function Step2_CourtTime({
   const [hasMoreCourts, setHasMoreCourts] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
   const [expandedCourtId, setExpandedCourtId] = useState<string | null>(null);
+  const [checkingAvailability, setCheckingAvailability] = useState<string | null>(null);
 
   // Generate time slots from 07:00 to 23:00 in 30-minute increments
   const timeSlots = Array.from({ length: 33 }, (_, i) => {
@@ -142,63 +170,97 @@ export function Step2_CourtTime({
     }
   }, [loadingMore, hasMoreCourts, courts.length, fetchCourtsData]);
 
-  const checkCourtAvailability = useCallback(async (courtId: string, timeSlot: string) => {
+
+  const checkCourtAvailabilityForAllSlots = useCallback(async (courtId: string) => {
     // Check if already cached
-    if (availability[courtId]?.[timeSlot]?.checked) {
+    if (availability[courtId] && Object.values(availability[courtId]).some(slot => slot.checked)) {
       return;
     }
 
-    // Set loading state
+    // Set loading state for all slots
+    const initialAvailability: { [key: string]: { available: boolean; loading: boolean; checked: boolean } } = {};
+    timeSlots.forEach(timeSlot => {
+      initialAvailability[timeSlot] = {
+        available: false,
+        loading: true,
+        checked: false,
+      };
+    });
+
     setAvailability(prev => ({
       ...prev,
-      [courtId]: {
-        ...prev[courtId],
-        [timeSlot]: {
-          available: false,
-          loading: true,
-          checked: false,
-        },
-      },
+      [courtId]: initialAvailability,
     }));
 
     try {
-      const startAtISO = combineDayAndTime(dayISO, timeSlot);
-      const result = await quickCheckCourt(authWrapper, courtId, startAtISO, durationMinutes);
+      const result = await getCourtAvailability(courtId, dayISO, durationMinutes);
       
+      // Debug: Log the API response
+      console.log('API Response for court', courtId, ':', result);
+      
+      // Process the response and map to our time slots
+      const newAvailability: { [key: string]: { available: boolean; loading: boolean; checked: boolean } } = {};
+      
+      timeSlots.forEach(timeSlot => {
+        // Check if this time slot is available in the API response
+        const slotStartTime = combineDayAndTime(dayISO, timeSlot);
+        
+        // Find matching slot in API response by comparing times
+        const matchingSlot = result.data?.slots?.find((slot: any) => {
+          const slotStartUTC = new Date(slot.startUTC);
+          const expectedStart = new Date(slotStartTime);
+          
+          // Compare times with a small tolerance for floating point precision
+          const timeDiff = Math.abs(slotStartUTC.getTime() - expectedStart.getTime());
+          return timeDiff < 1000; // Within 1 second
+        });
+
+        newAvailability[timeSlot] = {
+          available: matchingSlot?.available || false,
+          loading: false,
+          checked: true,
+        };
+      });
+
       setAvailability(prev => ({
         ...prev,
-        [courtId]: {
-          ...prev[courtId],
-          [timeSlot]: {
-            available: result.available,
-            loading: false,
-            checked: true,
-          },
-        },
+        [courtId]: newAvailability,
       }));
     } catch (error: any) {
       console.error('Failed to check court availability:', error);
+      notify.error('Failed to check availability. Please try again.');
+      
+      // Set all slots as unavailable on error
+      const errorAvailability: { [key: string]: { available: boolean; loading: boolean; checked: boolean } } = {};
+      timeSlots.forEach(timeSlot => {
+        errorAvailability[timeSlot] = {
+          available: false,
+          loading: false,
+          checked: true,
+        };
+      });
+
       setAvailability(prev => ({
         ...prev,
-        [courtId]: {
-          ...prev[courtId],
-          [timeSlot]: {
-            available: false,
-            loading: false,
-            checked: true,
-          },
-        },
+        [courtId]: errorAvailability,
       }));
     }
-  }, [dayISO, durationMinutes, availability]);
+  }, [dayISO, durationMinutes, timeSlots]);
 
-  const handleCourtCardClick = (courtId: string) => {
+  const handleCourtCardClick = async (courtId: string) => {
     if (expandedCourtId === courtId) {
       // Collapse if already expanded
       setExpandedCourtId(null);
+      setCheckingAvailability(null);
     } else {
       // Expand this court and collapse others
       setExpandedCourtId(courtId);
+      setCheckingAvailability(courtId);
+      
+      // Check availability for all time slots in one API call
+      await checkCourtAvailabilityForAllSlots(courtId);
+      
+      setCheckingAvailability(null);
     }
   };
 
@@ -217,8 +279,9 @@ export function Step2_CourtTime({
       return;
     }
     
+    // If availability hasn't been checked yet, trigger the bulk check
     if (!availability[courtId]?.[timeSlot]?.checked) {
-      checkCourtAvailability(courtId, timeSlot);
+      checkCourtAvailabilityForAllSlots(courtId);
       return;
     }
     
@@ -732,6 +795,26 @@ export function Step2_CourtTime({
                         borderRadius="$3"
                         padding="$4"
                       >
+                        {/* Loading indicator when checking availability */}
+                        {checkingAvailability === courtItem.id && (
+                          <YStack alignItems="center" paddingVertical="$4" gap="$3">
+                            <View
+                              width={32}
+                              height={32}
+                              borderWidth={3}
+                              borderColor="$color6"
+                              borderTopColor="$blue9"
+                              borderRadius="$round"
+                            />
+                            <Text 
+                              fontSize="$4" 
+                              color={isSelected ? 'rgba(255,255,255,0.8)' : '$textMuted'}
+                              fontWeight="600"
+                            >
+                              Checking availability...
+                            </Text>
+                          </YStack>
+                        )}
                         <XStack 
                           alignItems="center" 
                           justifyContent="space-between" 
@@ -755,16 +838,16 @@ export function Step2_CourtTime({
                               <View 
                                 width={16} 
                                 height={16} 
-                                backgroundColor="$secondary" 
+                                backgroundColor="$green9" 
                                 borderRadius="$2"
-                                shadowColor="$secondary"
-                                shadowOffset={{ width: 0, height: 1 }}
-                                shadowOpacity={0.3}
-                                shadowRadius={2}
+                                shadowColor="$green9"
+                                shadowOffset={{ width: 0, height: 2 }}
+                                shadowOpacity={0.4}
+                                shadowRadius={3}
                               />
                               <Text 
                                 fontSize="$3" 
-                                color={isSelected ? 'rgba(255,255,255,0.8)' : '$textMuted'}
+                                color={isSelected ? 'rgba(255,255,255,0.9)' : '$textMuted'}
                                 fontWeight="600"
                               >
                                 Available
@@ -777,13 +860,13 @@ export function Step2_CourtTime({
                                 backgroundColor="$red9" 
                                 borderRadius="$2"
                                 shadowColor="$red9"
-                                shadowOffset={{ width: 0, height: 1 }}
+                                shadowOffset={{ width: 0, height: 2 }}
                                 shadowOpacity={0.3}
-                                shadowRadius={2}
+                                shadowRadius={3}
                               />
                               <Text 
                                 fontSize="$3" 
-                                color={isSelected ? 'rgba(255,255,255,0.8)' : '$textMuted'}
+                                color={isSelected ? 'rgba(255,255,255,0.9)' : '$textMuted'}
                                 fontWeight="600"
                               >
                                 Booked
@@ -793,12 +876,33 @@ export function Step2_CourtTime({
                               <View 
                                 width={16} 
                                 height={16} 
+                                backgroundColor="$blue9" 
+                                borderRadius="$2"
+                                shadowColor="$blue9"
+                                shadowOffset={{ width: 0, height: 2 }}
+                                shadowOpacity={0.3}
+                                shadowRadius={3}
+                              />
+                              <Text 
+                                fontSize="$3" 
+                                color={isSelected ? 'rgba(255,255,255,0.9)' : '$textMuted'}
+                                fontWeight="600"
+                              >
+                                Checking
+                              </Text>
+                            </XStack>
+                            <XStack alignItems="center" gap="$2">
+                              <View 
+                                width={16} 
+                                height={16} 
                                 backgroundColor="white" 
                                 borderRadius="$2"
+                                borderWidth={2}
+                                borderColor="$primary"
                                 shadowColor="$primary"
-                                shadowOffset={{ width: 0, height: 1 }}
-                                shadowOpacity={0.3}
-                                shadowRadius={2}
+                                shadowOffset={{ width: 0, height: 2 }}
+                                shadowOpacity={0.4}
+                                shadowRadius={4}
                               />
                               <Text 
                                 fontSize="$3" 
@@ -826,27 +930,28 @@ export function Step2_CourtTime({
                                   backgroundColor: 'white', 
                                   color: '$primary', 
                                   borderColor: 'white',
-                                  borderWidth: 2,
+                                  borderWidth: 3,
                                   fontWeight: '800',
                                   shadowColor: '$primary',
-                                  shadowOffset: { width: 0, height: 3 },
-                                  shadowOpacity: 0.4,
-                                  shadowRadius: 6,
-                                  elevation: 4,
-                                  transform: [{ scale: 1.05 }]
+                                  shadowOffset: { width: 0, height: 4 },
+                                  shadowOpacity: 0.5,
+                                  shadowRadius: 8,
+                                  elevation: 6,
+                                  transform: [{ scale: 1.08 }]
                                 };
                               }
                               if (status === 'available') {
                                 return { 
-                                  backgroundColor: '$secondary', 
+                                  backgroundColor: '$green9', 
                                   color: 'white', 
-                                  borderColor: '$secondary',
+                                  borderColor: '$green9',
                                   borderWidth: 2,
                                   fontWeight: '700',
-                                  shadowColor: '$secondary',
-                                  shadowOffset: { width: 0, height: 2 },
-                                  shadowOpacity: 0.3,
-                                  shadowRadius: 4
+                                  shadowColor: '$green9',
+                                  shadowOffset: { width: 0, height: 3 },
+                                  shadowOpacity: 0.4,
+                                  shadowRadius: 6,
+                                  elevation: 3
                                 };
                               }
                               if (status === 'busy') {
@@ -854,26 +959,35 @@ export function Step2_CourtTime({
                                   backgroundColor: '$red9', 
                                   color: 'white', 
                                   borderColor: '$red9', 
-                                  opacity: 0.7,
+                                  opacity: 0.8,
                                   borderWidth: 2,
-                                  fontWeight: '600'
+                                  fontWeight: '600',
+                                  shadowColor: '$red9',
+                                  shadowOffset: { width: 0, height: 2 },
+                                  shadowOpacity: 0.3,
+                                  shadowRadius: 4
                                 };
                               }
                               if (status === 'loading') {
                                 return { 
-                                  backgroundColor: '$color4', 
-                                  color: '$color8', 
-                                  borderColor: '$color6',
+                                  backgroundColor: '$blue9', 
+                                  color: 'white', 
+                                  borderColor: '$blue9',
                                   borderWidth: 2,
-                                  fontWeight: '500'
+                                  fontWeight: '500',
+                                  shadowColor: '$blue9',
+                                  shadowOffset: { width: 0, height: 2 },
+                                  shadowOpacity: 0.3,
+                                  shadowRadius: 4
                                 };
                               }
                               return { 
-                                backgroundColor: '$color3', 
+                                backgroundColor: '$color4', 
                                 color: '$textMuted', 
                                 borderColor: '$color6',
                                 borderWidth: 2,
-                                fontWeight: '500'
+                                fontWeight: '500',
+                                opacity: 0.6
                               };
                             };
                             
