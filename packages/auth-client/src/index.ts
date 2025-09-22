@@ -255,6 +255,15 @@ export class AuthClient {
     return { Authorization: `Bearer ${this.accessToken}` };
   }
 
+  hasValidToken(): boolean {
+    return !!(this.accessToken && (!this.accessExpMs || this.getNow() <= this.accessExpMs));
+  }
+
+  async hasValidRefreshToken(): Promise<boolean> {
+    const refreshToken = await this.getRefresh();
+    return !!(refreshToken && refreshToken !== 'undefined' && refreshToken !== 'null' && refreshToken !== '');
+  }
+
   async withAuth<T>(
     fn: (headers: Record<string, string>) => Promise<T>,
   ): Promise<T> {

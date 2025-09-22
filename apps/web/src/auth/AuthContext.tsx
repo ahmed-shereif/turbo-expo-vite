@@ -36,6 +36,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const bootstrap = async () => {
       try {
+        // Check if we have a valid refresh token first
+        const hasRefreshToken = await auth.hasValidRefreshToken();
+        if (!hasRefreshToken) {
+          setUser(null);
+          if (location.pathname !== '/login' && location.pathname !== '/signup') {
+            navigate('/login', { replace: true });
+          }
+          return;
+        }
+
         await auth.refresh();
         const me = await auth.me();
         setUser(me);
@@ -47,6 +57,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         setUser(null);
+        // Auto-navigate to login on any bootstrap failure (no valid token)
+        if (location.pathname !== '/login' && location.pathname !== '/signup') {
+          navigate('/login', { replace: true });
+        }
       } finally {
         setIsBootstrapping(false);
       }
@@ -59,7 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       navigate('/login', { replace: true });
     });
     return () => unsubscribe();
-  }, []);
+  }, [navigate, location.pathname]);
 
   const login = async (email: string, password: string) => {
     await auth.login({ email, password });
