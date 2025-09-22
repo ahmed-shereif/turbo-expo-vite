@@ -1,4 +1,3 @@
-import React from 'react'
 import { YStack, type StackProps } from 'tamagui'
 
 export interface SkeletonProps extends StackProps {

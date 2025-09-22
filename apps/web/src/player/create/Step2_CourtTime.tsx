@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { auth } from '../../lib/authClient';
 import { fetchCourts, combineDayAndTime } from '@repo/player-api';
 import { notify } from '../../lib/notify';
-import { BrandCard, Skeleton, Icon, BrandButton, TextField } from '@repo/ui';
+import { BrandCard, Skeleton, Icon, BrandButton, TextField, ShadowView } from '@repo/ui';
 import { YStack, XStack, Text, View, Button, ScrollView } from 'tamagui';
 
 // Create a compatible auth wrapper
@@ -393,21 +393,23 @@ export function Step2_CourtTime({
     <YStack gap="$5" maxWidth={800} width="100%" marginHorizontal="auto" paddingHorizontal="$3">
       {/* Header */}
       <YStack alignItems="center" paddingVertical="$4">
-        <View
-          width={56}
-          height={56}
-          backgroundColor="$primary"
-          borderRadius="$round"
-          alignItems="center"
-          justifyContent="center"
-          marginBottom="$4"
-          shadowColor="$primary"
-          shadowOffset={{ width: 0, height: 3 }}
-          shadowOpacity={0.2}
-          shadowRadius={8}
+        <ShadowView
+          level="md"
+          color="primary"
+          elevated={true}
         >
-          <Icon name="Building" size={24} color="white" />
-        </View>
+          <View
+            width={56}
+            height={56}
+            backgroundColor="$primary"
+            borderRadius="$round"
+            alignItems="center"
+            justifyContent="center"
+            marginBottom="$4"
+          >
+            <Icon name="Building" size={24} color="white" />
+          </View>
+        </ShadowView>
         <Text fontSize="$7" fontWeight="800" color="$textHigh" marginBottom="$2" textAlign="center" letterSpacing={-0.5}>
           Pick Court & Time
         </Text>
@@ -422,10 +424,7 @@ export function Step2_CourtTime({
         padding="$5"
         borderWidth={1}
         borderColor="$color4"
-        shadowColor="$color8"
-        shadowOffset={{ width: 0, height: 2 }}
-        shadowOpacity={0.08}
-        shadowRadius={6}
+        elevated={true}
       >
         <YStack gap="$5">
           <YStack alignItems="center" marginBottom="$1">
@@ -504,12 +503,35 @@ export function Step2_CourtTime({
                       onTimeChange('');
                     }}
                     backgroundColor={durationMinutes === option.value ? '$primary' : '$surface'}
-                    borderColor={durationMinutes === option.value ? '$primary' : '$color6'}
+                    borderColor={durationMinutes === option.value ? '$primary' : '#D1D5DB'}
                     borderWidth={2}
-                    shadowColor={durationMinutes === option.value ? '$primary' : undefined}
-                    shadowOffset={durationMinutes === option.value ? { width: 0, height: 2 } : undefined}
-                    shadowOpacity={durationMinutes === option.value ? 0.2 : undefined}
-                    shadowRadius={durationMinutes === option.value ? 4 : undefined}
+                    shadowColor={durationMinutes === option.value ? '$primary' : '#E5E7EB'}
+                    shadowOffset={{ width: 0, height: 2 }}
+                    shadowOpacity={durationMinutes === option.value ? 0.25 : 0.1}
+                    shadowRadius={durationMinutes === option.value ? 6 : 3}
+                    elevation={durationMinutes === option.value ? 3 : 1}
+                    hoverStyle={{
+                      scale: 1.03,
+                      shadowOffset: { width: 0, height: 4 },
+                      shadowOpacity: durationMinutes === option.value ? 0.35 : 0.2,
+                      shadowRadius: durationMinutes === option.value ? 8 : 6,
+                      elevation: durationMinutes === option.value ? 5 : 2,
+                      ...(durationMinutes === option.value ? {
+                        backgroundColor: '#0066CC', // Darker blue on hover
+                        shadowColor: '#0066CC'
+                      } : {
+                        backgroundColor: '#F8FAFC', // Light hover background
+                        borderColor: '$primary',
+                        color: '$primary'
+                      })
+                    }}
+                    pressStyle={{
+                      scale: 0.97,
+                      shadowOffset: { width: 0, height: 1 },
+                      shadowOpacity: 0.15,
+                      shadowRadius: 2,
+                      elevation: 1
+                    }}
                   >
                     {option.label}
                   </BrandButton>
@@ -556,6 +578,28 @@ export function Step2_CourtTime({
               variant="outline"
               onPress={() => setAreaFilter('')}
               icon="RefreshCw"
+              backgroundColor="$surface"
+              borderColor="#D1D5DB"
+              color="$textHigh"
+              shadowColor="#E5E7EB"
+              shadowOffset={{ width: 0, height: 2 }}
+              shadowOpacity={0.1}
+              shadowRadius={4}
+              elevation={1}
+              hoverStyle={{
+                scale: 1.03,
+                backgroundColor: '#F8FAFC',
+                borderColor: '$primary',
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.2,
+                shadowRadius: 6
+              }}
+              pressStyle={{
+                scale: 0.97,
+                shadowOffset: { width: 0, height: 1 },
+                shadowOpacity: 0.05,
+                shadowRadius: 2
+              }}
             >
               Clear Filters
             </BrandButton>
@@ -680,21 +724,37 @@ export function Step2_CourtTime({
                             
                             {/* Expand Button */}
                             <View
-                              width={32}
-                              height={32}
-                              backgroundColor={isSelected ? 'white' : '$color4'}
-                              borderRadius="$3"
+                              width={36}
+                              height={36}
+                              backgroundColor={isSelected ? 'white' : '#F3F4F6'}
+                              borderRadius="$4"
                               alignItems="center"
                               justifyContent="center"
-                              shadowColor={isSelected ? '$primary' : '$color8'}
-                              shadowOffset={{ width: 0, height: 1 }}
-                              shadowOpacity={0.1}
-                              shadowRadius={2}
+                              shadowColor={isSelected ? '$primary' : '#E5E7EB'}
+                              shadowOffset={{ width: 0, height: 2 }}
+                              shadowOpacity={isSelected ? 0.2 : 0.1}
+                              shadowRadius={4}
+                              borderWidth={1}
+                              borderColor={isSelected ? '$primary' : '#D1D5DB'}
+                              animation="quick"
+                              hoverStyle={{
+                                scale: 1.1,
+                                backgroundColor: isSelected ? '#F8FAFC' : '#E5E7EB',
+                                shadowOffset: { width: 0, height: 4 },
+                                shadowOpacity: isSelected ? 0.3 : 0.15,
+                                shadowRadius: 6
+                              }}
+                              pressStyle={{
+                                scale: 0.95,
+                                shadowOffset: { width: 0, height: 1 },
+                                shadowOpacity: 0.1,
+                                shadowRadius: 2
+                              }}
                             >
                               {isExpanded ? (
-                                <Icon name="ChevronUp" size={14} color={isSelected ? '$primary' : '$textMuted'} />
+                                <Icon name="ChevronUp" size={16} color={isSelected ? '$primary' : '#6B7280'} />
                               ) : (
-                                <Icon name="ChevronDown" size={14} color={isSelected ? '$primary' : '$textMuted'} />
+                                <Icon name="ChevronDown" size={16} color={isSelected ? '$primary' : '#6B7280'} />
                               )}
                             </View>
                           </XStack>
@@ -929,65 +989,67 @@ export function Step2_CourtTime({
                                 return { 
                                   backgroundColor: 'white', 
                                   color: '$primary', 
-                                  borderColor: 'white',
+                                  borderColor: '$primary',
                                   borderWidth: 3,
                                   fontWeight: '800',
                                   shadowColor: '$primary',
                                   shadowOffset: { width: 0, height: 4 },
-                                  shadowOpacity: 0.5,
+                                  shadowOpacity: 0.4,
                                   shadowRadius: 8,
                                   elevation: 6,
-                                  transform: [{ scale: 1.08 }]
+                                  transform: [{ scale: 1.05 }]
                                 };
                               }
                               if (status === 'available') {
                                 return { 
-                                  backgroundColor: '$green9', 
+                                  backgroundColor: '#10B981', // Professional green
                                   color: 'white', 
-                                  borderColor: '$green9',
+                                  borderColor: '#10B981',
                                   borderWidth: 2,
                                   fontWeight: '700',
-                                  shadowColor: '$green9',
+                                  shadowColor: '#10B981',
                                   shadowOffset: { width: 0, height: 3 },
-                                  shadowOpacity: 0.4,
+                                  shadowOpacity: 0.3,
                                   shadowRadius: 6,
                                   elevation: 3
                                 };
                               }
                               if (status === 'busy') {
                                 return { 
-                                  backgroundColor: '$red9', 
+                                  backgroundColor: '#EF4444', // Professional red
                                   color: 'white', 
-                                  borderColor: '$red9', 
-                                  opacity: 0.8,
+                                  borderColor: '#EF4444', 
+                                  opacity: 0.85,
                                   borderWidth: 2,
                                   fontWeight: '600',
-                                  shadowColor: '$red9',
+                                  shadowColor: '#EF4444',
                                   shadowOffset: { width: 0, height: 2 },
-                                  shadowOpacity: 0.3,
-                                  shadowRadius: 4
+                                  shadowOpacity: 0.25,
+                                  shadowRadius: 4,
+                                  elevation: 2
                                 };
                               }
                               if (status === 'loading') {
                                 return { 
-                                  backgroundColor: '$blue9', 
+                                  backgroundColor: '#3B82F6', // Professional blue
                                   color: 'white', 
-                                  borderColor: '$blue9',
+                                  borderColor: '#3B82F6',
                                   borderWidth: 2,
                                   fontWeight: '500',
-                                  shadowColor: '$blue9',
+                                  shadowColor: '#3B82F6',
                                   shadowOffset: { width: 0, height: 2 },
-                                  shadowOpacity: 0.3,
-                                  shadowRadius: 4
+                                  shadowOpacity: 0.25,
+                                  shadowRadius: 4,
+                                  elevation: 2
                                 };
                               }
                               return { 
-                                backgroundColor: '$color4', 
-                                color: '$textMuted', 
-                                borderColor: '$color6',
+                                backgroundColor: '#F3F4F6', // Light gray
+                                color: '#9CA3AF', 
+                                borderColor: '#D1D5DB',
                                 borderWidth: 2,
                                 fontWeight: '500',
-                                opacity: 0.6
+                                opacity: 0.8
                               };
                             };
                             
@@ -1007,15 +1069,36 @@ export function Step2_CourtTime({
                                 accessibilityRole="button"
                                 accessibilityHint={status === 'available' ? 'Tap to select this time slot' : status === 'busy' ? 'This time slot is already booked' : 'Tap to check availability'}
                                 hoverStyle={{ 
-                                  opacity: 0.9,
-                                  scale: 1.02,
-                                  shadowOffset: { width: 0, height: 4 },
+                                  scale: 1.05,
+                                  shadowOffset: { width: 0, height: 6 },
                                   shadowOpacity: 0.4,
-                                  shadowRadius: 8
+                                  shadowRadius: 12,
+                                  elevation: 6,
+                                  ...(status === 'available' && {
+                                    backgroundColor: '#059669', // Darker green on hover
+                                    shadowColor: '#059669'
+                                  }),
+                                  ...(status === 'busy' && {
+                                    backgroundColor: '#DC2626', // Darker red on hover
+                                    shadowColor: '#DC2626',
+                                    opacity: 0.9
+                                  }),
+                                  ...(status === 'loading' && {
+                                    backgroundColor: '#2563EB', // Darker blue on hover
+                                    shadowColor: '#2563EB'
+                                  }),
+                                  ...(isTimeSelected && {
+                                    backgroundColor: '#F8FAFC', // Slightly off-white
+                                    shadowColor: '$primary',
+                                    shadowOpacity: 0.5
+                                  })
                                 }}
                                 pressStyle={{ 
                                   scale: 0.95,
-                                  opacity: 0.8
+                                  shadowOffset: { width: 0, height: 2 },
+                                  shadowOpacity: 0.2,
+                                  shadowRadius: 4,
+                                  elevation: 2
                                 }}
                                 {...getButtonProps()}
                               >
@@ -1171,9 +1254,24 @@ export function Step2_CourtTime({
               color="$primary"
               fontWeight="700"
               shadowColor="white"
-              shadowOffset={{ width: 0, height: 2 }}
-              shadowOpacity={0.3}
-              shadowRadius={4}
+              shadowOffset={{ width: 0, height: 3 }}
+              shadowOpacity={0.4}
+              shadowRadius={6}
+              elevation={3}
+              hoverStyle={{
+                scale: 1.05,
+                backgroundColor: '#F8FAFC',
+                borderColor: 'rgba(30, 144, 255, 0.8)',
+                shadowOffset: { width: 0, height: 5 },
+                shadowOpacity: 0.5,
+                shadowRadius: 8
+              }}
+              pressStyle={{
+                scale: 0.95,
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 3
+              }}
             >
               Change Selection
             </BrandButton>

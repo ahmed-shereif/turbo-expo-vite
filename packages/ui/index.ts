@@ -15,3 +15,15 @@ export { Screen } from './components/Screen'
 export { Skeleton } from './components/Skeleton'
 export { Icon } from './components/Icon'
 export { InfoBar, useCurrentUser, CurrentUserProvider } from './components/InfoBar'
+export { 
+  ShadowView, 
+  CardShadow, 
+  ButtonShadow, 
+  ModalShadow, 
+  FloatingShadow,
+  type ShadowLevel,
+  type ShadowColor,
+  type ShadowState,
+  type ShadowProps
+} from './components/ShadowSystem'
+export { ShadowExamples } from './components/ShadowExamples'

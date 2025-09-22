@@ -1,4 +1,3 @@
-import React from 'react'
 import { View, Text } from '@tamagui/core'
 import { BrandButton } from './BrandButton'
 import { BrandCard } from './BrandCard'
@@ -22,7 +21,7 @@ export function ErrorFallback({ error, resetErrorBoundary, onReport }: ErrorFall
           <Text fontSize="$4" color="$textMedium">{message}</Text>
           <View flexDirection="row" gap="$3" marginTop="$2">
             <BrandButton onPress={resetErrorBoundary}>Try again</BrandButton>
-            <BrandButton variant="outlined" onPress={() => onReport?.(error)}>Report issue</BrandButton>
+            <BrandButton variant="outline" onPress={() => onReport?.(error)}>Report issue</BrandButton>
           </View>
         </View>
       </BrandCard>
