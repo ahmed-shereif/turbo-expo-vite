@@ -1,0 +1,14 @@
+{
+  "name": "@repo/geo-eg",
+  "version": "0.1.0",
+  "description": "Egypt geographical data for cities and areas",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "dev": "tsc --watch"
+  },
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

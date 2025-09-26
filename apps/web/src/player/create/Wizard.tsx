@@ -118,8 +118,8 @@ export function Wizard() {
             court={state.court!}
             startTimeHHmm={state.startTimeHHmm!}
             durationMinutes={state.durationMinutes}
-            trainer={state.trainer}
-            onTrainerChange={(trainer) => updateState({ trainer })}
+            trainer={state.trainer as any}
+            onTrainerChange={(trainer) => updateState({ trainer: trainer as any })}
           />
         );
       case 4:

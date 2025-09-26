@@ -3,13 +3,17 @@ import Login from './routes/Login';
 import Signup from './routes/Signup';
 import Home from './routes/Home';
 import Admin from './routes/Admin';
-import Trainer from './routes/Trainer';
 import { RequireAuth, RequireRole } from './auth/guards';
 import PlayerHome from './player/routes/Home';
 import OpenSessions from './player/routes/OpenSessions';
 import MySessions from './player/routes/MySessions';
 import SessionDetail from './player/routes/SessionDetail';
 import { Wizard } from './player/create/Wizard';
+import TrainerHome from './trainer/routes/Home';
+import TrainerRequests from './trainer/routes/Requests';
+import TrainerProfile from './trainer/routes/Profile';
+import TrainerSessions from './trainer/routes/Sessions';
+import TrainerAvailability from './trainer/routes/Availability';
 
 function AppRouter() {
   return (
@@ -35,14 +39,58 @@ function AppRouter() {
         }
       />
       <Route
-        path="/trainer"
+        path="/trainer/home"
         element={
           <RequireAuth>
             <RequireRole roles={['TRAINER']}>
-              <Trainer />
+              <TrainerHome />
             </RequireRole>
           </RequireAuth>
         }
+      />
+      <Route
+        path="/trainer/requests"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['TRAINER']}>
+              <TrainerRequests />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/trainer/profile"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['TRAINER']}>
+              <TrainerProfile />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/trainer/sessions"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['TRAINER']}>
+              <TrainerSessions />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/trainer/availability"
+        element={
+          <RequireAuth>
+            <RequireRole roles={['TRAINER']}>
+              <TrainerAvailability />
+            </RequireRole>
+          </RequireAuth>
+        }
+      />
+      <Route
+        path="/trainer"
+        element={<Navigate to="/trainer/home" />}
       />
       <Route
         path="/player/home"

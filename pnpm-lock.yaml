@@ -104,6 +104,9 @@ importers:
       '@repo/player-api':
         specifier: workspace:*
         version: link:../../packages/player-api
+      '@repo/trainer-api':
+        specifier: workspace:*
+        version: link:../../packages/trainer-api
       '@repo/ui':
         specifier: workspace:*
         version: link:../../packages/ui
@@ -227,6 +230,12 @@ importers:
         specifier: ^4.6.0
         version: 4.6.2(eslint@8.57.1)
 
+  packages/geo-eg:
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.2
+
   packages/player-api:
     dependencies:
       '@repo/auth-client':
@@ -245,6 +254,22 @@ importers:
       vitest:
         specifier: ^2.1.9
         version: 2.1.9(@types/node@22.18.6)(jsdom@25.0.1)(lightningcss@1.30.1)(terser@5.44.0)
+
+  packages/trainer-api:
+    dependencies:
+      '@repo/auth-client':
+        specifier: workspace:*
+        version: link:../auth-client
+      zod:
+        specifier: ^3.22.4
+        version: 3.25.76
+    devDependencies:
+      typescript:
+        specifier: ^5.3.3
+        version: 5.9.2
+      vitest:
+        specifier: ^1.2.0
+        version: 1.6.1(@types/node@24.5.2)(jsdom@25.0.1)(lightningcss@1.30.1)(terser@5.44.0)
 
   packages/tsconfig: {}
 
@@ -13892,6 +13917,24 @@ snapshots:
       - supports-color
       - terser
 
+  vite-node@1.6.1(@types/node@24.5.2)(lightningcss@1.30.1)(terser@5.44.0):
+    dependencies:
+      cac: 6.7.14
+      debug: 4.4.3
+      pathe: 1.1.2
+      picocolors: 1.1.1
+      vite: 5.4.20(@types/node@24.5.2)(lightningcss@1.30.1)(terser@5.44.0)
+    transitivePeerDependencies:
+      - '@types/node'
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
   vite-node@2.1.9(@types/node@22.18.6)(lightningcss@1.30.1)(terser@5.44.0):
     dependencies:
       cac: 6.7.14
@@ -14000,6 +14043,41 @@ snapshots:
       why-is-node-running: 2.3.0
     optionalDependencies:
       '@types/node': 20.19.17
+      jsdom: 25.0.1
+    transitivePeerDependencies:
+      - less
+      - lightningcss
+      - sass
+      - sass-embedded
+      - stylus
+      - sugarss
+      - supports-color
+      - terser
+
+  vitest@1.6.1(@types/node@24.5.2)(jsdom@25.0.1)(lightningcss@1.30.1)(terser@5.44.0):
+    dependencies:
+      '@vitest/expect': 1.6.1
+      '@vitest/runner': 1.6.1
+      '@vitest/snapshot': 1.6.1
+      '@vitest/spy': 1.6.1
+      '@vitest/utils': 1.6.1
+      acorn-walk: 8.3.4
+      chai: 4.5.0
+      debug: 4.4.3
+      execa: 8.0.1
+      local-pkg: 0.5.1
+      magic-string: 0.30.19
+      pathe: 1.1.2
+      picocolors: 1.1.1
+      std-env: 3.9.0
+      strip-literal: 2.1.1
+      tinybench: 2.9.0
+      tinypool: 0.8.4
+      vite: 5.4.20(@types/node@24.5.2)(lightningcss@1.30.1)(terser@5.44.0)
+      vite-node: 1.6.1(@types/node@24.5.2)(lightningcss@1.30.1)(terser@5.44.0)
+      why-is-node-running: 2.3.0
+    optionalDependencies:
+      '@types/node': 24.5.2
       jsdom: 25.0.1
     transitivePeerDependencies:
       - less

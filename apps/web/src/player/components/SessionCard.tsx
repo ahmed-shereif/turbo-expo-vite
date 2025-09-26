@@ -3,7 +3,6 @@ import type { Rank } from '@repo/player-api';
 import { isEligible } from '@repo/player-api';
 import { usePlayerRank } from '../hooks/usePlayerRank';
 import { formatEGP } from '../utils/money';
-import { formatLocal } from '../utils/date';
 import { notify } from '../../lib/notify';
 import { auth } from '../../lib/authClient';
 import { joinSession } from '@repo/player-api';

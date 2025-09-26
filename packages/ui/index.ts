@@ -1,4 +1,5 @@
 export { TamaguiProvider, View, Text } from '@tamagui/core'
+export { YStack, XStack, ZStack, H1, H2, H3, H4, H5, H6, Select, Adapt, Sheet } from 'tamagui'
 export { default as config } from './tamagui.config'
 export type { Conf } from './tamagui.config'
 export { SharedButton } from './components/SharedButton'

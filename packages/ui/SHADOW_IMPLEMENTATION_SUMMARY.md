@@ -82,7 +82,8 @@ import { ShadowView, CardShadow, ButtonShadow } from '@repo/ui'
 ```tsx
 // BrandButton automatically uses appropriate shadows
 <BrandButton variant="primary">Primary Action</BrandButton>
-<BrandButton variant="secondary">Secondary Action</BrandButton>
+<BrandButton variant="secondary">Secondary Action</\
+>
 <BrandButton variant="ghost">Ghost Action</BrandButton>
 
 // BrandCard with elevation control

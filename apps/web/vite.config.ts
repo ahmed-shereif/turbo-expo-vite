@@ -15,11 +15,21 @@ export default defineConfig({
       components: ['@tamagui/core'],
     }),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3002',
+        changeOrigin: true,
+      },
+    },
+  },
   resolve: {
     alias: {
       'react-native': 'react-native-web',
       '@repo/player-api': resolve(root, '../../packages/player-api/src/index.ts'),
-      '@repo/player-api/': resolve(root, '../../packages/player-api/src/')
+      '@repo/player-api/': resolve(root, '../../packages/player-api/src/'),
+      '@repo/trainer-api': resolve(root, '../../packages/trainer-api/dist/index.js'),
+      '@repo/geo-eg': resolve(root, '../../packages/geo-eg/dist/index.js')
     },
   },
   define: {
