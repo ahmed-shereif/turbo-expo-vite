@@ -34,6 +34,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     const bootstrap = async () => {
       try {
+        // Check if we have a valid refresh token first
+        const hasRefreshToken = await auth.hasValidRefreshToken();
+        if (!hasRefreshToken) {
+          setUser(null);
+          router.replace('/(auth)/login');
+          return;
+        }
+
         await auth.refresh();
         const me = await auth.me();
         setUser(me);
@@ -46,6 +54,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       } catch (error) {
         setUser(null);
+        // Auto-navigate to login on any bootstrap failure (no valid token)
+        // Only navigate if not already on auth screens
+        router.replace('/(auth)/login');
       } finally {
         setIsBootstrapping(false);
       }

@@ -7,7 +7,8 @@ import { auth } from '../../lib/authClient';
 import { notify } from '../../lib/notify';
 import Filters from '../components/Filters';
 import SessionCard from '../components/SessionCard';
-import { Screen, BrandCard, Skeleton } from '@repo/ui'
+import { Screen, BrandCard, Skeleton, BrandButton } from '@repo/ui';
+import { Icon } from '@repo/ui';
 
 export default function OpenSessions() {
   const [search] = useSearchParams();
@@ -48,15 +49,18 @@ export default function OpenSessions() {
     }
   }, [q.isError, q.error]);
 
-  // Virtualized 2-column grid by virtualizing rows, each row has up to 2 items
+  // Responsive grid system
   const parentRef = useRef<HTMLDivElement | null>(null);
-
-  const [numCols, setNumCols] = useState(2);
+  const [numCols, setNumCols] = useState(1);
+  const [isFiltersExpanded, setIsFiltersExpanded] = useState(false);
 
   useEffect(() => {
     const updateCols = () => {
       if (typeof window !== 'undefined') {
-        setNumCols(window.innerWidth < 768 ? 1 : 2);
+        const width = window.innerWidth;
+        if (width >= 1200) setNumCols(3);
+        else if (width >= 768) setNumCols(2);
+        else setNumCols(1);
       }
     };
     updateCols();
@@ -68,8 +72,8 @@ export default function OpenSessions() {
   const rowVirtualizer = useVirtualizer({
     count: rowCount,
     getScrollElement: () => parentRef.current,
-    estimateSize: () => 190,
-    overscan: 8,
+    estimateSize: () => 240,
+    overscan: 5,
   });
 
   const virtualRows = rowVirtualizer.getVirtualItems();
@@ -86,76 +90,152 @@ export default function OpenSessions() {
 
   return (
     <Screen>
-      <h2>Open Sessions</h2>
-      <BrandCard>
-        <Filters />
-      </BrandCard>
+      <div style={{ 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'space-between', 
+        marginBottom: '1.5rem',
+        flexWrap: 'wrap',
+        gap: '1rem'
+      }}>
+        <div>
+          <h1 style={{ 
+            margin: 0, 
+            fontSize: '1.875rem', 
+            fontWeight: '700',
+            color: '#1a1a1a'
+          }}>Open Sessions</h1>
+          <p style={{ 
+            margin: '0.25rem 0 0 0', 
+            color: '#6b7280', 
+            fontSize: '0.875rem' 
+          }}>
+            {items.length > 0 ? `${items.length} sessions available` : 'Find and join tennis sessions'}
+          </p>
+        </div>
+        <BrandButton 
+          variant="outline" 
+          icon={isFiltersExpanded ? "ChevronUp" : "Filter"}
+          onPress={() => setIsFiltersExpanded(!isFiltersExpanded)}
+        >
+          {isFiltersExpanded ? 'Hide' : 'Filters'}
+        </BrandButton>
+      </div>
+
+      {isFiltersExpanded && (
+        <BrandCard style={{ marginBottom: '1.5rem' }}>
+          <Filters />
+        </BrandCard>
+      )}
+
       {q.isPending && (
-        <BrandCard>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 12 }}>
-            {Array.from({ length: 6 }).map((_, i) => (
-              <div key={i}>
-                <Skeleton height={18} />
-                <Skeleton height={14} style={{ marginTop: 8 }} />
-                <Skeleton height={14} style={{ marginTop: 8 }} />
+        <div style={{ 
+          display: 'grid', 
+          gridTemplateColumns: `repeat(${numCols}, 1fr)`, 
+          gap: '1rem',
+          marginBottom: '1.5rem'
+        }}>
+          {Array.from({ length: numCols * 2 }).map((_, i) => (
+            <BrandCard key={i}>
+              <div style={{ padding: '0.5rem' }}>
+                <Skeleton height={20} style={{ marginBottom: '0.75rem' }} />
+                <Skeleton height={16} style={{ marginBottom: '0.5rem' }} />
+                <Skeleton height={16} style={{ marginBottom: '0.5rem' }} />
+                <Skeleton height={14} />
               </div>
-            ))}
+            </BrandCard>
+          ))}
+        </div>
+      )}
+
+      {q.isSuccess && items.length === 0 && (
+        <BrandCard>
+          <div style={{ 
+            textAlign: 'center', 
+            padding: '3rem 1rem',
+            color: '#6b7280'
+          }}>
+            <Icon name="Calendar" size={48} color="#d1d5db" style={{ marginBottom: '1rem' }} />
+            <h3 style={{ margin: '0 0 0.5rem 0', color: '#374151' }}>No sessions found</h3>
+            <p style={{ margin: 0 }}>Try adjusting your filters to find more sessions.</p>
           </div>
         </BrandCard>
       )}
-      {q.isSuccess && items.length === 0 && <div>No open sessions match your filters.</div>}
+
       {items.length > 0 && (
-        <BrandCard>
+        <div
+          ref={parentRef}
+          style={{
+            height: 'calc(100vh - 200px)',
+            overflow: 'auto',
+            position: 'relative',
+            background: 'transparent',
+          }}
+        >
           <div
-            ref={parentRef}
             style={{
-              height: 'calc(100vh - 260px)',
-              overflow: 'auto',
+              height: rowVirtualizer.getTotalSize(),
+              width: '100%',
               position: 'relative',
-              borderRadius: 8,
             }}
           >
-            <div
-              style={{
-                height: rowVirtualizer.getTotalSize(),
-                width: '100%',
-                position: 'relative',
-              }}
-            >
-              {virtualRows.map((virtualRow) => {
-                const rowIndex = virtualRow.index;
+            {virtualRows.map((virtualRow) => {
+              const rowIndex = virtualRow.index;
               const firstIndex = rowIndex * numCols;
               const rowItems = Array.from({ length: numCols }, (_, i) => items[firstIndex + i]).filter(Boolean);
-                return (
-                  <div
-                    key={virtualRow.key}
-                    style={{
-                      position: 'absolute',
-                      top: 0,
-                      left: 0,
-                      width: '100%',
-                      transform: `translateY(${virtualRow.start}px)`,
-                      height: virtualRow.size,
-                      paddingBottom: 12,
-                    }}
-                  >
-                  <div style={{ display: 'grid', gridTemplateColumns: `repeat(${numCols}, 1fr)`, gap: 12 }}>
+              return (
+                <div
+                  key={virtualRow.key}
+                  style={{
+                    position: 'absolute',
+                    top: 0,
+                    left: 0,
+                    width: '100%',
+                    transform: `translateY(${virtualRow.start}px)`,
+                    height: virtualRow.size,
+                    paddingBottom: '1.5rem',
+                  }}
+                >
+                  <div style={{ 
+                    display: 'grid', 
+                    gridTemplateColumns: `repeat(${numCols}, 1fr)`, 
+                    gap: '1.5rem'
+                  }}>
                     {rowItems.map((it, i) => (
                       <SessionCard key={`item-${firstIndex + i}`} item={it} />
                     ))}
-                    </div>
                   </div>
-                );
-              })}
-            </div>
-            {(q.isFetchingNextPage || q.isLoading) && (
-              <div style={{ padding: 12, textAlign: 'center' }}>Loading more…</div>
-            )}
-            {!q.hasNextPage && items.length > 0 && (
-              <div style={{ padding: 12, textAlign: 'center', color: '#666' }}>You have reached the end.</div>
-            )}
+                </div>
+              );
+            })}
           </div>
-        </BrandCard>
+          
+          {(q.isFetchingNextPage || q.isLoading) && (
+            <div style={{ 
+              padding: '1.5rem', 
+              textAlign: 'center',
+              background: 'rgba(255, 255, 255, 0.9)',
+              backdropFilter: 'blur(4px)',
+              borderRadius: '0.5rem',
+              margin: '1rem 0'
+            }}>
+              <Icon name="Loader2" size={20} color="#6b7280" style={{ marginRight: '0.5rem' }} />
+              Loading more sessions...
+            </div>
+          )}
+          
+          {!q.hasNextPage && items.length > 0 && (
+            <div style={{ 
+              padding: '1.5rem', 
+              textAlign: 'center', 
+              color: '#6b7280',
+              fontSize: '0.875rem'
+            }}>
+              <Icon name="CheckCircle" size={16} color="#10b981" style={{ marginRight: '0.5rem' }} />
+              All sessions loaded
+            </div>
+          )}
+        </div>
       )}
     </Screen>
   );

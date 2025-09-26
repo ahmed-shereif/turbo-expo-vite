@@ -4,7 +4,7 @@ import './index.css'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { QueryErrorResetBoundary } from '@tanstack/react-query';
 import { ErrorBoundary } from 'react-error-boundary';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter, useLocation } from 'react-router-dom';
 import { AuthProvider } from './auth/AuthContext';
 import { AppRouter } from './AppRouter';
 import { Toaster } from 'react-hot-toast'
@@ -41,7 +41,7 @@ createRoot(document.getElementById('root')!).render(
                 <AuthProvider>
                   <AuthBridge>
                     <YStack>
-                      <InfoBar />
+                      <ConditionalInfoBar />
                       <YStack paddingTop="$4">
                         <AppRouter />
                       </YStack>
@@ -57,6 +57,19 @@ createRoot(document.getElementById('root')!).render(
     </TamaguiProvider>
   </StrictMode>,
 )
+
+function ConditionalInfoBar() {
+  const location = useLocation()
+  
+  // Don't show InfoBar on login or signup pages
+  const isAuthRoute = location.pathname === '/login' || location.pathname === '/signup'
+  
+  if (isAuthRoute) {
+    return null
+  }
+  
+  return <InfoBar />
+}
 
 function AuthBridge({ children }: { children: React.ReactNode }) {
   const { user } = useAuth()

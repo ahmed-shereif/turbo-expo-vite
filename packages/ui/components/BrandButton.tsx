@@ -1,10 +1,10 @@
-import React from 'react'
 import { Button, type ButtonProps, XStack, Text } from 'tamagui'
 import { Icon, type IconName } from './Icon'
+import { ButtonShadow } from './ShadowSystem'
 
 type BrandVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
 
-export interface BrandButtonProps extends Omit<ButtonProps, 'size'> {
+export interface BrandButtonProps extends Omit<ButtonProps, 'size' | 'variant' | 'icon' | 'iconAfter'> {
   variant?: BrandVariant
   fullWidth?: boolean
   size?: 'sm' | 'md' | 'lg'
@@ -17,14 +17,39 @@ export interface BrandButtonProps extends Omit<ButtonProps, 'size'> {
 const getColorsForVariant = (variant: BrandVariant) => {
   switch (variant) {
     case 'secondary':
-      return { bg: '$secondary', color: '$primaryContrast', border: 'transparent' }
+      return { 
+        bg: '$secondary', 
+        color: '$primaryContrast', 
+        border: 'transparent',
+        hoverBg: '#10B981', // Darker green on hover
+        shadowColor: 'secondary' as const
+      }
     case 'outline':
-      return { bg: '$surface', color: '$primary', border: '$primary' }
+      return { 
+        bg: '$surface', 
+        color: '$primary', 
+        border: '$primary',
+        hoverBg: '$primary',
+        hoverColor: '$primaryContrast',
+        shadowColor: 'primary' as const
+      }
     case 'ghost':
-      return { bg: 'transparent', color: '$primary', border: 'transparent' }
+      return { 
+        bg: 'transparent', 
+        color: '$primary', 
+        border: 'transparent',
+        hoverBg: 'rgba(30, 144, 255, 0.1)',
+        shadowColor: 'default' as const
+      }
     case 'primary':
     default:
-      return { bg: '$primary', color: '$primaryContrast', border: 'transparent' }
+      return { 
+        bg: '$primary', 
+        color: '$primaryContrast', 
+        border: 'transparent',
+        hoverBg: '#0066CC', // Darker blue on hover
+        shadowColor: 'primary' as const
+      }
   }
 }
 
@@ -50,37 +75,69 @@ export function BrandButton({
   iconAfter,
   ...rest
 }: BrandButtonProps) {
-  const { bg, color, border } = getColorsForVariant(variant)
+  const { bg, color, border, hoverBg, hoverColor, shadowColor } = getColorsForVariant(variant)
   const { px, py, fontSize } = getPaddingsForSize(size)
   const iconSize = size === 'sm' ? 14 : size === 'lg' ? 18 : 16
 
   const content = (
     <XStack alignItems="center" justifyContent="center" gap={6}>
-      {icon && <Icon name={icon} size={iconSize} color={color} />}
-      <Text color={color} fontSize={fontSize} fontWeight="700" textTransform="uppercase" letterSpacing={0.5}>
+      {icon && (
+        <Icon 
+          name={icon} 
+          size={iconSize} 
+          color={color}
+        />
+      )}
+      <Text 
+        color={color} 
+        fontSize={fontSize} 
+        fontWeight="700" 
+        textTransform="uppercase" 
+        letterSpacing={0.5}
+        animation="quick"
+        hoverStyle={{ color: hoverColor || color }}
+      >
         {loading ? 'Please wait…' : children}
       </Text>
-      {iconAfter && <Icon name={iconAfter} size={iconSize} color={color} />}
+      {iconAfter && (
+        <Icon 
+          name={iconAfter} 
+          size={iconSize} 
+          color={color}
+        />
+      )}
     </XStack>
   )
 
   return (
-    <Button
-      width={fullWidth ? '100%' : undefined}
-      backgroundColor={bg}
-      color={color}
-      borderColor={border}
-      borderWidth={variant === 'outline' ? 2 : 0}
-      borderRadius="$5"
-      paddingHorizontal={px}
-      paddingVertical={py}
-      animation="quick"
-      hoverStyle={{ opacity: 0.95 }}
-      pressStyle={{ scale: 0.98, opacity: 0.9 }}
-      {...rest}
+    <ButtonShadow
+      color={shadowColor}
+      state="default"
+      elevated={variant !== 'ghost'}
     >
-      {content}
-    </Button>
+      <Button
+        width={fullWidth ? '100%' : undefined}
+        backgroundColor={bg}
+        color={color}
+        borderColor={border}
+        borderWidth={variant === 'outline' ? 2 : 0}
+        borderRadius="$5"
+        paddingHorizontal={px}
+        paddingVertical={py}
+        animation="quick"
+        hoverStyle={{ 
+          backgroundColor: hoverBg,
+          scale: 1.02,
+        }}
+        pressStyle={{ 
+          scale: 0.98, 
+          opacity: 0.9,
+        }}
+        {...rest}
+      >
+        {content}
+      </Button>
+    </ButtonShadow>
   )
 }
 

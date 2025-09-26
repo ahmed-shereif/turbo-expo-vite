@@ -74,6 +74,7 @@ export function Step3_Trainer({
   const [displayedTrainers, setDisplayedTrainers] = useState<Trainer[]>([]);
   const [hasMoreTrainers, setHasMoreTrainers] = useState(true);
   const [loadingMore, setLoadingMore] = useState(false);
+  const [checkingAvailability, setCheckingAvailability] = useState(false);
 
   const startAtISO = combineDayAndTime(dayISO, startTimeHHmm);
 
@@ -82,6 +83,73 @@ export function Step3_Trainer({
     withAuth: auth.withAuth.bind(auth),
     getBaseUrl: auth.getBaseUrl.bind(auth),
   };
+
+  // Check availability for all trainers
+  const checkAllTrainersAvailability = useCallback(async (trainersList: Trainer[]) => {
+    // Filter out trainers that are already checked
+    const uncheckedTrainers = trainersList.filter(trainer => !availability[trainer.id]?.checked);
+    
+    if (uncheckedTrainers.length === 0) return;
+
+    setCheckingAvailability(true);
+
+    // Set loading state for unchecked trainers only
+    const loadingAvailability: TrainerAvailability = {};
+    uncheckedTrainers.forEach(trainer => {
+      loadingAvailability[trainer.id] = {
+        available: false,
+        loading: true,
+        checked: false,
+      };
+    });
+
+    setAvailability(prev => ({
+      ...prev,
+      ...loadingAvailability,
+    }));
+
+    try {
+      // Check availability for unchecked trainers in parallel
+      const promises = uncheckedTrainers.map(async (trainer) => {
+        try {
+          const result = await quickCheckTrainer(authWrapper, trainer.id, startAtISO, durationMinutes);
+          return {
+            trainerId: trainer.id,
+            available: result.available,
+            loading: false,
+            checked: true,
+          };
+        } catch (error) {
+          console.error(`Failed to check availability for trainer ${trainer.id}:`, error);
+          return {
+            trainerId: trainer.id,
+            available: false,
+            loading: false,
+            checked: true,
+          };
+        }
+      });
+
+      const results = await Promise.all(promises);
+      
+      // Update availability state with all results
+      const newAvailability: TrainerAvailability = {};
+      results.forEach(result => {
+        newAvailability[result.trainerId] = {
+          available: result.available,
+          loading: result.loading,
+          checked: result.checked,
+        };
+      });
+
+      setAvailability(prev => ({
+        ...prev,
+        ...newAvailability,
+      }));
+    } finally {
+      setCheckingAvailability(false);
+    }
+  }, [startAtISO, durationMinutes, availability]);
 
   const fetchTrainersData = useCallback(async (page = 1, append = false) => {
     try {
@@ -94,7 +162,7 @@ export function Step3_Trainer({
 
       const trainersData = await fetchTrainers(authWrapper, {
         area: court.area,
-        pageSize: 10,
+        pageSize: 20, // Increased page size to get more trainers
         page,
       });
 
@@ -103,10 +171,15 @@ export function Step3_Trainer({
         setDisplayedTrainers(prev => [...prev, ...trainersData as Trainer[]]);
       } else {
         setTrainers(trainersData as Trainer[]);
-        setDisplayedTrainers((trainersData as Trainer[]).slice(0, 10));
+        setDisplayedTrainers(trainersData as Trainer[]);
       }
 
-      setHasMoreTrainers(trainersData.length === 10);
+      setHasMoreTrainers(trainersData.length === 20);
+
+      // Check availability for the new trainers
+      if (trainersData.length > 0) {
+        checkAllTrainersAvailability(trainersData as Trainer[]);
+      }
     } catch (error: any) {
       console.error('Failed to fetch trainers:', error);
       notify.error('Failed to load trainers. Please try again.');
@@ -123,7 +196,7 @@ export function Step3_Trainer({
   // Load more trainers when scrolling
   const loadMoreTrainers = useCallback(() => {
     if (!loadingMore && hasMoreTrainers) {
-      const currentPage = Math.floor(trainers.length / 10) + 1;
+      const currentPage = Math.floor(trainers.length / 20) + 1;
       fetchTrainersData(currentPage, true);
     }
   }, [loadingMore, hasMoreTrainers, trainers.length, fetchTrainersData]);
@@ -228,6 +301,7 @@ export function Step3_Trainer({
 
     if (isLoading) return;
 
+    // If availability hasn't been checked yet, trigger individual check
     if (!availability[selectedTrainer.id]?.checked) {
       checkTrainerAvailability(selectedTrainer.id);
       return;
@@ -402,6 +476,16 @@ export function Step3_Trainer({
               setFilters(prev => ({ ...prev, availabilityFilter: 'all' }));
             }}
             icon="RefreshCw"
+            borderColor="$color6"
+            borderWidth={2}
+            hoverStyle={{
+              scale: 1.02,
+              borderColor: '$primary',
+              shadowOffset: { width: 0, height: 2 },
+              shadowOpacity: 0.2,
+              shadowRadius: 4
+            }}
+            pressStyle={{ scale: 0.98 }}
           >
             Clear Filters
           </BrandButton>
@@ -551,6 +635,17 @@ export function Step3_Trainer({
                   backgroundColor={filters.rankFilter === 'all' ? '$primary' : '$surface'}
                   borderColor={filters.rankFilter === 'all' ? '$primary' : '$color6'}
                   borderWidth={2}
+                  shadowColor={filters.rankFilter === 'all' ? '$primary' : undefined}
+                  shadowOffset={filters.rankFilter === 'all' ? { width: 0, height: 2 } : undefined}
+                  shadowOpacity={filters.rankFilter === 'all' ? 0.2 : undefined}
+                  shadowRadius={filters.rankFilter === 'all' ? 4 : undefined}
+                  hoverStyle={{
+                    scale: 1.02,
+                    shadowOffset: { width: 0, height: 3 },
+                    shadowOpacity: 0.3,
+                    shadowRadius: 6
+                  }}
+                  pressStyle={{ scale: 0.98 }}
                 >
                   All Ranks
                 </BrandButton>
@@ -562,6 +657,17 @@ export function Step3_Trainer({
                     backgroundColor={filters.rankFilter === rank ? '$primary' : '$surface'}
                     borderColor={filters.rankFilter === rank ? '$primary' : '$color6'}
                     borderWidth={2}
+                    shadowColor={filters.rankFilter === rank ? '$primary' : undefined}
+                    shadowOffset={filters.rankFilter === rank ? { width: 0, height: 2 } : undefined}
+                    shadowOpacity={filters.rankFilter === rank ? 0.2 : undefined}
+                    shadowRadius={filters.rankFilter === rank ? 4 : undefined}
+                    hoverStyle={{
+                      scale: 1.02,
+                      shadowOffset: { width: 0, height: 3 },
+                      shadowOpacity: 0.3,
+                      shadowRadius: 6
+                    }}
+                    pressStyle={{ scale: 0.98 }}
                   >
                     {label}
                   </BrandButton>
@@ -574,6 +680,112 @@ export function Step3_Trainer({
 
       {/* Trainers List */}
       <YStack gap="$4">
+        {/* Loading indicator for availability checking */}
+        {checkingAvailability && (
+          <BrandCard
+            backgroundColor="$color2"
+            padding="$6"
+            alignItems="center"
+            borderWidth={1}
+            borderColor="$color4"
+            shadowColor="$color8"
+            shadowOffset={{ width: 0, height: 2 }}
+            shadowOpacity={0.08}
+            shadowRadius={6}
+          >
+            <YStack alignItems="center" gap="$3">
+              <View
+                width={40}
+                height={40}
+                borderWidth={3}
+                borderColor="$color6"
+                borderTopColor="$primary"
+                borderRadius="$round"
+              />
+              <Text color="$textMuted" fontSize="$5" fontWeight="600">
+                Checking trainer availability...
+              </Text>
+            </YStack>
+          </BrandCard>
+        )}
+
+        {/* Status Legend */}
+        {!checkingAvailability && filteredTrainers().length > 0 && (
+          <BrandCard
+            backgroundColor="$color2"
+            padding="$4"
+            borderWidth={1}
+            borderColor="$color4"
+            shadowColor="$color8"
+            shadowOffset={{ width: 0, height: 1 }}
+            shadowOpacity={0.05}
+            shadowRadius={3}
+          >
+            <XStack alignItems="center" justifyContent="center" gap="$6" flexWrap="wrap" $sm={{ gap: '$4' }}>
+              <XStack alignItems="center" gap="$2">
+                <View
+                  width={16}
+                  height={16}
+                  backgroundColor="$green9"
+                  borderRadius="$2"
+                  shadowColor="$green9"
+                  shadowOffset={{ width: 0, height: 1 }}
+                  shadowOpacity={0.3}
+                  shadowRadius={2}
+                />
+                <Text fontSize="$3" color="$textMuted" fontWeight="600">
+                  Available
+                </Text>
+              </XStack>
+              <XStack alignItems="center" gap="$2">
+                <View
+                  width={16}
+                  height={16}
+                  backgroundColor="$red9"
+                  borderRadius="$2"
+                  shadowColor="$red9"
+                  shadowOffset={{ width: 0, height: 1 }}
+                  shadowOpacity={0.3}
+                  shadowRadius={2}
+                />
+                <Text fontSize="$3" color="$textMuted" fontWeight="600">
+                  Busy
+                </Text>
+              </XStack>
+              <XStack alignItems="center" gap="$2">
+                <View
+                  width={16}
+                  height={16}
+                  backgroundColor="$blue9"
+                  borderRadius="$2"
+                  shadowColor="$blue9"
+                  shadowOffset={{ width: 0, height: 1 }}
+                  shadowOpacity={0.3}
+                  shadowRadius={2}
+                />
+                <Text fontSize="$3" color="$textMuted" fontWeight="600">
+                  Checking
+                </Text>
+              </XStack>
+              <XStack alignItems="center" gap="$2">
+                <View
+                  width={16}
+                  height={16}
+                  backgroundColor="$color4"
+                  borderRadius="$2"
+                  shadowColor="$color8"
+                  shadowOffset={{ width: 0, height: 1 }}
+                  shadowOpacity={0.1}
+                  shadowRadius={2}
+                />
+                <Text fontSize="$3" color="$textMuted" fontWeight="600">
+                  Not Checked
+                </Text>
+              </XStack>
+            </XStack>
+          </BrandCard>
+        )}
+
         {filteredTrainers().length === 0 ? (
           <BrandCard
             backgroundColor="$color2"
@@ -613,6 +825,16 @@ export function Step3_Trainer({
                 availabilityFilter: 'all',
               })}
               icon="RefreshCw"
+              borderColor="$color6"
+              borderWidth={2}
+              hoverStyle={{
+                scale: 1.02,
+                borderColor: '$primary',
+                shadowOffset: { width: 0, height: 2 },
+                shadowOpacity: 0.2,
+                shadowRadius: 4
+              }}
+              pressStyle={{ scale: 0.98 }}
             >
               Clear Filters
             </BrandButton>
@@ -818,6 +1040,7 @@ export function Step3_Trainer({
                           alignItems="center"
                           justifyContent="space-between"
                           marginBottom="$3"
+                          $sm={{ flexDirection: 'column', alignItems: 'flex-start', gap: '$3' }}
                         >
                           <Text
                             fontSize="$5"
@@ -826,7 +1049,7 @@ export function Step3_Trainer({
                           >
                             Availability Status
                           </Text>
-                          <XStack alignItems="center" gap="$4">
+                          <XStack alignItems="center" gap="$4" flexWrap="wrap" $sm={{ justifyContent: 'flex-start' }}>
                             {status === 'loading' && (
                               <XStack alignItems="center" gap="$2">
                                 <View
@@ -900,6 +1123,17 @@ export function Step3_Trainer({
                                 borderColor="$primary"
                                 color="white"
                                 fontWeight="600"
+                                shadowColor="$primary"
+                                shadowOffset={{ width: 0, height: 2 }}
+                                shadowOpacity={0.3}
+                                shadowRadius={4}
+                                hoverStyle={{
+                                  scale: 1.05,
+                                  shadowOffset: { width: 0, height: 3 },
+                                  shadowOpacity: 0.4,
+                                  shadowRadius: 6
+                                }}
+                                pressStyle={{ scale: 0.95 }}
                               >
                                 Check Availability
                               </BrandButton>
@@ -917,9 +1151,17 @@ export function Step3_Trainer({
                             color={isSelected ? '$primary' : 'white'}
                             fontWeight="700"
                             shadowColor={isSelected ? '$primary' : '$primary'}
-                            shadowOffset={{ width: 0, height: 2 }}
-                            shadowOpacity={0.2}
-                            shadowRadius={4}
+                            shadowOffset={{ width: 0, height: 3 }}
+                            shadowOpacity={isSelected ? 0.4 : 0.2}
+                            shadowRadius={isSelected ? 6 : 4}
+                            borderWidth={isSelected ? 3 : 2}
+                            hoverStyle={{
+                              scale: 1.05,
+                              shadowOffset: { width: 0, height: 4 },
+                              shadowOpacity: 0.5,
+                              shadowRadius: 8
+                            }}
+                            pressStyle={{ scale: 0.95 }}
                           >
                             {isSelected ? 'Selected' : 'Select Trainer'}
                           </BrandButton>
@@ -1019,9 +1261,17 @@ export function Step3_Trainer({
               color="$primary"
               fontWeight="700"
               shadowColor="white"
-              shadowOffset={{ width: 0, height: 2 }}
-              shadowOpacity={0.3}
-              shadowRadius={4}
+              shadowOffset={{ width: 0, height: 3 }}
+              shadowOpacity={0.4}
+              shadowRadius={6}
+              borderWidth={2}
+              hoverStyle={{
+                scale: 1.05,
+                shadowOffset: { width: 0, height: 4 },
+                shadowOpacity: 0.5,
+                shadowRadius: 8
+              }}
+              pressStyle={{ scale: 0.95 }}
             >
               Change Selection
             </BrandButton>

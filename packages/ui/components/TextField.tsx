@@ -1,4 +1,3 @@
-import React from 'react'
 import { Input, type InputProps } from 'tamagui'
 
 export interface TextFieldProps extends InputProps {
