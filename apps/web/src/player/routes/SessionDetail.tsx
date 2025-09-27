@@ -18,51 +18,9 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../auth/AuthContext';
 import { Screen, BrandCard, BrandButton } from '@repo/ui'
 
-// Local interfaces to ensure strong typing and avoid undefined at usage sites
-type Seats = { filled: number; total: number };
-type Pricing = {
-  currency?: 'EGP';
-  courtPriceHourlyLE?: number;
-  trainerPriceHourlyLE?: number;
-  appFeeHourlyLE?: number;
-};
-type Court = {
-  id: string;
-  name: string;
-  area?: string;
-  address?: string;
-  priceHourlyLE?: number;
-  facilities?: string[];
-};
-type Trainer = {
-  id: string;
-  name?: string;
-  maxLevel?: number;
-  priceHourlyLE?: number;
-};
-type Member = {
-  playerId: string;
-  role: 'CREATOR' | 'PARTICIPANT';
-  name?: string;
-  rank?: Rank;
-  avatarUrl?: string;
-  joinedAt?: string;
-};
-type Session = {
-  id: string;
-  type: string;
-  status: string;
-  startAt: string;
-  durationMinutes: number;
-  seats: Seats;
-  minRank?: Rank;
-  court: Court;
-  trainer: Trainer;
-  pricing?: Pricing;
-  members: Member[];
-};
 
-export default function SessionDetail() {
+
+export default function SessionDetailPage() {
   const { id = '' } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -72,7 +30,7 @@ export default function SessionDetail() {
   const [confirmData, setConfirmData] = useState<null | { share?: number; required: number; accepted: number; pending: string[]; expiresAt?: string }>(null);
   const [showLeaveModal, setShowLeaveModal] = useState(false);
 
-  const sessionQ = useQuery<Session>({
+  const sessionQ = useQuery({
     queryKey: ['session', id],
     queryFn: () => fetchSession(auth as any, id),
     retry: 1,
@@ -159,7 +117,7 @@ export default function SessionDetail() {
   if (sessionQ.isError)
     return (
       <Screen>
-        <h2>Session Detail</h2>
+        <h2>SessionDetailType Detail</h2>
         <BrandCard>
           <div>Could not load session. Please try again.</div>
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
@@ -171,15 +129,16 @@ export default function SessionDetail() {
     );
   if (!sessionQ.data) return null;
 
-  const s: Session = sessionQ.data as Session;
-  console.log('SessionDetail session data:', s);
+  const s = sessionQ.data;
+  console.log('SessionDetailType session data:', s);
   const memberIds = new Set(s.members.map((m) => m.playerId));
   const seatsAvailable = s.seats.filled < s.seats.total;
   const userEligible = isEligible(rank as Rank | undefined, s.minRank as Rank | undefined);
+  const isPlayer = user?.roles?.includes('PLAYER');
   const pricingTotal = (s.pricing?.courtPriceHourlyLE ?? 0) + (s.pricing?.trainerPriceHourlyLE ?? 0) + (s.pricing?.appFeeHourlyLE ?? 0);
-  console.log('SessionDetail pricingTotal:', pricingTotal);
+  console.log('SessionDetailType pricingTotal:', pricingTotal);
   const intendedShare = s.seats.total > 0 ? Math.ceil(pricingTotal / s.seats.total) : undefined;
-  console.log('SessionDetail intendedShare:', intendedShare);
+  console.log('SessionDetailType intendedShare:', intendedShare);
   const isMember = memberIds.has(user?.id || '');
   // const isCreator = (s.creator?.playerId || '') === (user?.id || '');
 
@@ -349,7 +308,7 @@ export default function SessionDetail() {
           </div>
         </BrandCard>
 
-        {/* Session Info & Players */}
+        {/* SessionDetailType Info & Players */}
         <BrandCard>
           <div className="section-header">
             ⚡ Session Info
@@ -372,7 +331,7 @@ export default function SessionDetail() {
             )}
           </div>
           
-          {intendedShare != null && (
+          {intendedShare != null && user?.roles?.includes('PLAYER') && (
             <div style={{ background: '#f0f9ff', padding: 12, borderRadius: 8, marginBottom: 20, border: '1px solid #bae6fd' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#0369a1' }}>
                 💳 <strong>Your share: <span className="price-highlight">{formatEGP(intendedShare)}</span></strong>
@@ -421,7 +380,7 @@ export default function SessionDetail() {
 
           {/* Action Buttons */}
           <div style={{ marginTop: 20, display: 'flex', flexDirection: 'column', gap: 12 }}>
-            {!memberIds.has(user?.id || '') && userEligible && seatsAvailable && (
+            {!memberIds.has(user?.id || '') && userEligible && seatsAvailable && isPlayer && (
               <BrandButton 
                 icon="UserPlus" 
                 onPress={() => joinMut.mutate()} 
@@ -431,7 +390,7 @@ export default function SessionDetail() {
                 {joinMut.isPending ? '⏳ Joining...' : '🚀 Join Session'}
               </BrandButton>
             )}
-            {memberIds.has(user?.id || '') && seatsAvailable && (
+            {memberIds.has(user?.id || '') && seatsAvailable && isPlayer && (
               <BrandButton 
                 icon="CheckCircle" 
                 onPress={() => confirmMut.mutate()} 
@@ -441,7 +400,7 @@ export default function SessionDetail() {
                 {confirmMut.isPending ? '⏳ Processing...' : '✅ Confirm with Current Players'}
               </BrandButton>
             )}
-            {isMember && (
+            {isMember && isPlayer && (
               <BrandButton
                 icon="LogOut"
                 onPress={() => setShowLeaveModal(true)}

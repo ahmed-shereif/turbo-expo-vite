@@ -14,6 +14,8 @@
     "@hookform/resolvers": "^5.2.2",
     "@repo/auth-client": "workspace:*",
     "@repo/player-api": "workspace:*",
+    "@repo/trainer-api": "workspace:*",
+    "@repo/geo-eg": "workspace:*",
     "@repo/ui": "workspace:*",
     "@tanstack/react-query": "^5.89.0",
     "@tanstack/react-virtual": "^3.13.12",

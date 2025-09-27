@@ -43,6 +43,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           // Consumers can route elsewhere if deep-linked
           // eslint-disable-next-line
           router.replace('/(player)/home');
+        } else if ((me?.roles || []).includes('TRAINER' as any)) {
+          // On bootstrap success, if on root app stack index, route to trainer home
+          // eslint-disable-next-line
+          router.replace('/(trainer)/home');
         }
       } catch (error) {
         setUser(null);
@@ -66,6 +70,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(me);
     if ((me?.roles || []).includes('PLAYER' as any)) {
       router.replace('/(player)/home');
+    } else if ((me?.roles || []).includes('TRAINER' as any)) {
+      router.replace('/(trainer)/home');
     }
   };
 

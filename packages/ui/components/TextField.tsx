@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import { Input, type InputProps } from 'tamagui'
 
 export interface TextFieldProps extends InputProps {
@@ -6,7 +6,7 @@ export interface TextFieldProps extends InputProps {
   type?: string
 }
 
-export function TextField({ fullWidth, ...rest }: TextFieldProps) {
+export function TextField({ fullWidth, value, ...rest }: TextFieldProps) {
   return (
     <Input
       width={fullWidth ? '100%' : undefined}
@@ -21,6 +21,7 @@ export function TextField({ fullWidth, ...rest }: TextFieldProps) {
       placeholderTextColor="$textMuted"
       focusStyle={{ borderColor: '$primary', outlineColor: '$primary' }}
       pressStyle={{ opacity: 0.95 }}
+      value={value || ''}
       {...rest}
     />
   )

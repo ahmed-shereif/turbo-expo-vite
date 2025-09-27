@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import { YStack, type StackProps } from 'tamagui'
 
 export interface BrandCardProps extends StackProps {

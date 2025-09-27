@@ -7,7 +7,7 @@ import { Step1_Day } from './Step1_Day';
 import { Step2_CourtTime } from './Step2_CourtTime';
 import { Step3_Trainer } from './Step3_Trainer';
 import { Step4_Review } from './Step4_Review';
-import { BrandButton, Icon, BrandCard } from '@repo/ui';
+import { BrandButton, Icon, BrandCard, SafeText } from '@repo/ui';
 import { YStack, XStack, Text, View } from 'tamagui';
 import type { WizardState } from './types';
 
@@ -163,10 +163,10 @@ export function Wizard() {
           >
             <Icon name="Plus" size={24} color="white" />
           </View>
-          <Text fontSize="$10" fontWeight="700" color="$textHigh" marginBottom="$2" textAlign="center">Create Your Session</Text>
-          <Text fontSize="$6" color="$textMuted" maxWidth={512} textAlign="center">
+          <SafeText fontSize="$10" fontWeight="700" color="$textHigh" marginBottom="$2" textAlign="center">Create Your Session</SafeText>
+          <SafeText fontSize="$6" color="$textMuted" maxWidth={512} textAlign="center">
             Let's set up your perfect paddle training session in just a few steps
-          </Text>
+          </SafeText>
         </YStack>
 
         {/* Progress Section */}

@@ -7,7 +7,8 @@ import { auth } from '../../lib/authClient';
 import { notify } from '../../lib/notify';
 import Filters from '../components/Filters';
 import SessionCard from '../components/SessionCard';
-import { Screen, BrandCard, Skeleton } from '@repo/ui'
+import { Screen, BrandCard, Skeleton, SafeText } from '@repo/ui'
+import { View } from 'tamagui';
 
 export default function OpenSessions() {
   const [search] = useSearchParams();
@@ -149,10 +150,10 @@ export default function OpenSessions() {
               })}
             </div>
             {(q.isFetchingNextPage || q.isLoading) && (
-              <div style={{ padding: 12, textAlign: 'center' }}>Loading more…</div>
+              <View padding="$3"><SafeText textAlign="center">Loading more…</SafeText></View>
             )}
             {!q.hasNextPage && items.length > 0 && (
-              <div style={{ padding: 12, textAlign: 'center', color: '#666' }}>You have reached the end.</div>
+              <View padding="$3"><SafeText textAlign="center" color="$gray11">You have reached the end.</SafeText></View>
             )}
           </div>
         </BrandCard>

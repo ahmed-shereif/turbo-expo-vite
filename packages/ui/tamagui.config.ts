@@ -13,6 +13,7 @@ const tokens = {
     bgSoft: '#F9FAFB',
     surface: '#FFFFFF',
     textHigh: '#111827',
+    textMedium: '#374151',
     textMuted: '#6B7280',
   },
   radius: {
@@ -24,12 +25,8 @@ const tokens = {
     5: 16,
     round: 9999,
   },
-  shadow: {
-    ...baseConfig.tokens.shadow,
-    soft: '0 2px 8px rgba(0,0,0,0.08)',
-    medium: '0 4px 16px rgba(0,0,0,0.12)',
-    strong: '0 8px 24px rgba(0,0,0,0.16)',
-  },
+  // Note: Shadow tokens are handled differently in Tamagui v3
+  // Custom shadows can be defined in themes or used directly in components
 }
 
 // Create config with proper web handling and brand tokens

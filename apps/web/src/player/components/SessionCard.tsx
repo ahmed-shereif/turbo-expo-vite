@@ -33,7 +33,7 @@ export default function SessionCard({ item }: { item: any }) {
     setLoading(true);
     try {
       await joinSession(auth as any, sessionId);
-      navigate(`/player/session/${sessionId}`);
+      navigate(`/session/${sessionId}`);
     } catch (e: any) {
       const status = e?.status;
       const message: string = e?.message || '';
@@ -59,7 +59,7 @@ export default function SessionCard({ item }: { item: any }) {
           {item.pricing && <div>Your share now: {formatEGP(yourShare)}</div>}
         </div>
         <div style={{ display: 'flex', gap: 8 ,flexDirection:'column'}}>
-          <BrandButton icon="Eye" variant="outline" onPress={() => navigate(`/player/session/${item.id || item.sessionId}`)}>
+          <BrandButton icon="Eye" variant="outline" onPress={() => navigate(`/session/${item.id || item.sessionId}`)}>
             View details
           </BrandButton>
           <BrandButton icon="CalendarPlus" disabled={eligible === false || loading} onPress={handleJoin}>

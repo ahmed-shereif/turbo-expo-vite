@@ -1,4 +1,4 @@
-import React from 'react'
+// import React from 'react'
 import * as Lucide from '@tamagui/lucide-icons'
 import { Text, View } from '@tamagui/core'
 

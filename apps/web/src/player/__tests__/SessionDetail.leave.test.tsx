@@ -19,9 +19,9 @@ function setupRoute(id: string) {
   const qc = new QueryClient();
   return render(
     <QueryClientProvider client={qc}>
-      <MemoryRouter initialEntries={[`/player/session/${id}`]}>
+      <MemoryRouter initialEntries={[`/session/${id}`]}>
         <Routes>
-          <Route path="/player/session/:id" element={<SessionDetail />} />
+          <Route path="/session/:id" element={<SessionDetail />} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -54,7 +54,7 @@ describe('SessionDetail leave flow', () => {
     setupRoute('s1');
 
     // Wait for detail load
-    expect(await screen.findByText('Session Detail')).toBeInTheDocument();
+    expect(await screen.findByText('Session Details')).toBeInTheDocument();
 
     // Open leave modal
     const leaveBtn = screen.getByText('Leave Session');

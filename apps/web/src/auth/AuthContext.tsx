@@ -44,6 +44,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           if (location.pathname === '/') {
             navigate('/player/home', { replace: true });
           }
+        } else if ((me?.roles || []).includes('TRAINER' as any)) {
+          // On bootstrap success, if landing on root, redirect to Trainer Home
+          if (location.pathname === '/') {
+            navigate('/trainer/home', { replace: true });
+          }
         }
       } catch (error) {
         setUser(null);
@@ -67,6 +72,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(me);
     if ((me?.roles || []).includes('PLAYER' as any)) {
       navigate('/player/home', { replace: true });
+    } else if ((me?.roles || []).includes('TRAINER' as any)) {
+      navigate('/trainer/home', { replace: true });
     }
   };
 

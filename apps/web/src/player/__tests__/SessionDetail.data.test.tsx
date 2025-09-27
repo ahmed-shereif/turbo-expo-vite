@@ -22,9 +22,9 @@ function setupRoute(id: string) {
   const qc = new QueryClient();
   return render(
     <QueryClientProvider client={qc}>
-      <MemoryRouter initialEntries={[`/player/session/${id}`]}>
+      <MemoryRouter initialEntries={[`/session/${id}`]}>
         <Routes>
-          <Route path="/player/session/:id" element={<SessionDetail />} />
+          <Route path="/session/:id" element={<SessionDetail />} />
         </Routes>
       </MemoryRouter>
     </QueryClientProvider>,
@@ -53,9 +53,9 @@ describe('SessionDetail data rendering', () => {
 
     setupRoute('s1');
 
-    expect(await screen.findByText('Session Detail')).toBeInTheDocument();
+    expect(await screen.findByText('Session Details')).toBeInTheDocument();
     expect(screen.getByText('User One')).toBeInTheDocument();
-    expect(screen.getByText(/Rank: MID_D/)).toBeInTheDocument();
+    expect(screen.getByText('MID_D')).toBeInTheDocument();
     expect(screen.getByText('Trainer A')).toBeInTheDocument();
     expect(screen.getByText('Court A')).toBeInTheDocument();
   });
@@ -78,9 +78,9 @@ describe('SessionDetail data rendering', () => {
 
     setupRoute('s2');
 
-    expect(await screen.findByText('Session Detail')).toBeInTheDocument();
-    // Fallback name used in component is 'Player'
-    expect(screen.getByText('Player')).toBeInTheDocument();
+    expect(await screen.findByText('Session Details')).toBeInTheDocument();
+    // Fallback name used in component is 'Player u1'
+    expect(screen.getByText('Player u1')).toBeInTheDocument();
     // Court fallback name still renders provided name
     expect(screen.getByText('Court B')).toBeInTheDocument();
   });

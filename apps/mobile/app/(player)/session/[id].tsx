@@ -23,6 +23,7 @@ export default function SessionScreen() {
   const { user } = useAuth();
   const [visible, setVisible] = useState(false);
   const [modalText, setModalText] = useState('');
+  const isPlayer = user?.roles?.includes('PLAYER');
 
   const sessionQ = useQuery({
     queryKey: ['session', id],
@@ -131,13 +132,13 @@ export default function SessionScreen() {
                 />
                 {!sessionQ.data.members.some((m) => m.playerId === (user?.id || '')) &&
                   isEligible(user?.rank as Rank | undefined, sessionQ.data.minRank as Rank | undefined) &&
-                  sessionQ.data.seats.filled < sessionQ.data.seats.total && (
+                  sessionQ.data.seats.filled < sessionQ.data.seats.total && isPlayer && (
                     <BrandButton icon="CalendarPlus" onPress={() => joinMut.mutate()}>
                       Join Session
                     </BrandButton>
                   )}
                 {sessionQ.data.members.some((m) => m.playerId === (user?.id || '')) &&
-                  sessionQ.data.seats.filled < sessionQ.data.seats.total && (
+                  sessionQ.data.seats.filled < sessionQ.data.seats.total && isPlayer && (
                     <BrandButton icon="Users" onPress={() => confirmMut.mutate()}>
                       Confirm with Current Players
                     </BrandButton>

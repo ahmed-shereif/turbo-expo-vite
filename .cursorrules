@@ -206,3 +206,42 @@ Reference: full guidelines in `packages/ui/UX_GUIDELINES.md` and checklists in `
   - Export styled components from `@repo/ui`
   - Use Tamagui's `createTamagui` for theme configuration
   - Leverage Tamagui's built-in responsive and theme system
+
+## Text Alignment & SafeText Usage - MANDATORY
+
+**NEVER use inline textAlign styles with regular Text components. Always use SafeText for text alignment.**
+
+- Text Alignment Rules
+  - ALWAYS use `SafeText` component from `@repo/ui` for any text that needs alignment
+  - NEVER use `style={{ textAlign: 'left|center|right' }}` with regular `Text` components
+  - Use `textAlign="left|center|right"` prop directly on `SafeText` components
+  - This prevents React warnings about unrecognized DOM props
+
+- SafeText Usage Patterns
+  ```tsx
+  // ✅ CORRECT - Use SafeText with textAlign prop
+  <SafeText textAlign="center" color="$gray11">
+    No items found
+  </SafeText>
+  
+  <SafeText textAlign="right" fontSize="$3" fontWeight="600">
+    Status: {status}
+  </SafeText>
+  
+  // ❌ WRONG - Don't use inline styles with Text
+  <Text style={{ textAlign: 'center' }} color="$gray11">
+    No items found
+  </Text>
+  ```
+
+- Why SafeText is Required
+  - Regular `Text` components pass `textAlign` as a DOM attribute, causing React warnings
+  - `SafeText` properly extracts alignment props and applies them via the `style` object
+  - Ensures consistent behavior across web and mobile platforms
+  - Prevents console warnings and potential rendering issues
+
+- Migration Pattern
+  - When you see `style={{ textAlign: ... }}` on `Text` components, replace with `SafeText`
+  - Import `SafeText` from `@repo/ui` alongside other UI components
+  - Move `textAlign` from `style` object to direct prop
+  - Remove the `style` prop entirely if it only contained `textAlign`

@@ -25,4 +25,19 @@ export default defineConfig({
   define: {
     'process.env.TAMAGUI_TARGET': '"web"',
   },
+  build: {
+    chunkSizeWarningLimit: 600,
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          tamagui: ['tamagui', '@tamagui/core'],
+          'tamagui-components': ['@tamagui/dialog', '@tamagui/select'],
+          router: ['react-router-dom'],
+          query: ['@tanstack/react-query'],
+          zod: ['zod'],
+        },
+      },
+    },
+  },
 })

@@ -1,11 +1,16 @@
-import { Screen, BrandCard } from '@repo/ui'
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
 
 export default function Trainer() {
-  return (
-    <Screen>
-      <BrandCard>
-        Trainer Area
-      </BrandCard>
-    </Screen>
-  );
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
+  useEffect(() => {
+    if (user?.roles?.includes('TRAINER')) {
+      navigate('/trainer/home', { replace: true });
+    }
+  }, [user, navigate]);
+
+  return null;
 }

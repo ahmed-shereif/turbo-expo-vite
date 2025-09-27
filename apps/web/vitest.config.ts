@@ -17,6 +17,9 @@ export default defineConfig({
     globals: true,
     css: false,
     isolate: true,
+    typecheck: {
+      tsconfig: './tsconfig.test.json'
+    }
   },
 });
 

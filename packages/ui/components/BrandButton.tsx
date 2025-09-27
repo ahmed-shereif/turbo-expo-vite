@@ -1,10 +1,11 @@
-import React from 'react'
-import { Button, type ButtonProps, XStack, Text } from 'tamagui'
+// import React from 'react'
+import { Button, type ButtonProps, XStack } from 'tamagui'
 import { Icon, type IconName } from './Icon'
+import { SafeText } from './SafeText'
 
 type BrandVariant = 'primary' | 'secondary' | 'outline' | 'ghost'
 
-export interface BrandButtonProps extends Omit<ButtonProps, 'size'> {
+export interface BrandButtonProps extends Omit<ButtonProps, 'size' | 'variant' | 'icon' | 'iconAfter'> {
   variant?: BrandVariant
   fullWidth?: boolean
   size?: 'sm' | 'md' | 'lg'
@@ -54,12 +55,23 @@ export function BrandButton({
   const { px, py, fontSize } = getPaddingsForSize(size)
   const iconSize = size === 'sm' ? 14 : size === 'lg' ? 18 : 16
 
+  // Filter out props that shouldn't be passed to DOM elements
+  const { 
+    textAlign, 
+    textTransform, 
+    letterSpacing, 
+    fontWeight, 
+    fontFamily, 
+    lineHeight,
+    ...buttonProps 
+  } = rest as any
+
   const content = (
     <XStack alignItems="center" justifyContent="center" gap={6}>
       {icon && <Icon name={icon} size={iconSize} color={color} />}
-      <Text color={color} fontSize={fontSize} fontWeight="700" textTransform="uppercase" letterSpacing={0.5}>
+      <SafeText color={color} fontSize={fontSize} fontWeight="700" textTransform="uppercase" letterSpacing={0.5}>
         {loading ? 'Please wait…' : children}
-      </Text>
+      </SafeText>
       {iconAfter && <Icon name={iconAfter} size={iconSize} color={color} />}
     </XStack>
   )
@@ -77,7 +89,7 @@ export function BrandButton({
       animation="quick"
       hoverStyle={{ opacity: 0.95 }}
       pressStyle={{ scale: 0.98, opacity: 0.9 }}
-      {...rest}
+      {...buttonProps}
     >
       {content}
     </Button>

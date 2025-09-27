@@ -88,7 +88,8 @@ describe('Step3_Trainer', () => {
     // Click on a trainer
     const trainerCard = screen.getByText('John Doe').closest('[data-testid="trainer-card"]') || 
                        screen.getByText('John Doe').closest('div');
-    fireEvent.click(trainerCard);
+    expect(trainerCard).toBeTruthy();
+    fireEvent.click(trainerCard!);
 
     await waitFor(() => {
       expect(quickCheckTrainer).toHaveBeenCalledWith(
@@ -120,7 +121,8 @@ describe('Step3_Trainer', () => {
 
     // Click on a trainer
     const trainerCard = screen.getByText('John Doe').closest('div');
-    fireEvent.click(trainerCard);
+    expect(trainerCard).toBeTruthy();
+    fireEvent.click(trainerCard!);
 
     await waitFor(() => {
       expect(mockOnTrainerChange).toHaveBeenCalledWith(mockTrainers[0]);
@@ -150,7 +152,8 @@ describe('Step3_Trainer', () => {
 
     // Click on a trainer
     const trainerCard = screen.getByText('John Doe').closest('div');
-    fireEvent.click(trainerCard);
+    expect(trainerCard).toBeTruthy();
+    fireEvent.click(trainerCard!);
 
     await waitFor(() => {
       expect(screen.getByText('Trainer is busy at this time.')).toBeInTheDocument();
@@ -182,8 +185,10 @@ describe('Step3_Trainer', () => {
     const trainer1Card = screen.getByText('John Doe').closest('div');
     const trainer2Card = screen.getByText('Jane Smith').closest('div');
     
-    fireEvent.click(trainer1Card);
-    fireEvent.click(trainer2Card);
+    expect(trainer1Card).toBeTruthy();
+    expect(trainer2Card).toBeTruthy();
+    fireEvent.click(trainer1Card!);
+    fireEvent.click(trainer2Card!);
 
     await waitFor(() => {
       expect(screen.getByText('No available trainers. Please select another date and time.')).toBeInTheDocument();

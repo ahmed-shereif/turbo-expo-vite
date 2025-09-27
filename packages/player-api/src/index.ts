@@ -12,7 +12,7 @@ import {
   CreateSessionResponse,
 } from './schemas';
 
-export type { Court, Trainer };
+export type { Court, Trainer, SessionDetail };
 
 export type { RankT as Rank };
 
@@ -166,9 +166,9 @@ export async function fetchSession(auth: AuthLike, id: string) {
     // console.log("data=>>",data)
     const sessionId = ensureSessionId(id);
     const res = await fetch(`${base(auth)}/sessions/${sessionId}`, { headers });
-    console.log('🧛', res)
+
     const body = await res.json().catch(() => ({}));
-    console.log('🙆‍♂️body ', body)
+
     if (!res.ok) {
       const message = body?.error?.message || 'Unexpected error. Please try again.';
       const status = res.status;
@@ -177,7 +177,7 @@ export async function fetchSession(auth: AuthLike, id: string) {
       throw error;
     }
     const raw = unwrapApi<any>(body);
-    console.log('🧖‍♀️=> ', raw)
+
     // Defensive normalize for partial fields
     const normalized = {
       ...raw,
@@ -275,7 +275,7 @@ export async function fetchMySessions(
   const qs = buildQuery({ status: q.status, page: q.page, pageSize: q.pageSize });
   const data = await auth.withAuth(async (headers: Record<string, string>) => {
     const res = await fetch(`${base(auth)}/me/sessions${qs}`, { headers });
-    console.log('💆‍♂️me/sessions =>?', res)
+ 
     const body = await res.json().catch(() => ({}));
     if (!res.ok) {
       const message = body?.error?.message || 'Unexpected error. Please try again.';
@@ -462,9 +462,19 @@ export async function fetchTrainers(
   const mapped = items.map((item: any) => ({
     id: item.id ?? '',
     name: item.name ?? '',
+    rank: item.rank ?? undefined,
     maxLevel: isFinite(Number(item.maxLevel)) ? Number(item.maxLevel) : undefined,
-    priceHourlyLE: isFinite(Number(item.priceHourlyLE)) ? Number(item.priceHourlyLE) : undefined,
+    hourlyPrice: isFinite(Number(item.hourlyPrice)) ? Number(item.hourlyPrice) : undefined,
+    priceHourlyLE: isFinite(Number(item.hourlyPrice ?? item.priceHourlyLE)) ? Number(item.hourlyPrice ?? item.priceHourlyLE) : undefined,
     areasCovered: Array.isArray(item.areasCovered) ? item.areasCovered : undefined,
+    isVerified: item.isVerified ?? undefined,
+    verifiedAt: item.verifiedAt ?? undefined,
+    rating: item.rating ? {
+      avgStars: Number(item.rating.avgStars),
+      count: Number(item.rating.count),
+    } : null,
+    createdAt: item.createdAt ?? undefined,
+    updatedAt: item.updatedAt ?? undefined,
   }));
 
   return z.array(Trainer).parse(mapped);

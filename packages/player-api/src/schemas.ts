@@ -36,7 +36,7 @@ export const SessionSummary = z.object({
   trainer: z.object({
     id: z.string(),
     name: z.string().optional(),
-    maxLevel: z.coerce.number().optional(),
+    maxLevel: z.number().optional(),
     priceHourlyLE: z.number().optional(),
   }),
   pricing: Pricing,
@@ -102,9 +102,19 @@ export type Court = z.infer<typeof Court>;
 export const Trainer = z.object({
   id: z.string(),
   name: z.string(),
-  maxLevel: z.coerce.number().optional(),
+  rank: Rank.optional(),
+  maxLevel: z.number().optional(),
+  hourlyPrice: z.number().optional(),
   priceHourlyLE: z.number().optional(),
   areasCovered: z.array(z.string()).optional(),
+  isVerified: z.boolean().optional(),
+  verifiedAt: z.string().nullable().optional(),
+  rating: z.object({
+    avgStars: z.number(),
+    count: z.number(),
+  }).nullable().optional(),
+  createdAt: z.string().optional(),
+  updatedAt: z.string().optional(),
 });
 export type Trainer = z.infer<typeof Trainer>;
 

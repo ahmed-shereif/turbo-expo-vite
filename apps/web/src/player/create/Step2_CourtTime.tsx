@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { auth } from '../../lib/authClient';
 import { fetchCourts, quickCheckCourt, combineDayAndTime } from '@repo/player-api';
 import { notify } from '../../lib/notify';
-import { BrandCard, Skeleton, Icon, BrandButton, TextField } from '@repo/ui';
+import { BrandCard, Skeleton, Icon, BrandButton, TextField, SafeText } from '@repo/ui';
 import { YStack, XStack, Text, View, Button, ScrollView } from 'tamagui';
 
 // Create a compatible auth wrapper
@@ -345,12 +345,12 @@ export function Step2_CourtTime({
         >
           <Icon name="Building" size={24} color="white" />
         </View>
-        <Text fontSize="$7" fontWeight="800" color="$textHigh" marginBottom="$2" textAlign="center" letterSpacing={-0.5}>
+        <SafeText fontSize="$7" fontWeight="800" color="$textHigh" marginBottom="$2" textAlign="center" letterSpacing={-0.5}>
           Pick Court & Time
-        </Text>
-        <Text color="$textMuted" fontSize="$4" textAlign="center" lineHeight="$5" maxWidth={400}>
+        </SafeText>
+        <SafeText color="$textMuted" fontSize="$4" textAlign="center" lineHeight="$5" maxWidth={400}>
           Choose your preferred court and time slot for the perfect game experience
-        </Text>
+        </SafeText>
       </YStack>
 
       {/* Filters Section */}
@@ -483,12 +483,12 @@ export function Step2_CourtTime({
             >
               <Icon name="Building2" size={32} color="$color8" />
             </View>
-            <Text color="$textHigh" fontSize="$5" fontWeight="700" marginBottom="$2" textAlign="center">
+            <SafeText color="$textHigh" fontSize="$5" fontWeight="700" marginBottom="$2" textAlign="center">
               No Courts Found
-            </Text>
-            <Text color="$textMuted" fontSize="$4" textAlign="center" marginBottom="$3" maxWidth={400}>
+            </SafeText>
+            <SafeText color="$textMuted" fontSize="$4" textAlign="center" marginBottom="$3" maxWidth={400}>
               We couldn't find any courts in this area. Try adjusting your search criteria or location.
-            </Text>
+            </SafeText>
             <BrandButton
               variant="outline"
               onPress={() => setAreaFilter('')}

@@ -1,5 +1,5 @@
 import type { WizardState } from './types';
-import { Icon, BrandCard } from '@repo/ui';
+import { Icon, BrandCard, SafeText } from '@repo/ui';
 import { YStack, XStack, Text, View, Button, H4 } from 'tamagui';
 import { formatEGP, type Rank } from '@repo/player-api';
 
@@ -72,10 +72,10 @@ export function Step4_Review({
         >
           <Icon name="CheckCircle" size={16} color="#9333ea" />
         </View>
-        <H4 color="$textHigh" textAlign="center" marginBottom="$1">Review & Confirm</H4>
-        <Text color="$textMuted" fontSize="$3" textAlign="center" opacity={0.8}>
+        <SafeText fontSize="$5" fontWeight="600" color="$textHigh" textAlign="center" marginBottom="$1">Review & Confirm</SafeText>
+        <SafeText color="$textMuted" fontSize="$3" textAlign="center" opacity={0.8}>
           Everything looks perfect! Review your session details before creating.
-        </Text>
+        </SafeText>
       </YStack>
 
       {/* Compact Session Summary */}
@@ -363,9 +363,9 @@ export function Step4_Review({
               </View>
               <Text fontSize="$3" fontWeight="600" color="$textHigh" marginBottom="$1">Your Estimated Share</Text>
               <Text fontSize="$6" fontWeight="700" color="$green11" marginBottom="$2">{formatEGP(intendedShare)}</Text>
-              <Text fontSize="$2" color="$textMuted" textAlign="center" opacity={0.8}>
+              <SafeText fontSize="$2" color="$textMuted" textAlign="center" opacity={0.8}>
                 💡 Final amount may vary if you start early or make changes
-              </Text>
+              </SafeText>
             </View>
           </View>
         </YStack>
