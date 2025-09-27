@@ -68,6 +68,14 @@ export function useCourts() {
   });
 }
 
+export function useCourtsByAreas(areas: string[], enabled: boolean = true) {
+  return useQuery({
+    queryKey: ['courts', 'by-areas', areas],
+    queryFn: () => getAllCourts(auth, { areas }),
+    enabled: enabled && areas.length > 0,
+  });
+}
+
 export function useTrainerCalendar(trainerId: string) {
   return useQuery({
     queryKey: ['trainer-calendar', trainerId],

@@ -52,11 +52,9 @@ export function MultiSelectField({
   
   const handleSelectAll = () => {
     if (allSelected) {
-      // Deselect all filtered options
       const filteredValues = filteredOptions.map(option => option.value)
       onSelectionChange(selectedValues.filter(value => !filteredValues.includes(value)))
     } else {
-      // Select all filtered options
       const newValues = [...new Set([...selectedValues, ...filteredOptions.map(option => option.value)])]
       onSelectionChange(newValues)
     }
@@ -70,75 +68,84 @@ export function MultiSelectField({
     }
   }
 
+  const searchSection = searchable ? (
+    <XStack 
+      alignItems="center" 
+      space="$2" 
+      paddingHorizontal="$2" 
+      paddingVertical="$2"
+      backgroundColor="$bgSoft"
+      borderRadius="$3"
+      marginBottom="$2"
+    >
+      <Icon name="Search" size={16} color="$textMuted" />
+      <Input
+        placeholder={searchPlaceholder}
+        value={searchTerm}
+        onChangeText={setSearchTerm}
+        borderWidth={0}
+        backgroundColor="transparent"
+        flex={1}
+        fontSize="$4"
+        focusStyle={{ outlineColor: 'transparent' }}
+      />
+      {searchTerm ? (
+        <Icon 
+          name="X" 
+          size={16} 
+          color="$textMuted"
+          cursor="pointer"
+          onPress={() => setSearchTerm('')}
+        />
+      ) : null}
+    </XStack>
+  ) : null
+
+  const selectAllSection = filteredOptions.length > 0 ? (
+    <CheckboxField
+      label={selectAllLabel}
+      checked={allSelected}
+      onCheckedChange={handleSelectAll}
+      disabled={disabled}
+      paddingHorizontal="$2"
+      paddingVertical="$1"
+      backgroundColor={someSelected && !allSelected ? '$primary' : 'transparent'}
+      opacity={someSelected && !allSelected ? 0.1 : 1}
+    />
+  ) : null
+
+  const noResultsSection = filteredOptions.length === 0 && searchTerm ? (
+    <YStack alignItems="center" padding="$4">
+      <Icon name="SearchX" size={24} color="$textMuted" />
+      <Text color="$textMuted" fontSize="$3">
+        {`No options found for "${searchTerm}"`}
+      </Text>
+    </YStack>
+  ) : null
+
   return (
     <YStack space="$3" {...rest}>
       <XStack alignItems="center" space="$1">
         <Label fontSize="$4" fontWeight="500" color="$textHigh">
           {label}
         </Label>
-        {required && <Text color="$red10" fontSize="$4">*</Text>}
+        {required ? <Text color="$red10" fontSize="$4">*</Text> : null}
       </XStack>
-      
-      {description && (
+      {description ? (
         <Text fontSize="$3" color="$textMuted">
           {description}
         </Text>
-      )}
-      
+      ) : null}
       <YStack
         backgroundColor="$surface"
         borderColor={error ? '$red10' : '$color6'}
         borderWidth={1}
         borderRadius="$4"
         padding="$3"
-        maxHeight={maxHeight + 60} // Account for search and select all
+        maxHeight={maxHeight + 60}
       >
-        {searchable && (
-          <XStack 
-            alignItems="center" 
-            space="$2" 
-            paddingHorizontal="$2" 
-            paddingVertical="$2"
-            backgroundColor="$bgSoft"
-            borderRadius="$3"
-            marginBottom="$2"
-          >
-            <Icon name="Search" size={16} color="$textMuted" />
-            <Input
-              placeholder={searchPlaceholder}
-              value={searchTerm}
-              onChangeText={setSearchTerm}
-              borderWidth={0}
-              backgroundColor="transparent"
-              flex={1}
-              fontSize="$4"
-              focusStyle={{ outlineColor: 'transparent' }}
-            />
-            {searchTerm && (
-              <Icon 
-                name="X" 
-                size={16} 
-                color="$textMuted"
-                cursor="pointer"
-                onPress={() => setSearchTerm('')}
-              />
-            )}
-          </XStack>
-        )}
-        
-        {filteredOptions.length > 0 && (
-          <CheckboxField
-            label={selectAllLabel}
-            checked={allSelected}
-            onCheckedChange={handleSelectAll}
-            disabled={disabled}
-            paddingHorizontal="$2"
-            paddingVertical="$1"
-            backgroundColor={someSelected && !allSelected ? '$primary' : 'transparent'}
-            opacity={someSelected && !allSelected ? 0.1 : 1}
-          />
-        )}
-        
+        {searchSection}
+        {selectAllSection}
         <ScrollView maxHeight={maxHeight} showsVerticalScrollIndicator>
           <YStack space="$2" paddingTop="$2">
             {filteredOptions.map((option) => (
@@ -154,22 +161,13 @@ export function MultiSelectField({
             ))}
           </YStack>
         </ScrollView>
-        
-        {filteredOptions.length === 0 && searchTerm && (
-          <YStack alignItems="center" padding="$4">
-            <Icon name="SearchX" size={24} color="$textMuted" />
-            <Text color="$textMuted" fontSize="$3" textAlign="center">
-              {`No options found for "${searchTerm}"`}
-            </Text>
-          </YStack>
-        )}
+        {noResultsSection}
       </YStack>
-      
-      {error && (
+      {error ? (
         <Text color="$red10" fontSize="$2">
           {error}
         </Text>
-      )}
+      ) : null}
     </YStack>
   )
 }

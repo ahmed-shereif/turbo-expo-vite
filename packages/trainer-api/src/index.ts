@@ -26,6 +26,7 @@ type ListTrainerSessionsQuery = {
 
 type GetCourtsQuery = {
   area?: string;
+  areas?: string[];
   page?: number;
   pageSize?: number;
 };
@@ -98,6 +99,9 @@ export async function getAllCourts(
   return auth.withAuth(async (headers) => {
     const params = new URLSearchParams();
     if (query.area) params.set('area', query.area);
+    if (query.areas && query.areas.length > 0) {
+      query.areas.forEach(area => params.append('areas', area));
+    }
     if (query.page) params.set('page', query.page.toString());
     if (query.pageSize) params.set('pageSize', query.pageSize.toString());
 
@@ -110,7 +114,23 @@ export async function getAllCourts(
     }
 
     const data = await res.json() as any;
-    return Array.isArray(data) ? data : data.courts || [];
+    
+    // Handle different response structures
+    if (Array.isArray(data)) {
+      return data;
+    }
+    if (data.data && Array.isArray(data.data)) {
+      return data.data;
+    }
+    if (data.data && data.data.courts && Array.isArray(data.data.courts)) {
+      return data.data.courts;
+    }
+    if (data.courts && Array.isArray(data.courts)) {
+      return data.courts;
+    }
+    
+    console.warn('Unexpected courts API response structure:', data);
+    return [];
   });
 }
 
@@ -124,7 +144,8 @@ export async function getTrainerProfile(auth: AuthClient): Promise<TrainerProfil
       throw new Error(`Failed to fetch trainer profile: ${res.statusText}`);
     }
 
-    return res.json() as Promise<TrainerProfile>;
+    const data = await res.json() as any;
+    return data.data || data;
   });
 }
 
@@ -146,7 +167,8 @@ export async function updateTrainerProfile(
       throw new Error(`Failed to update trainer profile: ${res.statusText}`);
     }
 
-    return res.json() as Promise<TrainerProfile>;
+    const data = await res.json() as any;
+    return data.data || data;
   });
 }
 

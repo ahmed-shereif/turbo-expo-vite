@@ -4,9 +4,9 @@ import { useForm, Controller } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
 import { Screen, BrandCard, BrandButton } from '@repo/ui';
-import { YStack, XStack, H2, Text, Input, Label, Select } from '@tamagui/core';
+import { YStack, XStack, H2, Text, Input, Label, Select } from 'tamagui';
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { authClient } from '../../src/lib/authClient';
+import { auth } from '../../src/lib/authClient';
 import { getTrainerProfile, updateTrainerProfile, getAllCourts, Rank } from '@repo/trainer-api';
 import { EG_CITIES, getAreasByCity } from '@repo/geo-eg';
 import { notify } from '../../src/lib/notify';
@@ -27,16 +27,16 @@ export default function TrainerProfile() {
 
   const { data: profile, isLoading } = useQuery({
     queryKey: ['trainer-profile'],
-    queryFn: () => getTrainerProfile(authClient),
+    queryFn: () => getTrainerProfile(auth),
   });
 
-  const { data: courts = [] } = useQuery({
+  const { data: allCourts = [] } = useQuery({
     queryKey: ['courts'],
-    queryFn: () => getAllCourts(authClient),
+    queryFn: () => getAllCourts(auth),
   });
 
   const updateMutation = useMutation({
-    mutationFn: updateTrainerProfile.bind(null, authClient),
+    mutationFn: updateTrainerProfile.bind(null, auth),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['trainer-profile'] });
     },
@@ -57,11 +57,23 @@ export default function TrainerProfile() {
   const watchedAreas = watch('areasCovered');
   const watchedCourts = watch('acceptedCourtIds');
   const availableAreas = getAreasByCity(watchedCity);
+  
+  // Filter courts based on selected areas
+  const filteredCourts = allCourts.filter(court => {
+    // If no areas are selected, show all courts
+    if (!watchedAreas || watchedAreas.length === 0) {
+      return true;
+    }
+    // Filter courts that match any of the selected areas
+    return watchedAreas.some(area => 
+      court.area && court.area.toLowerCase().includes(area.toLowerCase())
+    );
+  });
 
   useEffect(() => {
     if (profile) {
       setValue('hourlyPriceLE', profile.hourlyPriceLE);
-      setValue('maxLevel', profile.maxLevel);
+      setValue('maxLevel', profile.maxLevel as any);
       setValue('areasCovered', profile.areasCovered);
       setValue('acceptedCourtIds', profile.acceptedCourtIds);
       
@@ -142,7 +154,7 @@ export default function TrainerProfile() {
                       id="hourlyPrice"
                       placeholder="Enter hourly price (50-10000)"
                       value={field.value?.toString() || ''}
-                      onChangeText={(text) => field.onChange(parseInt(text) || 0)}
+                      onChangeText={(text: string) => field.onChange(parseInt(text) || 0)}
                       keyboardType="numeric"
                     />
                   )}
@@ -184,7 +196,7 @@ export default function TrainerProfile() {
                   render={({ field }) => (
                     <Select 
                       value={field.value} 
-                      onValueChange={(value) => {
+                      onValueChange={(value: string) => {
                         field.onChange(value);
                         setSelectedCity(value);
                         setValue('areasCovered', []); // Reset areas when city changes
@@ -215,8 +227,8 @@ export default function TrainerProfile() {
                     {availableAreas.map((area) => (
                       <XStack key={area} space="$2" alignItems="center" paddingVertical="$1">
                         <BrandButton
-                          size="$2"
-                          variant={watchedAreas.includes(area) ? 'outlined' : 'ghost'}
+                          size="sm"
+                          variant={watchedAreas.includes(area) ? 'outline' : 'ghost'}
                           onPress={() => toggleArea(area)}
                         >
                           {area}
@@ -233,18 +245,18 @@ export default function TrainerProfile() {
               <YStack space="$2">
                 <Label>Accepted Courts</Label>
                 <Text fontSize="$2" color="$gray11">
-                  Selecting courts helps players find you
+                  Selecting courts helps players find you. Showing {filteredCourts.length} courts in your selected areas.
                 </Text>
                 <YStack space="$2" maxHeight={200}>
                   <ScrollView style={{ maxHeight: 200 }}>
-                    {courts.map((court) => (
+                    {filteredCourts.map((court) => (
                       <XStack key={court.id} space="$2" alignItems="center" paddingVertical="$1">
                         <BrandButton
-                          size="$2"
-                          variant={watchedCourts.includes(court.id) ? 'outlined' : 'ghost'}
+                          size="sm"
+                          variant={watchedCourts.includes(court.id) ? 'outline' : 'ghost'}
                           onPress={() => toggleCourt(court.id)}
                         >
-                          {court.name} {court.area && `• ${court.area}`}
+                          {court.area ? `${court.name} • ${court.area}` : court.name}
                         </BrandButton>
                       </XStack>
                     ))}

@@ -40,7 +40,7 @@ export default function SessionDetailPage() {
       const e = sessionQ.error as any;
       if ((e?.status ?? 0) === 404) {
         notify.error('Session no longer available.');
-        navigate('/player/open', { replace: true });
+        navigate(getBackNavigationPath(), { replace: true });
       } else {
         notify.error(e?.message || 'Could not load session. Please try again.');
       }
@@ -101,7 +101,7 @@ export default function SessionDetailPage() {
       qc.invalidateQueries({ queryKey: ['session', id] });
       qc.invalidateQueries({ queryKey: ['my-sessions'] });
       qc.invalidateQueries({ queryKey: ['open-sessions'] });
-      navigate('/player/sessions', { replace: true });
+      navigate(getBackNavigationPath(), { replace: true });
     },
     onError: (e: any) => notify.error(e?.message || 'Could not leave session.'),
   });
@@ -122,7 +122,7 @@ export default function SessionDetailPage() {
           <div>Could not load session. Please try again.</div>
           <div style={{ display: 'flex', gap: 8, marginTop: 8 }}>
             <BrandButton icon="RefreshCw" variant="outline" onPress={() => sessionQ.refetch()}>Retry</BrandButton>
-            <BrandButton icon="ArrowLeft" variant="outline" onPress={() => navigate('/player/open')}>Back to Open Sessions</BrandButton>
+            <BrandButton icon="ArrowLeft" variant="outline" onPress={() => navigate(getBackNavigationPath())}>Back to {isTrainer ? 'Trainer Home' : 'Player Home'}</BrandButton>
           </div>
         </BrandCard>
       </Screen>
@@ -135,12 +135,20 @@ export default function SessionDetailPage() {
   const seatsAvailable = s.seats.filled < s.seats.total;
   const userEligible = isEligible(rank as Rank | undefined, s.minRank as Rank | undefined);
   const isPlayer = user?.roles?.includes('PLAYER');
+  const isTrainer = user?.roles?.includes('TRAINER');
   const pricingTotal = (s.pricing?.courtPriceHourlyLE ?? 0) + (s.pricing?.trainerPriceHourlyLE ?? 0) + (s.pricing?.appFeeHourlyLE ?? 0);
   console.log('SessionDetailType pricingTotal:', pricingTotal);
   const intendedShare = s.seats.total > 0 ? Math.ceil(pricingTotal / s.seats.total) : undefined;
   console.log('SessionDetailType intendedShare:', intendedShare);
   const isMember = memberIds.has(user?.id || '');
   // const isCreator = (s.creator?.playerId || '') === (user?.id || '');
+
+  // Determine the correct back navigation path based on user role
+  const getBackNavigationPath = () => {
+    if (isTrainer) return '/trainer/home';
+    if (isPlayer) return '/player/home';
+    return '/'; // fallback
+  };
 
   function avatarFallback(name?: string, playerId?: string) {
     if (name) {
@@ -252,7 +260,7 @@ export default function SessionDetailPage() {
       {/* Header */}
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <BrandButton icon="ArrowLeft" variant="outline" onPress={() => navigate('/player/open')} />
+          <BrandButton icon="ArrowLeft" variant="outline" onPress={() => navigate(getBackNavigationPath())} />
           <h1 style={{ margin: 0, color: '#1f2937', fontSize: 24, fontWeight: 700 }}>Session Details</h1>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>

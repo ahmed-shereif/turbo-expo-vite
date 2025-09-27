@@ -95,7 +95,6 @@ export function SimpleSelectField({
           color={selectedOption ? '$textHigh' : '$textMuted'} 
           fontSize="$4"
           flex={1}
-          textAlign="left"
         >
           {displayValue}
         </Text>
@@ -149,7 +148,6 @@ export function SimpleSelectField({
                   color={option.disabled ? '$textMuted' : '$textHigh'}
                   fontSize="$4"
                   flex={1}
-                  textAlign="left"
                 >
                   {option.label}
                 </Text>

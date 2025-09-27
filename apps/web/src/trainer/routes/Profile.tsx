@@ -9,12 +9,13 @@ import {
   SimpleSelectField,
   PriceInput, 
   MultiSelectField,
+  CourtsMultiSelectField,
   TrainerProfileSkeleton,
   Icon,
   SafeText
 } from '@repo/ui';
-import { useTrainerProfile, useUpdateTrainerProfile, useCourts } from '../hooks/useTrainerQueries';
-import { YStack, XStack, H2, Text, H3, Separator } from 'tamagui';
+import { useTrainerProfile, useUpdateTrainerProfile, useCourtsByAreas } from '../hooks/useTrainerQueries';
+import { YStack, XStack, H2, H3, Separator } from 'tamagui';
 import { EG_CITIES, getAreasByCity } from '@repo/geo-eg';
 import { Rank } from '@repo/trainer-api';
 import { notify } from '../../lib/notify';
@@ -24,7 +25,7 @@ const profileSchema = z.object({
   maxLevel: Rank,
   city: z.string().min(1),
   areasCovered: z.array(z.string()).min(1),
-  acceptedCourtIds: z.array(z.string()).optional().default([]),
+  acceptedCourtIds: z.array(z.string()),
 });
 
 type ProfileForm = z.infer<typeof profileSchema>;
@@ -32,7 +33,6 @@ type ProfileForm = z.infer<typeof profileSchema>;
 export default function TrainerProfile() {
   const [selectedCity, setSelectedCity] = useState('Cairo');
   const { data: profile, isLoading } = useTrainerProfile();
-  const { data: courts = [] } = useCourts();
   const updateMutation = useUpdateTrainerProfile();
 
   const { control, handleSubmit, setValue, watch, formState: { errors, isSubmitting } } = useForm<ProfileForm>({
@@ -47,7 +47,14 @@ export default function TrainerProfile() {
   });
 
   const watchedCity = watch('city');
+  const watchedAreas = watch('areasCovered');
   const availableAreas = getAreasByCity(watchedCity);
+  
+  // Fetch courts based on selected areas
+  const { data: courts = [], isLoading: courtsLoading, error: courtsError } = useCourtsByAreas(
+    watchedAreas,
+    watchedAreas && watchedAreas.length > 0
+  );
 
   useEffect(() => {
     if (profile) {
@@ -68,9 +75,6 @@ export default function TrainerProfile() {
   }, [profile, setValue]);
 
   const onSubmit = async (data: ProfileForm) => {
-    console.log('Form submission started with data:', data);
-    console.log('Form validation errors:', errors);
-    
     // Ensure acceptedCourtIds is an array
     const submitData = {
       hourlyPriceLE: data.hourlyPriceLE,
@@ -80,11 +84,9 @@ export default function TrainerProfile() {
     };
     
     try {
-      const result = await updateMutation.mutateAsync(submitData);
-      console.log('Form submission successful:', result);
+      await updateMutation.mutateAsync(submitData);
       notify.success('Profile updated successfully! 🎉');
     } catch (error: any) {
-      console.error('Form submission error:', error);
       if (error.status === 422) {
         notify.error('Please check your input values');
       } else if (error.status === 409) {
@@ -101,11 +103,7 @@ export default function TrainerProfile() {
     label: area,
   }));
 
-  // Convert courts to MultiSelectOption format
-  const courtOptions = courts.map(court => ({
-    value: court.id,
-    label: court.name + (court.area ? " • " + court.area : ""),
-  }));
+  // No need to convert courts to options anymore - CourtsMultiSelectField handles this
 
   // Convert rank options for select
   const rankOptions = [
@@ -159,12 +157,11 @@ export default function TrainerProfile() {
                   render={({ field }) => (
                     <PriceInput
                       label="Hourly Rate"
-                      description="Set your hourly training rate (50-10,000 LE)"
+                      description="Set your hourly training rate in LE"
                       value={field.value}
                       onValueChange={field.onChange}
                       currency="LE"
-                      min={50}
-                      max={10000}
+                    
                       error={errors.hourlyPriceLE?.message}
                       required
                     />
@@ -225,16 +222,16 @@ export default function TrainerProfile() {
                   render={({ field }) => (
                     <MultiSelectField
                       label="Areas Covered"
-                      description={"Select all areas in " + selectedCity + " where you can provide training"}
+                      description={`Select all areas in ${selectedCity} where you can provide training`}
                       options={areaOptions}
                       selectedValues={field.value}
                       onSelectionChange={field.onChange}
                       searchable
-                      searchPlaceholder={"Search areas in " + selectedCity + "..."}
+                      searchPlaceholder={`Search areas in ${selectedCity}...`}
                       maxHeight={200}
                       error={errors.areasCovered?.message}
                       required
-                      selectAllLabel={"Select All Areas in " + selectedCity}
+                      selectAllLabel={`Select All Areas in ${selectedCity}`}
                     />
                   )}
                 />
@@ -252,12 +249,14 @@ export default function TrainerProfile() {
                 name="acceptedCourtIds"
                 control={control}
                 render={({ field }) => (
-                  <MultiSelectField
+                  <CourtsMultiSelectField
                     label="Accepted Courts"
-                    description="Select courts where you're available to train. This helps players find you when booking sessions."
-                    options={courtOptions}
+                    description="Select courts where you're available to train. Courts will be loaded based on your selected areas."
                     selectedValues={field.value}
                     onSelectionChange={field.onChange}
+                    courts={courts}
+                    isLoading={courtsLoading}
+                    error={courtsError?.message}
                     searchable
                     searchPlaceholder="Search courts..."
                     maxHeight={200}
@@ -270,7 +269,7 @@ export default function TrainerProfile() {
             {/* Action Buttons */}
             <YStack space="$3" paddingTop="$2">
               <BrandButton 
-                onPress={handleSubmit(onSubmit)}
+                onPress={handleSubmit(onSubmit as any)}
                 disabled={isSubmitting || updateMutation.isPending}
                 loading={isSubmitting || updateMutation.isPending}
                 size="lg"

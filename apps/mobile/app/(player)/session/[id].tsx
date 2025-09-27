@@ -24,17 +24,24 @@ export default function SessionScreen() {
   const [visible, setVisible] = useState(false);
   const [modalText, setModalText] = useState('');
   const isPlayer = user?.roles?.includes('PLAYER');
+  const isTrainer = user?.roles?.includes('TRAINER');
+
+  // Determine the correct back navigation path based on user role
+  const getBackNavigationPath = () => {
+    if (isTrainer) return '/(trainer)/home';
+    if (isPlayer) return '/(player)/home';
+    return '/(app)'; // fallback
+  };
 
   const sessionQ = useQuery({
     queryKey: ['session', id],
     queryFn: () => fetchSession(auth as any, id!),
     enabled: !!id,
-    useErrorBoundary: (e) => (e as any)?.status >= 500,
     retry: 1,
     onError: (e: any) => {
       if ((e?.status ?? 0) === 404) {
         notify.error('Session no longer available.');
-        router.replace('/(player)/open');
+        router.replace(getBackNavigationPath());
         return;
       }
       notify.error(e?.message || 'Could not load session. Please try again.');
@@ -45,7 +52,6 @@ export default function SessionScreen() {
     queryKey: ['court-confirmation', id],
     queryFn: () => getCourtConfirmation(auth as any, id!),
     enabled: !!id,
-    useErrorBoundary: (e) => (e as any)?.status >= 500,
     retry: 1,
     onError: (e: any) => notify.error(e?.message || 'Could not load session. Please try again.'),
   });
@@ -88,28 +94,36 @@ export default function SessionScreen() {
       qc.invalidateQueries({ queryKey: ['session', id] });
       qc.invalidateQueries({ queryKey: ['my-sessions'] });
       qc.invalidateQueries({ queryKey: ['open-sessions'] });
-      router.replace('/(player)/sessions');
+      router.replace(getBackNavigationPath());
     },
     onError: (e: any) => notify.error(e?.message || 'Could not leave session.'),
   });
 
-  const isMember = !!sessionQ.data?.members.some((m) => m.playerId === (user?.id || ''));
+  const isMember = !!sessionQ.data?.members?.some((m: any) => m.playerId === (user?.id || ''));
 
   return (
     <AuthGate>
-      <RoleGate roles={['PLAYER']}>
+      <RoleGate roles={['PLAYER', 'TRAINER']}>
         <Screen>
           {sessionQ.isLoading && <Text>Loading...</Text>}
           {sessionQ.isSuccess && (
             <View>
-              <Text style={{ fontSize: 20, marginBottom: 8 }}>Session Detail</Text>
+              <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 16 }}>
+                <BrandButton 
+                  icon="ArrowLeft" 
+                  variant="outline" 
+                  onPress={() => router.push(getBackNavigationPath())}
+                  style={{ marginRight: 12 }}
+                />
+                <Text style={{ fontSize: 20, fontWeight: '600' }}>Session Detail</Text>
+              </View>
               <BrandCard>
-                <Text>Court: {sessionQ.data.court.name} — {sessionQ.data.court.area}</Text>
-                <Text>Trainer: {sessionQ.data.trainer.name}</Text>
-                <Text>Seats: {sessionQ.data.seats.filled}/{sessionQ.data.seats.total}</Text>
+                <Text>Court: {(sessionQ.data as any)?.court?.name} — {(sessionQ.data as any)?.court?.area}</Text>
+                <Text>Trainer: {(sessionQ.data as any)?.trainer?.name}</Text>
+                <Text>Seats: {(sessionQ.data as any)?.seats?.filled}/{(sessionQ.data as any)?.seats?.total}</Text>
                 {courtQ.isSuccess && (
                   <Text>
-                    {courtQ.data.status === 'PENDING'
+                    {(courtQ.data as any)?.status === 'PENDING'
                       ? 'Awaiting court confirmation'
                       : 'Court confirmed'}
                   </Text>
@@ -118,9 +132,9 @@ export default function SessionScreen() {
               <BrandCard>
                 <Text style={{ marginTop: 8, fontWeight: '600' }}>Players in this session</Text>
                 <FlatList
-                  data={sessionQ.data.members}
-                  keyExtractor={(m) => m.playerId}
-                  renderItem={({ item }) => (
+                  data={(sessionQ.data as any)?.members || []}
+                  keyExtractor={(m: any) => m.playerId}
+                  renderItem={({ item }: { item: any }) => (
                     <View testID={`member-item-${item.playerId}`} style={{ paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: '#eee' }}>
                       <Text>
                         {(item.name || '•••')} {item.playerId === (user?.id || '') ? '(You)' : ''} — {item.role}
@@ -130,15 +144,15 @@ export default function SessionScreen() {
                     </View>
                   )}
                 />
-                {!sessionQ.data.members.some((m) => m.playerId === (user?.id || '')) &&
-                  isEligible(user?.rank as Rank | undefined, sessionQ.data.minRank as Rank | undefined) &&
-                  sessionQ.data.seats.filled < sessionQ.data.seats.total && isPlayer && (
+                {!(sessionQ.data as any)?.members?.some((m: any) => m.playerId === (user?.id || '')) &&
+                  isEligible(user?.rank as Rank | undefined, (sessionQ.data as any)?.minRank as Rank | undefined) &&
+                  (sessionQ.data as any)?.seats?.filled < (sessionQ.data as any)?.seats?.total && isPlayer && (
                     <BrandButton icon="CalendarPlus" onPress={() => joinMut.mutate()}>
                       Join Session
                     </BrandButton>
                   )}
-                {sessionQ.data.members.some((m) => m.playerId === (user?.id || '')) &&
-                  sessionQ.data.seats.filled < sessionQ.data.seats.total && isPlayer && (
+                {(sessionQ.data as any)?.members?.some((m: any) => m.playerId === (user?.id || '')) &&
+                  (sessionQ.data as any)?.seats?.filled < (sessionQ.data as any)?.seats?.total && isPlayer && (
                     <BrandButton icon="Users" onPress={() => confirmMut.mutate()}>
                       Confirm with Current Players
                     </BrandButton>
