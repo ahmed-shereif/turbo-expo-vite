@@ -8,12 +8,15 @@ import { notify } from '../../lib/notify';
 import { auth } from '../../lib/authClient';
 import { joinSession } from '@repo/player-api';
 import { useState } from 'react';
+import { useAuth } from '../../auth/AuthContext';
 import { BrandCard, BrandButton } from '@repo/ui'
 
 export default function SessionCard({ item }: { item: any }) {
   const rank = usePlayerRank();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const { user } = useAuth();
+  const isPlayer = user?.roles?.includes('PLAYER');
 
   const totalSeats = item.seats.total;
   const pricingTotal = (item.pricing?.courtPriceHourlyLE ?? 0) + (item.pricing?.trainerPriceHourlyLE ?? 0) + (item.pricing?.appFeeHourlyLE ?? 0);
@@ -62,9 +65,11 @@ export default function SessionCard({ item }: { item: any }) {
           <BrandButton icon="Eye" variant="outline" onPress={() => navigate(`/session/${item.id || item.sessionId}`)}>
             View details
           </BrandButton>
-          <BrandButton icon="CalendarPlus" disabled={eligible === false || loading} onPress={handleJoin}>
-            {eligible === false ? 'Not eligible' : (loading ? 'Joining...' : 'Join Session')}
-          </BrandButton>
+          {isPlayer && (
+            <BrandButton icon="CalendarPlus" disabled={eligible === false || loading} onPress={handleJoin}>
+              {eligible === false ? 'Not eligible' : (loading ? 'Joining...' : 'Join Session')}
+            </BrandButton>
+          )}
         </div>
       </div>
     </BrandCard>

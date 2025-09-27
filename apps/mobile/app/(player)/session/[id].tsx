@@ -143,7 +143,7 @@ export default function SessionScreen() {
                       Confirm with Current Players
                     </BrandButton>
                   )}
-                {isMember && (
+                {isMember && isPlayer && (
                   <BrandButton
                     testID="leave-session-button"
                     onPress={() =>
