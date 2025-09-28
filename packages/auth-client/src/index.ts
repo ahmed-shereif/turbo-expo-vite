@@ -63,7 +63,7 @@ async function handleResponse<T>(res: Response): Promise<T> {
     return body as T;
   }
 
-  const body = await res.json().catch(() => ({}));
+  const body = await res.json().catch(() => ({})) as any;
 
   if (
     res.status === 401 &&
@@ -162,7 +162,7 @@ export class AuthClient {
     });
 
     if (!res.ok) {
-      const body = await res.json().catch(() => ({}));
+      const body = await res.json().catch(() => ({})) as any;
       const message = body?.error?.message || 'Unexpected error. Please try again.';
       // Support both fieldErrors object and errors array formats, and single-field detail
       const detailsErrors = body?.error?.details?.errors as
