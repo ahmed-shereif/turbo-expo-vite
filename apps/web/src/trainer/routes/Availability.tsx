@@ -505,7 +505,7 @@ export default function TrainerAvailability() {
                           ? '$accent' 
                           : isAvailable 
                             ? '$secondary' 
-                            : '$color3'
+                            : '$red9'
                       }
                       borderRadius="$2"
                       borderWidth={1}
@@ -514,7 +514,7 @@ export default function TrainerAvailability() {
                           ? '$accent' 
                           : isAvailable 
                             ? '$secondary' 
-                            : '$color6'
+                            : '$red9'
                       }
                       cursor="pointer"
                       onPress={() => !hasSession && toggleHourAvailability(date, hour)}
@@ -569,7 +569,7 @@ export default function TrainerAvailability() {
               </SafeText>
             </XStack>
             <XStack space="$2" alignItems="center">
-              <YStack width={20} height={20} backgroundColor="$color3" borderRadius="$2" />
+              <YStack width={20} height={20} backgroundColor="$red9" borderRadius="$2" />
               <SafeText textAlign="left" fontSize="$3" color="$textMuted">
                 Not Available
               </SafeText>
@@ -584,6 +584,16 @@ export default function TrainerAvailability() {
             </XStack>
           </XStack>
         </YStack>
+
+        {/* Save Button for Calendar View */}
+        <BrandButton 
+          onPress={saveWorkingWindows}
+          disabled={updateWorkingMutation.isPending}
+          fullWidth
+          size="lg"
+        >
+          {updateWorkingMutation.isPending ? 'Saving Your Schedule...' : 'Save Weekly Template'}
+        </BrandButton>
       </YStack>
     </BrandCard>
   );
