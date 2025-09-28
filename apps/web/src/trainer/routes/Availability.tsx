@@ -7,10 +7,10 @@ import {
   useBlackouts, 
   useAddBlackout, 
   useRemoveBlackout,
-  useTrainerSessions
+  useAllTrainerSessions
 } from '../hooks/useTrainerQueries';
 import { YStack, XStack, H2, H3, Label, ScrollView, Button } from 'tamagui';
-import { WorkingWindow, SessionSummary } from '@repo/trainer-api';
+import { SessionSummary } from '@repo/trainer-api';
 import { notify } from '../../lib/notify';
 import dayjs from 'dayjs';
 
@@ -116,7 +116,7 @@ export default function TrainerAvailability() {
 
   const { data: calendar } = useTrainerCalendar(trainerId);
   const { data: blackouts = [] } = useBlackouts(trainerId);
-  const { data: sessionsData } = useTrainerSessions('ALL', 1, 100); // Get all sessions for calendar
+  const { data: sessionsData } = useAllTrainerSessions('ALL'); // Get all sessions for calendar view
   const updateWorkingMutation = useUpdateWorkingWindows(trainerId);
   const addBlackoutMutation = useAddBlackout(trainerId);
   const removeBlackoutMutation = useRemoveBlackout();
@@ -128,11 +128,25 @@ export default function TrainerAvailability() {
         [day.key]: { enabled: false, ranges: [] }
       }), {} as WeekSchedule);
 
-      calendar.workingWindows.forEach((window: WorkingWindow) => {
-        schedule[window.day] = {
-          enabled: true,
-          ranges: window.ranges,
-        };
+      // Convert backend format to frontend format
+      const dayNumberToName: Record<number, string> = {
+        0: 'Sun', 1: 'Mon', 2: 'Tue', 3: 'Wed', 4: 'Thu', 5: 'Fri', 6: 'Sat'
+      };
+
+      calendar.workingWindows.forEach((window: any) => {
+        // Backend format: { dow: [1,2,3], startLocal: "09:00", endLocal: "17:00" }
+        window.dow.forEach((dayNumber: number) => {
+          const dayName = dayNumberToName[dayNumber] as keyof WeekSchedule;
+          if (dayName && schedule[dayName]) {
+            schedule[dayName] = {
+              enabled: true,
+              ranges: [
+                ...(schedule[dayName].ranges || []),
+                { from: window.startLocal, to: window.endLocal }
+              ],
+            };
+          }
+        });
       });
 
       setWeekSchedule(schedule);
@@ -201,6 +215,26 @@ export default function TrainerAvailability() {
     return sessionsData.items.filter(session => 
       dayjs(session.startAt).isSame(date, 'day')
     );
+  };
+
+  const getSessionsForHour = (date: dayjs.Dayjs, hour: number): SessionSummary[] => {
+    const sessions = getSessionsForDate(date);
+    
+    return sessions.filter(session => {
+      // Convert UTC session times to local time for comparison
+      const sessionStart = dayjs(session.startAt);
+      const sessionEnd = sessionStart.add(session.durationMinutes, 'minutes');
+      
+      // Get the local hour for the session start time
+      const sessionStartHour = sessionStart.hour();
+      const sessionEndHour = sessionEnd.hour();
+      
+      // Check if the session overlaps with this hour slot
+      // A session overlaps if it starts in this hour OR ends in this hour OR spans this hour
+      return (sessionStartHour === hour) || 
+             (sessionEndHour === hour) || 
+             (sessionStartHour < hour && sessionEndHour > hour);
+    });
   };
 
   const isHourAvailable = (date: dayjs.Dayjs, hour: number): boolean => {
@@ -279,14 +313,27 @@ export default function TrainerAvailability() {
 
   const saveWorkingWindows = async () => {
     try {
-      const workingWindows: WorkingWindow[] = DAYS
+      // Transform frontend data structure to backend format
+      const windows = DAYS
         .filter(day => weekSchedule[day.key].enabled && weekSchedule[day.key].ranges.length > 0)
-        .map(day => ({
-          day: day.key,
-          ranges: weekSchedule[day.key].ranges,
-        }));
+        .map(day => {
+          // Convert day name to day of week number (0=Sunday, 1=Monday, etc.)
+          const dayToNumber: Record<string, number> = {
+            'Sun': 0, 'Mon': 1, 'Tue': 2, 'Wed': 3, 'Thu': 4, 'Fri': 5, 'Sat': 6
+          };
+          
+          // For each time range, create a separate window entry
+          return weekSchedule[day.key].ranges.map(range => ({
+            dow: [dayToNumber[day.key]],
+            startLocal: range.from,
+            endLocal: range.to,
+            effectiveFrom: dayjs().format('YYYY-MM-DD'), // Start from today
+            effectiveTo: dayjs().add(1, 'year').format('YYYY-MM-DD'), // Valid for 1 year
+          }));
+        })
+        .flat(); // Flatten the array since we create multiple entries per day
 
-      await updateWorkingMutation.mutateAsync({ week: workingWindows });
+      await updateWorkingMutation.mutateAsync({ windows });
       notify.success('Your availability has been saved! 🎉');
     } catch (error) {
       notify.error('Failed to save availability. Please try again.');
@@ -357,16 +404,16 @@ export default function TrainerAvailability() {
         </SafeText>
 
         {/* Calendar Grid */}
-        <YStack space="$2">
+        <YStack space="$2" maxWidth="100%" overflow="hidden">
           {/* Header with day names */}
-          <XStack space="$1">
-            <YStack width={60} padding="$2">
+          <XStack space="$2" minWidth={0} marginBottom="$2">
+            <YStack width={60} padding="$2" flexShrink={0}>
               <SafeText textAlign="center" fontSize="$3" fontWeight="600" color="$textMuted">
                 Time
               </SafeText>
             </YStack>
             {getWeekDays().map((date) => (
-              <YStack key={date.format('YYYY-MM-DD')} flex={1} padding="$2">
+              <YStack key={date.format('YYYY-MM-DD')} flex={1} padding="$2" minWidth={120} maxWidth={200} width={150} marginHorizontal="$1">
                 <SafeText textAlign="center" fontSize="$3" fontWeight="600" color="$textHigh">
                   {date.format('ddd')}
                 </SafeText>
@@ -377,68 +424,75 @@ export default function TrainerAvailability() {
             ))}
           </XStack>
 
-          {/* Hour rows */}
-          {Array.from({ length: 24 }, (_, hour) => (
-            <XStack key={hour} space="$1" minHeight={40}>
-              <YStack width={60} padding="$2" justifyContent="center">
-                <SafeText textAlign="center" fontSize="$3" color="$textMuted">
-                  {hour.toString().padStart(2, '0')}:00
-                </SafeText>
-              </YStack>
-              {getWeekDays().map((date) => {
-                const sessions = getSessionsForDate(date);
-                const hasSession = sessions.some(session => 
-                  dayjs(session.startAt).hour() === hour
-                );
-                const isAvailable = isHourAvailable(date, hour);
-                
-                return (
-                  <YStack 
-                    key={`${date.format('YYYY-MM-DD')}-${hour}`} 
-                    flex={1} 
-                    padding="$1"
-                    backgroundColor={
-                      hasSession 
-                        ? '$accent' 
-                        : isAvailable 
-                          ? '$secondary' 
-                          : '$color3'
-                    }
-                    borderRadius="$2"
-                    borderWidth={1}
-                    borderColor={
-                      hasSession 
-                        ? '$accent' 
-                        : isAvailable 
-                          ? '$secondary' 
-                          : '$color6'
-                    }
-                    cursor="pointer"
-                    onPress={() => !hasSession && toggleHourAvailability(date, hour)}
-                    pressStyle={{ opacity: 0.8 }}
-                    opacity={hasSession ? 0.7 : 1}
-                  >
-                    {hasSession && (
-                      <YStack space="$1">
-                        {sessions
-                          .filter(session => dayjs(session.startAt).hour() === hour)
-                          .map((session, idx) => (
-                            <YStack key={idx} padding="$1" backgroundColor="$surface" borderRadius="$1">
-                              <SafeText textAlign="center" fontSize="$2" fontWeight="500" color="$textHigh">
+          {/* Scrollable Calendar Container */}
+          <YStack maxHeight={600} overflow="scroll" borderWidth={1} borderColor="$color6" borderRadius="$3" padding="$2">
+            {/* Hour rows */}
+            {Array.from({ length: 24 }, (_, hour) => (
+              <XStack key={hour} space="$2" minHeight={60} marginBottom="$1">
+                <YStack width={60} padding="$2" justifyContent="center" flexShrink={0} borderBottomWidth={1} borderColor="$color6">
+                  <SafeText textAlign="center" fontSize="$3" color="$textMuted">
+                    {hour.toString().padStart(2, '0')}:00
+                  </SafeText>
+                </YStack>
+                {getWeekDays().map((date) => {
+                  const sessions = getSessionsForHour(date, hour);
+                  const hasSession = sessions.length > 0;
+                  const isAvailable = isHourAvailable(date, hour);
+                  
+                  return (
+                    <YStack 
+                      key={`${date.format('YYYY-MM-DD')}-${hour}`} 
+                      flex={1} 
+                      minWidth={120}
+                      maxWidth={200}
+                      width={150}
+                      padding="$2"
+                      marginHorizontal="$1"
+                      backgroundColor={
+                        hasSession 
+                          ? '$accent' 
+                          : isAvailable 
+                            ? '$secondary' 
+                            : '$color3'
+                      }
+                      borderRadius="$2"
+                      borderWidth={1}
+                      borderColor={
+                        hasSession 
+                          ? '$accent' 
+                          : isAvailable 
+                            ? '$secondary' 
+                            : '$color6'
+                      }
+                      cursor="pointer"
+                      onPress={() => !hasSession && toggleHourAvailability(date, hour)}
+                      pressStyle={{ opacity: 0.8 }}
+                      opacity={hasSession ? 0.7 : 1}
+                      height={60}
+                      justifyContent="center"
+                      overflow="hidden"
+                      boxShadow="inset 0 0 0 1px $color6"
+                    >
+                      {hasSession && (
+                        <YStack space="$1" width="100%" height="100%" justifyContent="center">
+                          {sessions.map((session, idx) => (
+                            <YStack key={idx} padding="$1" backgroundColor="$surface" borderRadius="$2" width="100%" flex={1} justifyContent="center" boxShadow="inset 0 0 0 1px $color6">
+                              <SafeText textAlign="center" fontSize="$2" fontWeight="600" color="$textHigh" numberOfLines={1}>
                                 {session.court?.name || 'Session'}
                               </SafeText>
-                              <SafeText textAlign="center" fontSize="$1" color="$textMuted">
+                              <SafeText textAlign="center" fontSize="$1" color="$textMuted" numberOfLines={1}>
                                 {dayjs(session.startAt).format('HH:mm')} - {dayjs(session.startAt).add(session.durationMinutes, 'minutes').format('HH:mm')}
                               </SafeText>
                             </YStack>
                           ))}
-                      </YStack>
-                    )}
-                  </YStack>
-                );
-              })}
-            </XStack>
-          ))}
+                        </YStack>
+                      )}
+                    </YStack>
+                  );
+                })}
+              </XStack>
+            ))}
+          </YStack>
         </YStack>
 
         {/* Legend */}

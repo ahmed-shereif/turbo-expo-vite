@@ -61,6 +61,35 @@ export function useTrainerSessions(status?: string, page = 1, pageSize = 20) {
   });
 }
 
+export function useAllTrainerSessions(status?: string) {
+  return useQuery({
+    queryKey: ['trainer-sessions-all', status],
+    queryFn: async () => {
+      const allSessions: any[] = [];
+      let page = 1;
+      const pageSize = 50; // Maximum allowed by API
+      let hasMore = true;
+
+      while (hasMore) {
+        const response = await listTrainerSessions(auth, { status: status as any, page, pageSize });
+        allSessions.push(...response.items);
+        
+        // Check if we've fetched all available sessions
+        hasMore = response.items.length === pageSize && allSessions.length < response.total;
+        page++;
+      }
+
+      return {
+        items: allSessions,
+        total: allSessions.length,
+        page: 1,
+        pageSize: allSessions.length,
+        totalPages: 1
+      };
+    },
+  });
+}
+
 export function useCourts() {
   return useQuery({
     queryKey: ['courts'],
