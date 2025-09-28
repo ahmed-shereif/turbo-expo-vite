@@ -50,7 +50,7 @@ export default function Login() {
               control={control}
               name="email"
               render={({ field }) => (
-                <TextField placeholder="Email" fullWidth {...field} />
+                <TextField placeholder="Email" type="email" fullWidth {...field} />
               )}
             />
             {errors.email && (

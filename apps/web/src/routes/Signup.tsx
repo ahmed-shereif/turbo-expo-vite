@@ -59,11 +59,11 @@ export default function Signup() {
             {errors.name && <div style={{ color: '#ef4444' }}>{errors.name.message}</div>}
           </div>
           <div>
-            <Controller control={control} name="phone" render={({ field }) => (<TextField placeholder="Phone (+201234567890)" fullWidth {...field} />)} />
+            <Controller control={control} name="phone" render={({ field }) => (<TextField placeholder="Phone (+201234567890)" type="tel" fullWidth {...field} />)} />
             {errors.phone && <div style={{ color: '#ef4444' }}>{errors.phone.message}</div>}
           </div>
           <div>
-            <Controller control={control} name="email" render={({ field }) => (<TextField placeholder="Email" fullWidth {...field} />)} />
+            <Controller control={control} name="email" render={({ field }) => (<TextField placeholder="Email" type="email" fullWidth {...field} />)} />
             {errors.email && <div style={{ color: '#ef4444' }}>{errors.email.message}</div>}
           </div>
           <div>

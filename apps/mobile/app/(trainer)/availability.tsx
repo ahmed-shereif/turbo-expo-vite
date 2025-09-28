@@ -254,6 +254,7 @@ export default function TrainerAvailability() {
                             value={range.from}
                             onChangeText={(value) => updateTimeRange(day, index, 'from', value)}
                             placeholder="09:00"
+                            keyboardType="numeric"
                           />
                           <Text>to</Text>
                           <Input
@@ -262,6 +263,7 @@ export default function TrainerAvailability() {
                             value={range.to}
                             onChangeText={(value) => updateTimeRange(day, index, 'to', value)}
                             placeholder="17:00"
+                            keyboardType="numeric"
                           />
                           <Button 
                             size="$2" 
@@ -300,6 +302,7 @@ export default function TrainerAvailability() {
                     placeholder="YYYY-MM-DD HH:MM"
                     value={newBlackout.startAt}
                     onChangeText={(value) => setNewBlackout(prev => ({ ...prev, startAt: value }))}
+                    keyboardType="numeric"
                   />
                 </YStack>
                 <YStack space="$2">
@@ -308,6 +311,7 @@ export default function TrainerAvailability() {
                     placeholder="YYYY-MM-DD HH:MM"
                     value={newBlackout.endAt}
                     onChangeText={(value) => setNewBlackout(prev => ({ ...prev, endAt: value }))}
+                    keyboardType="numeric"
                   />
                 </YStack>
                 <YStack space="$2">

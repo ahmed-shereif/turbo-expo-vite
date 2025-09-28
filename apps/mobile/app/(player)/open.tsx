@@ -46,9 +46,9 @@ export default function Open() {
               <Text>Area</Text>
               <TextInput value={area} onChangeText={setArea} placeholder="Area" style={{ borderWidth: 1, padding: 8 }} />
               <Text>Date From (ISO)</Text>
-              <TextInput value={dateFrom} onChangeText={setDateFrom} placeholder="YYYY-MM-DDTHH:mm" style={{ borderWidth: 1, padding: 8 }} />
+              <TextInput value={dateFrom} onChangeText={setDateFrom} placeholder="YYYY-MM-DDTHH:mm" keyboardType="numeric" style={{ borderWidth: 1, padding: 8 }} />
               <Text>Date To (ISO)</Text>
-              <TextInput value={dateTo} onChangeText={setDateTo} placeholder="YYYY-MM-DDTHH:mm" style={{ borderWidth: 1, padding: 8 }} />
+              <TextInput value={dateTo} onChangeText={setDateTo} placeholder="YYYY-MM-DDTHH:mm" keyboardType="numeric" style={{ borderWidth: 1, padding: 8 }} />
               <Text>Eligible only: {eligibleOnly ? 'Yes' : 'No'}</Text>
               <BrandButton variant="outline" icon="ShieldCheck" onPress={() => setEligibleOnly((v) => !v)}>Toggle Eligible</BrandButton>
               <Text>Price Min</Text>

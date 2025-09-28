@@ -73,6 +73,7 @@ export default function CreateSessionStep1() {
           value={dayISO || ''}
           onChangeText={handleDateChange}
           placeholder="YYYY-MM-DD"
+          keyboardType="numeric"
           style={{
             borderWidth: 1,
             borderColor: '#d1d5db',
