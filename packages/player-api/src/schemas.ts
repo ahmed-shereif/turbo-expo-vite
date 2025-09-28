@@ -17,10 +17,20 @@ export const Pricing = z
   })
   .optional();
 
+export const SessionStatus = z.enum([
+  'AWAITING_TRAINER',
+  'AWAITING_TRAINER_AND_COURT', 
+  'PENDING',
+  'AWAITING_COURT_CONFIRMATION',
+  'APPROVED',
+  'CANCELLED'
+]);
+export type SessionStatus = z.infer<typeof SessionStatus>;
+
 export const SessionSummary = z.object({
   id: z.string(),
   type: z.string(),
-  status: z.string(),
+  status: SessionStatus,
   startAt: z.string(),
   durationMinutes: z.number(),
   seats: Seats,
@@ -143,7 +153,7 @@ export const CreateSessionResponse = z.object({
     creatorId: z.string(),
     courtId: z.string(),
     trainerId: z.string(),
-    status: z.string(),
+    status: SessionStatus,
     type: z.string(),
     startAt: z.string(),
     durationMinutes: z.number(),

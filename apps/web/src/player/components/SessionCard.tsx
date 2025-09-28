@@ -9,7 +9,8 @@ import { auth } from '../../lib/authClient';
 import { joinSession } from '@repo/player-api';
 import { useState } from 'react';
 import { useAuth } from '../../auth/AuthContext';
-import { BrandCard, BrandButton } from '@repo/ui'
+import { BrandCard, BrandButton, SessionStatusBadge } from '@repo/ui'
+import type { SessionStatus } from '@repo/player-api';
 
 export default function SessionCard({ item }: { item: any }) {
   const rank = usePlayerRank();
@@ -60,6 +61,9 @@ export default function SessionCard({ item }: { item: any }) {
           <div>Seats: {item.seats.filled}/{item.seats.total}</div>
           {minRank && <div>Min Rank: {minRank}</div>}
           {item.pricing && <div>Your share now: {formatEGP(yourShare)}</div>}
+          <div style={{ marginTop: 8 }}>
+            <SessionStatusBadge status={item.status as SessionStatus} size="sm" />
+          </div>
         </div>
         <div style={{ display: 'flex', gap: 8 ,flexDirection:'column'}}>
           <BrandButton icon="Eye" variant="outline" onPress={() => navigate(`/session/${item.id || item.sessionId}`)}>

@@ -1,9 +1,10 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Screen, BrandCard, BrandButton, SafeText } from '@repo/ui';
+import { Screen, BrandCard, BrandButton, SafeText, SessionStatusBadge } from '@repo/ui';
 import { useTrainerSessions } from '../hooks/useTrainerQueries';
 import { YStack, XStack, H2, Text, Button } from 'tamagui';
 import type { SessionSummary, Pagination } from '@repo/trainer-api';
+import type { SessionStatus } from '@repo/player-api';
 
 type TabKey = 'UPCOMING' | 'PAST';
 
@@ -77,9 +78,7 @@ export default function TrainerSessions() {
                         <Text fontSize="$3" color="$gray11">
                           Type: {session.type}
                         </Text>
-                        <Text fontSize="$3" color="$gray11">
-                          Status: {session.status}
-                        </Text>
+                        <SessionStatusBadge status={session.status as SessionStatus} size="sm" />
                       </XStack>
                       {session.creator && (
                         <Text fontSize="$3" color="$gray11">

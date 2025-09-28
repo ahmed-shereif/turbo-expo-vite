@@ -48,10 +48,20 @@ export const Court = z.object({
 });
 export type Court = z.infer<typeof Court>;
 
+export const SessionStatus = z.enum([
+  'AWAITING_TRAINER',
+  'AWAITING_TRAINER_AND_COURT',
+  'PENDING', 
+  'AWAITING_COURT_CONFIRMATION',
+  'APPROVED',
+  'CANCELLED'
+]);
+export type SessionStatus = z.infer<typeof SessionStatus>;
+
 export const SessionSummary = z.object({
   id: z.string(),
   type: z.enum(['OPEN', 'PRIVATE']),
-  status: z.string(),
+  status: SessionStatus,
   startAt: z.string(),
   durationMinutes: z.number(),
   seats: z.object({
