@@ -179,12 +179,14 @@ export function Step3_Trainer({
         }
       }
 
-      // Availability filter
+      // Availability filter - Keep checked trainers visible regardless of availability
       if (filters.availabilityFilter === 'available') {
         const status = availability[trainerItem.id];
-        if (!status?.checked || !status?.available) {
-          return false;
+        // Show available trainers OR trainers that have been checked (to maintain visibility)
+        if (!status?.checked) {
+          return false; // Hide unchecked trainers
         }
+        // Keep all checked trainers visible (both available and unavailable)
       } else if (filters.availabilityFilter === 'checked') {
         const status = availability[trainerItem.id];
         if (!status?.checked) {
@@ -307,15 +309,8 @@ export function Step3_Trainer({
     }
   };
 
-  // Check if we have any available trainers after all checks are done
-  useEffect(() => {
-    const checkedTrainers = Object.values(availability).filter(status => status.checked);
-    const availableTrainers = checkedTrainers.filter(status => status.available);
-
-    if (checkedTrainers.length > 0 && availableTrainers.length === 0 && !loading) {
-      setNoAvailableTrainers(true);
-    }
-  }, [availability, loading]);
+  // Keep the trainer list visible even when no trainers are available
+  // This ensures better UX by showing unavailable trainers with clear status
 
   if (loading) {
     return (
@@ -373,82 +368,7 @@ export function Step3_Trainer({
     );
   }
 
-  if (noAvailableTrainers) {
-    return (
-      <YStack gap="$8" maxWidth={1200} width="100%" marginHorizontal="auto" paddingHorizontal="$4">
-        {/* Header */}
-        <YStack alignItems="center" paddingVertical="$6">
-          <View
-            width={80}
-            height={80}
-            backgroundColor="$primary"
-            borderRadius="$round"
-            alignItems="center"
-            justifyContent="center"
-            marginBottom="$6"
-            shadowColor="$primary"
-            shadowOffset={{ width: 0, height: 4 }}
-            shadowOpacity={0.2}
-            shadowRadius={12}
-          >
-            <Icon name="User" size={32} color="white" />
-          </View>
-          <Text fontSize="$10" fontWeight="800" color="$textHigh" marginBottom="$3" textAlign="center" letterSpacing={-0.5}>
-            Pick Your Trainer
-          </Text>
-          <SafeText color="$textMuted" fontSize="$6" textAlign="center" lineHeight="$6" maxWidth={500}>
-            Choose the perfect trainer to guide your session
-          </SafeText>
-        </YStack>
 
-        <BrandCard
-          backgroundColor="$color2"
-          padding="$12"
-          alignItems="center"
-          borderWidth={1}
-          borderColor="$color4"
-          borderStyle="dashed"
-        >
-          <View
-            width={96}
-            height={96}
-            backgroundColor="$color4"
-            borderRadius="$round"
-            alignItems="center"
-            justifyContent="center"
-            marginBottom="$6"
-            shadowColor="$color8"
-            shadowOffset={{ width: 0, height: 2 }}
-            shadowOpacity={0.1}
-            shadowRadius={8}
-          >
-            <Icon name="UserX" size={40} color="$color8" />
-          </View>
-          <SafeText color="$textHigh" fontSize="$7" fontWeight="700" marginBottom="$2" textAlign="center">
-            No Available Trainers
-          </SafeText>
-          <SafeText color="$textMuted" fontSize="$5" textAlign="center" marginBottom="$4" maxWidth={400}>
-            We couldn't find any available trainers for this time slot. Try selecting a different date and time.
-          </SafeText>
-          <BrandButton
-            variant="outline"
-            onPress={() => {
-              setFilters({
-                searchQuery: '',
-                rankFilter: 'all',
-                priceRange: { min: 0, max: 1000 },
-                availabilityFilter: 'all',
-                ratingFilter: 0,
-              });
-            }}
-            icon="RefreshCw"
-          >
-            Clear Filters
-          </BrandButton>
-        </BrandCard>
-      </YStack>
-    );
-  }
 
   return (
     <YStack gap="$5" maxWidth={800} width="100%" marginHorizontal="auto" paddingHorizontal="$3">

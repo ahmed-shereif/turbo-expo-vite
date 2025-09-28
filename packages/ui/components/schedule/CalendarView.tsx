@@ -18,6 +18,7 @@ interface CalendarViewProps {
   onClearOverrides: () => void;
   onToggleHourAvailability: (date: dayjs.Dayjs, hour: number) => void;
   onSave: () => void;
+  onSessionClick?: (session: SessionSummary) => void;
   isSaving?: boolean;
 }
 
@@ -33,6 +34,7 @@ export function CalendarView({
   onClearOverrides,
   onToggleHourAvailability,
   onSave,
+  onSessionClick,
   isSaving = false,
 }: CalendarViewProps) {
   const getEffectiveDaySchedule = (date: dayjs.Dayjs): DaySchedule => {
@@ -162,7 +164,7 @@ export function CalendarView({
             {/* Hour rows */}
             {Array.from({ length: 24 }, (_, hour) => (
               <XStack key={hour} space="$2" minHeight={60} marginBottom="$1">
-                <YStack width={60} padding="$2" justifyContent="center" flexShrink={0} borderBottomWidth={1} borderColor="$color6">
+                <YStack width={60} padding="$2" justifyContent="flex-start" flexShrink={0} borderBottomWidth={1} borderColor="$color6">
                   <SafeText textAlign="center" fontSize="$3" color="$textMuted">
                     {hour.toString().padStart(2, '0')}:00
                   </SafeText>
@@ -209,7 +211,20 @@ export function CalendarView({
                       {hasSession && (
                         <YStack space="$1" width="100%" height="100%" justifyContent="center">
                           {sessionsForHour.map((session, idx) => (
-                            <YStack key={idx} padding="$1" backgroundColor="$surface" borderRadius="$2" width="100%" flex={1} justifyContent="center" boxShadow="inset 0 0 0 1px $color6">
+                            <YStack 
+                              key={idx} 
+                              padding="$1" 
+                              backgroundColor="$surface" 
+                              borderRadius="$2" 
+                              width="100%" 
+                              flex={1} 
+                              justifyContent="center" 
+                              boxShadow="inset 0 0 0 1px $color6"
+                              cursor={onSessionClick ? "pointer" : "default"}
+                              onPress={onSessionClick ? () => onSessionClick(session) : undefined}
+                              pressStyle={onSessionClick ? { opacity: 0.8, scale: 0.98 } : undefined}
+                              hoverStyle={onSessionClick ? { backgroundColor: "$color3" } : undefined}
+                            >
                               <SafeText textAlign="center" fontSize="$2" fontWeight="600" color="$textHigh" numberOfLines={1}>
                                 {session.court?.name || 'Session'}
                               </SafeText>

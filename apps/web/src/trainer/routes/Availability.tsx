@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Screen, 
   SafeText,
@@ -13,6 +14,7 @@ import {
   DAYS
 } from '@repo/ui';
 import type { WeekSchedule } from '@repo/ui';
+import type { SessionSummary } from '@repo/trainer-api';
 import { useAuth } from '../../auth/AuthContext';
 import { 
   useTrainerCalendarWithWindows, 
@@ -29,6 +31,7 @@ import dayjs from 'dayjs';
 
 export default function TrainerAvailability() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const trainerId = user?.id || '';
   
   // Use custom hooks for state management
@@ -231,6 +234,9 @@ export default function TrainerAvailability() {
     }
   };
 
+  const handleSessionClick = (session: SessionSummary) => {
+    navigate(`/session/${session.id}`);
+  };
 
   return (
     <Screen>
@@ -266,6 +272,7 @@ export default function TrainerAvailability() {
               onClearOverrides={handleClearAllDailyOverrides}
               onToggleHourAvailability={toggleHourAvailability}
               onSave={saveWorkingWindows}
+              onSessionClick={handleSessionClick}
               isSaving={updateWorkingMutation.isPending}
             />
           ) : (
