@@ -216,6 +216,20 @@ export async function getTrainerCalendar(auth: AuthClient, trainerId: string) {
   });
 }
 
+export async function getTrainerWorkingWindows(auth: AuthClient, trainerId: string) {
+  return auth.withAuth(async (headers) => {
+    const res = await fetch(`${auth.getBaseUrl()}/calendar/TRAINER/${trainerId}/working-windows`, {
+      headers,
+    });
+
+    if (!res.ok) {
+      throw new Error(`Failed to fetch trainer working windows: ${res.statusText}`);
+    }
+
+    return res.json();
+  });
+}
+
 export async function putWorkingWindows(
   auth: AuthClient,
   trainerId: string,

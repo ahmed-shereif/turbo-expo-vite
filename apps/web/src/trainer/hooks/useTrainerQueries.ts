@@ -1,4 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMemo } from 'react';
 import { auth } from '../../lib/authClient';
 import {
   listTrainerRequests,
@@ -8,6 +9,7 @@ import {
   listTrainerSessions,
   getAllCourts,
   getTrainerCalendar,
+  getTrainerWorkingWindows,
   putWorkingWindows,
   listBlackouts,
   addBlackout,
@@ -75,7 +77,7 @@ export function useAllTrainerSessions(status?: string) {
         allSessions.push(...response.items);
         
         // Check if we've fetched all available sessions
-        hasMore = response.items.length === pageSize && allSessions.length < response.total;
+        hasMore = response.items.length === pageSize && allSessions.length < response.totalCount;
         page++;
       }
 
@@ -111,6 +113,40 @@ export function useTrainerCalendar(trainerId: string) {
     queryFn: () => getTrainerCalendar(auth, trainerId),
     enabled: !!trainerId,
   });
+}
+
+export function useTrainerWorkingWindows(trainerId: string) {
+  return useQuery({
+    queryKey: ['trainer-working-windows', trainerId],
+    queryFn: () => getTrainerWorkingWindows(auth, trainerId),
+    enabled: !!trainerId,
+  });
+}
+
+export function useTrainerCalendarWithWindows(trainerId: string) {
+  const calendarQuery = useTrainerCalendar(trainerId);
+  const workingWindowsQuery = useTrainerWorkingWindows(trainerId);
+
+  const data = useMemo(() => {
+    if (calendarQuery.data && workingWindowsQuery.data) {
+      return {
+        ...calendarQuery.data.data,
+        workingWindows: workingWindowsQuery.data.data || []
+      };
+    }
+    return undefined;
+  }, [calendarQuery.data, workingWindowsQuery.data]);
+
+  return {
+    data,
+    isLoading: calendarQuery.isLoading || workingWindowsQuery.isLoading,
+    isError: calendarQuery.isError || workingWindowsQuery.isError,
+    error: calendarQuery.error || workingWindowsQuery.error,
+    refetch: () => {
+      calendarQuery.refetch();
+      workingWindowsQuery.refetch();
+    }
+  };
 }
 
 export function useUpdateWorkingWindows(trainerId: string) {

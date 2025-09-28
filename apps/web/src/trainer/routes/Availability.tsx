@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { Screen, BrandCard, BrandButton, CheckboxField, TextField, SafeText } from '@repo/ui';
 import { useAuth } from '../../auth/AuthContext';
 import { 
-  useTrainerCalendar, 
+  useTrainerCalendarWithWindows, 
   useUpdateWorkingWindows, 
   useBlackouts, 
   useAddBlackout, 
@@ -97,12 +97,16 @@ export default function TrainerAvailability() {
   const { user } = useAuth();
   const trainerId = user?.id || '';
   
-  const [weekSchedule, setWeekSchedule] = useState<WeekSchedule>(() => 
+  // Weekly template - this is the persistent template that doesn't change with calendar modifications
+  const [weeklyTemplate, setWeeklyTemplate] = useState<WeekSchedule>(() => 
     DAYS.reduce((acc, day) => ({
       ...acc,
       [day.key]: { enabled: false, ranges: [] }
     }), {} as WeekSchedule)
   );
+  
+  // Daily calendar overrides - specific day modifications that don't affect the weekly template
+  const [dailyOverrides, setDailyOverrides] = useState<Record<string, DaySchedule>>({});
   
   const [newBlackout, setNewBlackout] = useState({
     startAt: '',
@@ -114,7 +118,7 @@ export default function TrainerAvailability() {
   const [viewMode, setViewMode] = useState<'list' | 'calendar'>('list');
   const [currentDate, setCurrentDate] = useState(dayjs());
 
-  const { data: calendar } = useTrainerCalendar(trainerId);
+  const { data: calendar } = useTrainerCalendarWithWindows(trainerId);
   const { data: blackouts = [] } = useBlackouts(trainerId);
   const { data: sessionsData } = useAllTrainerSessions('ALL'); // Get all sessions for calendar view
   const updateWorkingMutation = useUpdateWorkingWindows(trainerId);
@@ -149,60 +153,94 @@ export default function TrainerAvailability() {
         });
       });
 
-      setWeekSchedule(schedule);
+      setWeeklyTemplate(schedule);
     }
   }, [calendar]);
 
-  const updateDaySchedule = (day: typeof DAYS[number]['key'], schedule: DaySchedule) => {
-    setWeekSchedule(prev => ({
+  // Weekly template functions - these affect the persistent weekly template
+  const updateWeeklyTemplate = (day: typeof DAYS[number]['key'], schedule: DaySchedule) => {
+    setWeeklyTemplate(prev => ({
       ...prev,
       [day]: schedule,
     }));
   };
 
-  const addTimeRange = (day: typeof DAYS[number]['key']) => {
-    updateDaySchedule(day, {
-      ...weekSchedule[day],
-      ranges: [...weekSchedule[day].ranges, { from: '09:00', to: '17:00' }],
+  const addTimeRangeToTemplate = (day: typeof DAYS[number]['key']) => {
+    updateWeeklyTemplate(day, {
+      ...weeklyTemplate[day],
+      ranges: [...weeklyTemplate[day].ranges, { from: '09:00', to: '17:00' }],
     });
   };
 
-  const removeTimeRange = (day: typeof DAYS[number]['key'], index: number) => {
-    updateDaySchedule(day, {
-      ...weekSchedule[day],
-      ranges: weekSchedule[day].ranges.filter((_, i) => i !== index),
+  const removeTimeRangeFromTemplate = (day: typeof DAYS[number]['key'], index: number) => {
+    updateWeeklyTemplate(day, {
+      ...weeklyTemplate[day],
+      ranges: weeklyTemplate[day].ranges.filter((_, i) => i !== index),
     });
   };
 
-  const updateTimeRange = (day: typeof DAYS[number]['key'], index: number, field: 'from' | 'to', value: string) => {
-    const newRanges = [...weekSchedule[day].ranges];
+  const updateTimeRangeInTemplate = (day: typeof DAYS[number]['key'], index: number, field: 'from' | 'to', value: string) => {
+    const newRanges = [...weeklyTemplate[day].ranges];
     newRanges[index] = { ...newRanges[index], [field]: value };
-    updateDaySchedule(day, {
-      ...weekSchedule[day],
+    updateWeeklyTemplate(day, {
+      ...weeklyTemplate[day],
       ranges: newRanges,
     });
   };
 
+  // Daily calendar override functions - these affect specific days without changing the template
+  const getEffectiveDaySchedule = (date: dayjs.Dayjs): DaySchedule => {
+    const dateKey = date.format('YYYY-MM-DD');
+    const dayKey = date.format('ddd') as keyof WeekSchedule;
+    
+    // If there's a daily override, use it; otherwise use the weekly template
+    return dailyOverrides[dateKey] || weeklyTemplate[dayKey];
+  };
+
+  const updateDailyOverride = (date: dayjs.Dayjs, schedule: DaySchedule) => {
+    const dateKey = date.format('YYYY-MM-DD');
+    setDailyOverrides(prev => ({
+      ...prev,
+      [dateKey]: schedule,
+    }));
+  };
+
+  // Helper function for future use - clears override for a specific day
+  const clearDailyOverride = (date: dayjs.Dayjs) => {
+    const dateKey = date.format('YYYY-MM-DD');
+    setDailyOverrides(prev => {
+      const newOverrides = { ...prev };
+      delete newOverrides[dateKey];
+      return newOverrides;
+    });
+  };
+
+
+  const clearAllDailyOverrides = () => {
+    setDailyOverrides({});
+    notify.success('All daily overrides cleared. Calendar will now use weekly template.');
+  };
+
   const applyPreset = (preset: PresetSchedule) => {
-    setWeekSchedule(preset.schedule);
+    setWeeklyTemplate(preset.schedule);
     setShowPresets(false);
     notify.success(`Applied ${preset.name} schedule`);
   };
 
   const copyMondayToWeek = () => {
-    const mondaySchedule = weekSchedule.Mon;
-    const newSchedule = { ...weekSchedule };
+    const mondaySchedule = weeklyTemplate.Mon;
+    const newSchedule = { ...weeklyTemplate };
     DAYS.forEach(day => {
       if (day.key !== 'Mon') {
         newSchedule[day.key] = { ...mondaySchedule };
       }
     });
-    setWeekSchedule(newSchedule);
+    setWeeklyTemplate(newSchedule);
     notify.success('Monday schedule copied to all days');
   };
 
   const clearAll = () => {
-    setWeekSchedule(DAYS.reduce((acc, day) => ({
+    setWeeklyTemplate(DAYS.reduce((acc, day) => ({
       ...acc,
       [day.key]: { enabled: false, ranges: [] }
     }), {} as WeekSchedule));
@@ -238,8 +276,7 @@ export default function TrainerAvailability() {
   };
 
   const isHourAvailable = (date: dayjs.Dayjs, hour: number): boolean => {
-    const dayKey = date.format('ddd') as keyof WeekSchedule;
-    const daySchedule = weekSchedule[dayKey];
+    const daySchedule = getEffectiveDaySchedule(date);
     
     if (!daySchedule.enabled) return false;
     
@@ -250,13 +287,12 @@ export default function TrainerAvailability() {
   };
 
   const toggleHourAvailability = (date: dayjs.Dayjs, hour: number) => {
-    const dayKey = date.format('ddd') as keyof WeekSchedule;
-    const daySchedule = weekSchedule[dayKey];
+    const daySchedule = getEffectiveDaySchedule(date);
     const timeStr = `${hour.toString().padStart(2, '0')}:00`;
     
     if (!daySchedule.enabled) {
       // Enable the day and add this hour
-      updateDaySchedule(dayKey, {
+      updateDailyOverride(date, {
         enabled: true,
         ranges: [{ from: timeStr, to: `${(hour + 1).toString().padStart(2, '0')}:00` }]
       });
@@ -287,7 +323,7 @@ export default function TrainerAvailability() {
           return range;
         }).flat().filter(range => range.from !== range.to);
         
-        updateDaySchedule(dayKey, {
+        updateDailyOverride(date, {
           ...daySchedule,
           ranges: newRanges.length > 0 ? newRanges : []
         });
@@ -298,7 +334,7 @@ export default function TrainerAvailability() {
           to: `${(hour + 1).toString().padStart(2, '0')}:00` 
         }].sort((a, b) => a.from.localeCompare(b.from));
         
-        updateDaySchedule(dayKey, {
+        updateDailyOverride(date, {
           ...daySchedule,
           ranges: newRanges
         });
@@ -315,7 +351,7 @@ export default function TrainerAvailability() {
     try {
       // Transform frontend data structure to backend format
       const windows = DAYS
-        .filter(day => weekSchedule[day.key].enabled && weekSchedule[day.key].ranges.length > 0)
+        .filter(day => weeklyTemplate[day.key].enabled && weeklyTemplate[day.key].ranges.length > 0)
         .map(day => {
           // Convert day name to day of week number (0=Sunday, 1=Monday, etc.)
           const dayToNumber: Record<string, number> = {
@@ -323,7 +359,7 @@ export default function TrainerAvailability() {
           };
           
           // For each time range, create a separate window entry
-          return weekSchedule[day.key].ranges.map(range => ({
+          return weeklyTemplate[day.key].ranges.map(range => ({
             dow: [dayToNumber[day.key]],
             startLocal: range.from,
             endLocal: range.to,
@@ -334,7 +370,7 @@ export default function TrainerAvailability() {
         .flat(); // Flatten the array since we create multiple entries per day
 
       await updateWorkingMutation.mutateAsync({ windows });
-      notify.success('Your availability has been saved! 🎉');
+      notify.success('Your weekly availability template has been saved! 🎉');
     } catch (error) {
       notify.error('Failed to save availability. Please try again.');
     }
@@ -396,6 +432,13 @@ export default function TrainerAvailability() {
             >
               Next →
             </Button>
+            <Button 
+              size="$3" 
+              variant="outlined"
+              onPress={clearAllDailyOverrides}
+            >
+              Clear Overrides
+            </Button>
           </XStack>
         </XStack>
 
@@ -412,16 +455,25 @@ export default function TrainerAvailability() {
                 Time
               </SafeText>
             </YStack>
-            {getWeekDays().map((date) => (
-              <YStack key={date.format('YYYY-MM-DD')} flex={1} padding="$2" minWidth={120} maxWidth={200} width={150} marginHorizontal="$1">
-                <SafeText textAlign="center" fontSize="$3" fontWeight="600" color="$textHigh">
-                  {date.format('ddd')}
-                </SafeText>
-                <SafeText textAlign="center" fontSize="$2" color="$textMuted">
-                  {date.format('MMM D')}
-                </SafeText>
-              </YStack>
-            ))}
+            {getWeekDays().map((date) => {
+              const dateKey = date.format('YYYY-MM-DD');
+              const hasOverride = dailyOverrides[dateKey];
+              return (
+                <YStack key={date.format('YYYY-MM-DD')} flex={1} padding="$2" minWidth={120} maxWidth={200} width={150} marginHorizontal="$1">
+                  <SafeText textAlign="center" fontSize="$3" fontWeight="600" color="$textHigh">
+                    {date.format('ddd')}
+                  </SafeText>
+                  <SafeText textAlign="center" fontSize="$2" color="$textMuted">
+                    {date.format('MMM D')}
+                  </SafeText>
+                  {hasOverride && (
+                    <SafeText textAlign="center" fontSize="$1" color="$accent" fontWeight="600">
+                      Override
+                    </SafeText>
+                  )}
+                </YStack>
+              );
+            })}
           </XStack>
 
           {/* Scrollable Calendar Container */}
@@ -500,11 +552,14 @@ export default function TrainerAvailability() {
           <SafeText textAlign="left" fontWeight="600" color="$textHigh" fontSize="$4">
             Legend
           </SafeText>
+          <SafeText textAlign="left" fontSize="$3" color="$textMuted" marginBottom="$2">
+            Calendar view shows your weekly template as the base. You can click on hours to override specific days without affecting your weekly template.
+          </SafeText>
           <XStack space="$4" flexWrap="wrap">
             <XStack space="$2" alignItems="center">
               <YStack width={20} height={20} backgroundColor="$secondary" borderRadius="$2" />
               <SafeText textAlign="left" fontSize="$3" color="$textMuted">
-                Available
+                Available (from template)
               </SafeText>
             </XStack>
             <XStack space="$2" alignItems="center">
@@ -517,6 +572,14 @@ export default function TrainerAvailability() {
               <YStack width={20} height={20} backgroundColor="$color3" borderRadius="$2" />
               <SafeText textAlign="left" fontSize="$3" color="$textMuted">
                 Not Available
+              </SafeText>
+            </XStack>
+            <XStack space="$2" alignItems="center">
+              <SafeText textAlign="left" fontSize="$3" color="$accent" fontWeight="600">
+                "Override"
+              </SafeText>
+              <SafeText textAlign="left" fontSize="$3" color="$textMuted">
+                Day has custom schedule
               </SafeText>
             </XStack>
           </XStack>
@@ -635,38 +698,38 @@ export default function TrainerAvailability() {
                           <XStack justifyContent="space-between" alignItems="center">
                             <CheckboxField
                               label={day.label}
-                              checked={weekSchedule[day.key].enabled}
-                              onCheckedChange={(checked) => updateDaySchedule(day.key, {
-                                ...weekSchedule[day.key],
+                              checked={weeklyTemplate[day.key].enabled}
+                              onCheckedChange={(checked) => updateWeeklyTemplate(day.key, {
+                                ...weeklyTemplate[day.key],
                                 enabled: checked,
-                                ranges: checked ? weekSchedule[day.key].ranges : [],
+                                ranges: checked ? weeklyTemplate[day.key].ranges : [],
                               })}
                             />
-                            {weekSchedule[day.key].enabled && (
+                            {weeklyTemplate[day.key].enabled && (
                               <BrandButton 
                                 size="sm" 
                                 variant="outline"
-                                onPress={() => addTimeRange(day.key)}
+                                onPress={() => addTimeRangeToTemplate(day.key)}
                               >
                                 Add Time
                               </BrandButton>
                             )}
                           </XStack>
 
-                          {weekSchedule[day.key].enabled && (
+                          {weeklyTemplate[day.key].enabled && (
                             <YStack space="$3" paddingLeft="$6">
-                              {weekSchedule[day.key].ranges.length === 0 ? (
+                              {weeklyTemplate[day.key].ranges.length === 0 ? (
                                 <SafeText textAlign="left" color="$textMuted" fontSize="$3" fontStyle="italic">
                                   No time slots added yet. Click "Add Time" to get started.
                                 </SafeText>
                               ) : (
-                                weekSchedule[day.key].ranges.map((range, index) => (
+                                weeklyTemplate[day.key].ranges.map((range, index) => (
                                   <XStack key={index} space="$3" alignItems="center">
                                     <YStack space="$1" flex={1}>
                                       <Label fontSize="$3" color="$textMedium">From</Label>
                                       <TextField
                                         value={range.from}
-                                        onChangeText={(value) => updateTimeRange(day.key, index, 'from', value)}
+                                        onChangeText={(value) => updateTimeRangeInTemplate(day.key, index, 'from', value)}
                                         placeholder="09:00"
                                         type="time"
                                       />
@@ -678,7 +741,7 @@ export default function TrainerAvailability() {
                                       <Label fontSize="$3" color="$textMedium">To</Label>
                                       <TextField
                                         value={range.to}
-                                        onChangeText={(value) => updateTimeRange(day.key, index, 'to', value)}
+                                        onChangeText={(value) => updateTimeRangeInTemplate(day.key, index, 'to', value)}
                                         placeholder="17:00"
                                         type="time"
                                       />
@@ -686,7 +749,7 @@ export default function TrainerAvailability() {
                                     <BrandButton 
                                       size="sm" 
                                       variant="outline"
-                                      onPress={() => removeTimeRange(day.key, index)}
+                                      onPress={() => removeTimeRangeFromTemplate(day.key, index)}
                                       marginTop="$6"
                                     >
                                       Remove

@@ -66,6 +66,11 @@ export function BrandButton({
     ...buttonProps 
   } = rest as any
 
+  // Ensure textAlign is not passed to the Button component
+  if ('textAlign' in buttonProps) {
+    delete buttonProps.textAlign
+  }
+
   const content = (
     <XStack alignItems="center" justifyContent="center" gap={6}>
       {icon && <Icon name={icon} size={iconSize} color={color} />}
