@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Screen, BrandCard, BrandButton, CheckboxField, TextField, SafeText } from '@repo/ui';
+import { Screen, BrandCard, BrandButton, CheckboxField, TextField, SafeText, Icon } from '@repo/ui';
 import { useAuth } from '../../auth/AuthContext';
 import { 
   useTrainerCalendarWithWindows, 
@@ -756,14 +756,21 @@ export default function TrainerAvailability() {
                                         type="time"
                                       />
                                     </YStack>
-                                    <BrandButton 
-                                      size="sm" 
-                                      variant="outline"
+                                    <Button 
+                                      size="$5" 
+                                      variant="ghost"
                                       onPress={() => removeTimeRangeFromTemplate(day.key, index)}
                                       marginTop="$6"
+                                      padding="$4"
+                                      backgroundColor="transparent"
+                                      borderWidth={0}
+                                      pressStyle={{ backgroundColor: '$red2', opacity: 0.8 }}
+                                      alignSelf="center"
+                                      justifyContent="center"
+                                      alignItems="center"
                                     >
-                                      Remove
-                                    </BrandButton>
+                                      <Icon name="Trash2" size={24} color="$red9" />
+                                    </Button>
                                   </XStack>
                                 ))
                               )}

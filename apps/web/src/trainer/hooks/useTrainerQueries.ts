@@ -155,7 +155,9 @@ export function useUpdateWorkingWindows(trainerId: string) {
   return useMutation({
     mutationFn: (payload: any) => putWorkingWindows(auth, trainerId, payload),
     onSuccess: () => {
+      // Invalidate both calendar and working windows queries since useTrainerCalendarWithWindows combines them
       queryClient.invalidateQueries({ queryKey: ['trainer-calendar', trainerId] });
+      queryClient.invalidateQueries({ queryKey: ['trainer-working-windows', trainerId] });
     },
   });
 }
