@@ -9,7 +9,10 @@ const root = dirname(fileURLToPath(import.meta.url))
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [
-    react(),
+    react({
+      // Enable React DevTools in development
+      include: "**/*.{jsx,tsx}",
+    }),
     tamaguiPlugin({
       config: './tamagui.config.ts',
       components: ['@tamagui/core'],
@@ -24,6 +27,7 @@ export default defineConfig({
   },
   define: {
     'process.env.TAMAGUI_TARGET': '"web"',
+    'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'development'),
   },
   build: {
     chunkSizeWarningLimit: 600,

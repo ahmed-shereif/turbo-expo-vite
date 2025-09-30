@@ -58,17 +58,12 @@ export function CalendarView({
     return sessionsForDate.filter(session => {
       // Convert UTC session times to local time for comparison
       const sessionStart = dayjs(session.startAt);
-      const sessionEnd = sessionStart.add(session.durationMinutes, 'minutes');
       
       // Get the local hour for the session start time
       const sessionStartHour = sessionStart.hour();
-      const sessionEndHour = sessionEnd.hour();
       
-      // Check if the session overlaps with this hour slot
-      // A session overlaps if it starts in this hour OR ends in this hour OR spans this hour
-      return (sessionStartHour === hour) || 
-             (sessionEndHour === hour) || 
-             (sessionStartHour < hour && sessionEndHour > hour);
+      // Only show sessions in their starting hour slot to avoid duplication
+      return sessionStartHour === hour;
     });
   };
 
@@ -231,6 +226,11 @@ export function CalendarView({
                               <SafeText textAlign="center" fontSize="$1" color="$textMuted" numberOfLines={1}>
                                 {dayjs(session.startAt).format('HH:mm')} - {dayjs(session.startAt).add(session.durationMinutes, 'minutes').format('HH:mm')}
                               </SafeText>
+                              {session.durationMinutes > 60 && (
+                                <SafeText textAlign="center" fontSize="$1" color="$textMuted" numberOfLines={1}>
+                                  ({session.durationMinutes}min)
+                                </SafeText>
+                              )}
                             </YStack>
                           ))}
                         </YStack>
