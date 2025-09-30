@@ -163,7 +163,7 @@ export default function CreateSessionStep3() {
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
             Create Session
           </Text>
-          <Text style={{ fontSize: 16, color: '#666', marginBottom: 16 }}>
+          <Text style={{ fontSize: 16, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
             Step 3 of 4: Pick Trainer
           </Text>
           <Skeleton style={{ height: 80, marginBottom: 16 }} />
@@ -181,7 +181,7 @@ export default function CreateSessionStep3() {
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
             Create Session
           </Text>
-          <Text style={{ fontSize: 16, color: '#666', marginBottom: 16 }}>
+          <Text style={{ fontSize: 16, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
             Step 3 of 4: Pick Trainer
           </Text>
           
@@ -189,14 +189,14 @@ export default function CreateSessionStep3() {
           <View style={{ 
             width: '100%', 
             height: 8, 
-            backgroundColor: '#e5e7eb', 
+            backgroundColor: 'var(--color-border-primary)', 
             borderRadius: 4,
             marginBottom: 24
           }}>
             <View style={{ 
               width: '75%', 
               height: '100%', 
-              backgroundColor: '#3b82f6', 
+              backgroundColor: 'var(--color-brand-primary)', 
               borderRadius: 4 
             }} />
           </View>
@@ -204,21 +204,21 @@ export default function CreateSessionStep3() {
           <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 8 }}>
             Pick Trainer
           </Text>
-          <Text style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+          <Text style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
             Choose a trainer for your session.
           </Text>
         </BrandCard>
         
         <View style={{ 
-          backgroundColor: '#fef3c7', 
-          borderColor: '#f59e0b', 
+          backgroundColor: 'var(--color-feedback-warning-bg)', 
+          borderColor: 'var(--color-feedback-warning-border)', 
           borderWidth: 1, 
           borderRadius: 8, 
           padding: 16, 
           alignItems: 'center',
           marginBottom: 16
         }}>
-          <Text style={{ fontSize: 16, color: '#92400e', textAlign: 'center' }}>
+          <Text style={{ fontSize: 16, color: 'var(--color-feedback-warning-text)', textAlign: 'center' }}>
             No available trainers. Please select another date and time.
           </Text>
         </View>
@@ -239,7 +239,7 @@ export default function CreateSessionStep3() {
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
           Create Session
         </Text>
-        <Text style={{ fontSize: 16, color: '#666', marginBottom: 16 }}>
+        <Text style={{ fontSize: 16, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
           Step 3 of 4: Pick Trainer
         </Text>
         
@@ -247,14 +247,14 @@ export default function CreateSessionStep3() {
         <View style={{ 
           width: '100%', 
           height: 8, 
-          backgroundColor: '#e5e7eb', 
+          backgroundColor: 'var(--color-border-primary)', 
           borderRadius: 4,
           marginBottom: 24
         }}>
           <View style={{ 
             width: '75%', 
             height: '100%', 
-            backgroundColor: '#3b82f6', 
+            backgroundColor: 'var(--color-brand-primary)', 
             borderRadius: 4 
           }} />
         </View>
@@ -262,19 +262,19 @@ export default function CreateSessionStep3() {
         <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 8 }}>
           Pick Trainer
         </Text>
-        <Text style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+        <Text style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
           Choose a trainer for your session.
         </Text>
 
         <View style={{ 
-          backgroundColor: '#dbeafe', 
-          borderColor: '#93c5fd', 
+          backgroundColor: 'var(--color-feedback-info-bg)', 
+          borderColor: 'var(--color-feedback-info-border)', 
           borderWidth: 1, 
           borderRadius: 8, 
           padding: 12, 
           marginBottom: 16 
         }}>
-          <Text style={{ fontSize: 14, color: '#1e40af' }}>
+          <Text style={{ fontSize: 14, color: 'var(--color-feedback-info-text)' }}>
             <Text style={{ fontWeight: 'bold' }}>Session:</Text> {court!.name} at {startTimeHHmm} ({durationMinutes} min)
           </Text>
         </View>
@@ -283,7 +283,7 @@ export default function CreateSessionStep3() {
       <ScrollView style={{ flex: 1 }}>
         {trainers.length === 0 ? (
           <BrandCard style={{ padding: 16, alignItems: 'center' }}>
-            <Text style={{ color: '#666' }}>No trainers found in this area.</Text>
+            <Text style={{ color: 'var(--color-text-tertiary)' }}>No trainers found in this area.</Text>
           </BrandCard>
         ) : (
           trainers
@@ -300,8 +300,8 @@ export default function CreateSessionStep3() {
                     marginBottom: 16,
                     borderRadius: 8,
                     borderWidth: isSelected ? 2 : 1,
-                    borderColor: isSelected ? '#3b82f6' : '#e5e7eb',
-                    backgroundColor: isSelected ? '#dbeafe' : '#ffffff',
+                    borderColor: isSelected ? 'var(--color-brand-primary)' : 'var(--color-border-primary)',
+                    backgroundColor: isSelected ? 'var(--color-feedback-info-bg)' : 'var(--color-surface-primary)',
                     padding: 16,
                   }}
                 >
@@ -311,18 +311,18 @@ export default function CreateSessionStep3() {
                         {trainerItem.name}
                       </Text>
                       {trainerItem.maxLevel !== undefined && (
-                        <Text style={{ fontSize: 14, color: '#666', marginBottom: 4 }}>
+                        <Text style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 4 }}>
                           Max Level: {rankLabels[trainerItem.maxLevel as Rank] || 'Unknown'}
                         </Text>
                       )}
                       {trainerItem.priceHourlyLE && (
-                        <Text style={{ fontSize: 14, fontWeight: '500', color: '#059669', marginBottom: 8 }}>
+                        <Text style={{ fontSize: 14, fontWeight: '500', color: 'var(--color-feedback-success-text)', marginBottom: 8 }}>
                           {trainerItem.priceHourlyLE} EGP/hour
                         </Text>
                       )}
                       {trainerItem.areasCovered && trainerItem.areasCovered.length > 0 && (
                         <View style={{ marginTop: 8 }}>
-                          <Text style={{ fontSize: 12, color: '#666', marginBottom: 4 }}>
+                          <Text style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginBottom: 4 }}>
                             Areas Covered:
                           </Text>
                           <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 4 }}>
@@ -330,13 +330,13 @@ export default function CreateSessionStep3() {
                               <View
                                 key={area}
                                 style={{
-                                  backgroundColor: '#f3f4f6',
+                                  backgroundColor: 'var(--color-surface-tertiary)',
                                   paddingHorizontal: 8,
                                   paddingVertical: 2,
                                   borderRadius: 4,
                                 }}
                               >
-                                <Text style={{ fontSize: 12, color: '#374151' }}>
+                                <Text style={{ fontSize: 12, color: 'var(--color-text-secondary)' }}>
                                   {area}
                                 </Text>
                               </View>
@@ -352,7 +352,7 @@ export default function CreateSessionStep3() {
                           width: 20, 
                           height: 20, 
                           borderWidth: 2, 
-                          borderColor: '#3b82f6', 
+                          borderColor: 'var(--color-brand-primary)', 
                           borderTopColor: 'transparent', 
                           borderRadius: 10,
                           // Note: React Native doesn't have animate-spin, this would need a proper animation library
@@ -360,24 +360,24 @@ export default function CreateSessionStep3() {
                       )}
                       {status === 'available' && (
                         <View style={{
-                          backgroundColor: '#dcfce7',
+                          backgroundColor: 'var(--color-feedback-success-bg)',
                           paddingHorizontal: 8,
                           paddingVertical: 4,
                           borderRadius: 12,
                         }}>
-                          <Text style={{ fontSize: 12, fontWeight: '500', color: '#166534' }}>
+                          <Text style={{ fontSize: 12, fontWeight: '500', color: 'var(--color-feedback-success-text)' }}>
                             Available
                           </Text>
                         </View>
                       )}
                       {status === 'busy' && (
                         <View style={{
-                          backgroundColor: '#fef2f2',
+                          backgroundColor: 'var(--color-feedback-error-bg)',
                           paddingHorizontal: 8,
                           paddingVertical: 4,
                           borderRadius: 12,
                         }}>
-                          <Text style={{ fontSize: 12, fontWeight: '500', color: '#dc2626' }}>
+                          <Text style={{ fontSize: 12, fontWeight: '500', color: 'var(--color-feedback-error-text)' }}>
                             Busy
                           </Text>
                         </View>
@@ -389,13 +389,13 @@ export default function CreateSessionStep3() {
                             checkTrainerAvailability(trainerItem.id);
                           }}
                           style={{
-                            backgroundColor: '#dbeafe',
+                            backgroundColor: 'var(--color-feedback-info-bg)',
                             paddingHorizontal: 8,
                             paddingVertical: 4,
                             borderRadius: 12,
                           }}
                         >
-                          <Text style={{ fontSize: 12, fontWeight: '500', color: '#1e40af' }}>
+                          <Text style={{ fontSize: 12, fontWeight: '500', color: 'var(--color-feedback-info-text)' }}>
                             Check
                           </Text>
                         </TouchableOpacity>
@@ -410,13 +410,13 @@ export default function CreateSessionStep3() {
 
       {trainer && (
         <BrandCard style={{ 
-          backgroundColor: '#dcfce7', 
-          borderColor: '#bbf7d0', 
+          backgroundColor: 'var(--color-feedback-success-bg)', 
+          borderColor: 'var(--color-feedback-success-border)', 
           borderWidth: 1, 
           padding: 12, 
           marginBottom: 16 
         }}>
-          <Text style={{ fontSize: 14, color: '#166534' }}>
+          <Text style={{ fontSize: 14, color: 'var(--color-feedback-success-text)' }}>
             <Text style={{ fontWeight: 'bold' }}>Selected:</Text> {trainer.name}
           </Text>
         </BrandCard>

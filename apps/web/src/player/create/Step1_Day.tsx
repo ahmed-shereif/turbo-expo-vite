@@ -160,31 +160,31 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
               width: '100%',
               padding: '12px',
               fontSize: '16px',
-              border: '2px solid #F3F4F6',
+              border: '2px solid var(--color-border-primary)',
               borderRadius: '8px',
-              backgroundColor: '#FFFFFF',
-              color: '#111827',
+              backgroundColor: 'var(--color-surface-primary)',
+              color: 'var(--color-text-primary)',
               transition: 'all 200ms ease',
-              boxShadow: '0 1px 4px rgba(0,0,0,0.1)',
+              boxShadow: '0 1px 4px var(--color-shadow-sm)',
             }}
             onFocus={(e) => {
               const target = e.target as HTMLInputElement;
               target.style.outline = 'none';
-              target.style.borderColor = '#1E90FF';
-              target.style.boxShadow = '0 0 0 4px rgba(30, 144, 255, 0.2)';
+              target.style.borderColor = 'var(--color-brand-primary)';
+              target.style.boxShadow = '0 0 0 4px var(--color-shadow-focus)';
             }}
             onBlur={(e) => {
               const target = e.target as HTMLInputElement;
-              target.style.borderColor = '#F3F4F6';
-              target.style.boxShadow = '0 1px 4px rgba(0,0,0,0.1)';
+              target.style.borderColor = 'var(--color-border-primary)';
+              target.style.boxShadow = '0 1px 4px var(--color-shadow-sm)';
             }}
             onMouseEnter={(e) => {
               const target = e.target as HTMLInputElement;
-              target.style.backgroundColor = '#F9FAFB';
+              target.style.backgroundColor = 'var(--color-surface-secondary)';
             }}
             onMouseLeave={(e) => {
               const target = e.target as HTMLInputElement;
-              target.style.backgroundColor = '#FFFFFF';
+              target.style.backgroundColor = 'var(--color-surface-primary)';
             }}
           />
         </DateInputContainer>
@@ -237,20 +237,20 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
                   gap: '6px',
                   transition: 'all 200ms ease',
                   cursor: 'pointer',
-                  backgroundColor: isSelected ? '#1E90FF' : '#FFFFFF',
-                  borderColor: isSelected ? '#1E90FF' : '#F3F4F6',
-                  boxShadow: isSelected ? '0 4px 8px rgba(30, 144, 255, 0.3)' : '0 1px 4px rgba(0,0,0,0.1)',
+                  backgroundColor: isSelected ? 'var(--color-brand-primary)' : 'var(--color-surface-primary)',
+                  borderColor: isSelected ? 'var(--color-brand-primary)' : 'var(--color-border-primary)',
+                  boxShadow: isSelected ? '0 4px 8px var(--color-shadow-focus)' : '0 1px 4px var(--color-shadow-sm)',
                 }}
                 onMouseEnter={(e) => {
                   if (!isSelected) {
-                    e.currentTarget.style.borderColor = '#1E90FF';
-                    e.currentTarget.style.boxShadow = '0 2px 6px rgba(0,0,0,0.15)';
+                    e.currentTarget.style.borderColor = 'var(--color-brand-primary)';
+                    e.currentTarget.style.boxShadow = '0 2px 6px var(--color-shadow-md)';
                   }
                 }}
                 onMouseLeave={(e) => {
                   if (!isSelected) {
-                    e.currentTarget.style.borderColor = '#F3F4F6';
-                    e.currentTarget.style.boxShadow = '0 1px 4px rgba(0,0,0,0.1)';
+                    e.currentTarget.style.borderColor = 'var(--color-border-primary)';
+                    e.currentTarget.style.boxShadow = '0 1px 4px var(--color-shadow-sm)';
                   }
                 }}
               >
@@ -259,7 +259,7 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
                     fontSize: '11px',
                     fontWeight: '500',
                     opacity: 0.75,
-                    color: isSelected ? '#FFFFFF' : '#6B7280',
+                    color: isSelected ? 'var(--color-text-inverse)' : 'var(--color-text-tertiary)',
                   }}
                 >
                   {i === 0 ? 'Today' : i === 1 ? 'Tomorrow' : date.toLocaleDateString('en-US', { weekday: 'short' })}
@@ -268,7 +268,7 @@ export function Step1_Day({ dayISO, onDayChange }: Step1_DayProps) {
                   style={{
                     fontSize: '13px',
                     fontWeight: '700',
-                    color: isSelected ? '#FFFFFF' : '#111827',
+                    color: isSelected ? 'var(--color-text-inverse)' : 'var(--color-text-primary)',
                   }}
                 >
                   {date.toLocaleDateString('en-US', { month: 'short', day: 'numeric' })}

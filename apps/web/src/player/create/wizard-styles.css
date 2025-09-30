@@ -71,7 +71,7 @@
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(255, 255, 255, 0.2),
+    var(--color-surface-overlay),
     transparent
   );
   transition: left 0.5s;
@@ -85,9 +85,9 @@
 .shimmer {
   background: linear-gradient(
     90deg,
-    #f0f0f0 0px,
-    #e0e0e0 40px,
-    #f0f0f0 80px
+    var(--color-surface-tertiary) 0px,
+    var(--color-border-secondary) 40px,
+    var(--color-surface-tertiary) 80px
   );
   background-size: 200px;
   animation: shimmer 1.5s infinite;
@@ -117,16 +117,16 @@
   right: 0;
   bottom: 0;
   border-radius: inherit;
-  box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.5);
+  box-shadow: 0 0 0 0 var(--color-brand-primary);
   transition: box-shadow 0.3s ease;
 }
 
 .selectable-card:hover::after {
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
+  box-shadow: 0 0 0 4px var(--color-brand-primary);
 }
 
 .selectable-card.selected::after {
-  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3);
+  box-shadow: 0 0 0 3px var(--color-brand-primary);
 }
 
 /* Time slot grid enhancements */
@@ -167,7 +167,7 @@
 .wizard-button:focus,
 .selectable-card:focus,
 .time-slot:focus {
-  outline: 2px solid #3b82f6;
+  outline: 2px solid var(--color-brand-primary);
   outline-offset: 2px;
 }
 
@@ -176,9 +176,9 @@
   .shimmer {
     background: linear-gradient(
       90deg,
-      #374151 0px,
-      #4b5563 40px,
-      #374151 80px
+      var(--color-surface-tertiary) 0px,
+      var(--color-border-secondary) 40px,
+      var(--color-surface-tertiary) 80px
     );
   }
 }
@@ -191,6 +191,6 @@
   
   .wizard-card {
     box-shadow: none !important;
-    border: 1px solid #e5e7eb !important;
+    border: 1px solid var(--color-border-primary) !important;
   }
 }

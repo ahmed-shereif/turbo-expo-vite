@@ -674,7 +674,7 @@ export function Step2_CourtTime({
                               </View>
                               <Text 
                                 fontSize="$3" 
-                                color={isSelected ? 'rgba(255,255,255,0.8)' : '$color8'}
+                                color={isSelected ? 'var(--color-text-inverse)' : '$color8'}
                                 fontWeight="400"
                               >
                                 {courtItem.address}
@@ -706,7 +706,7 @@ export function Step2_CourtTime({
                               paddingVertical="$1"
                               borderRadius="$3"
                               borderWidth={1}
-                              borderColor={isSelected ? 'rgba(255,255,255,0.3)' : '$color5'}
+                              borderColor={isSelected ? 'var(--color-border-secondary)' : '$color5'}
                             >
                               <Text 
                                 fontSize="$3" 
@@ -725,10 +725,10 @@ export function Step2_CourtTime({
                     {isExpanded && (
                       <YStack 
                         borderTopWidth={1} 
-                        borderTopColor={isSelected ? 'rgba(255,255,255,0.2)' : '$color4'} 
+                        borderTopColor={isSelected ? 'var(--color-border-secondary)' : '$color4'} 
                         paddingTop="$4" 
                         marginTop="$4"
-                        backgroundColor={isSelected ? 'rgba(255,255,255,0.05)' : '$color2'}
+                        backgroundColor={isSelected ? 'var(--color-surface-overlay)' : '$color2'}
                         borderRadius="$3"
                         padding="$4"
                       >
@@ -764,7 +764,7 @@ export function Step2_CourtTime({
                               />
                               <Text 
                                 fontSize="$3" 
-                                color={isSelected ? 'rgba(255,255,255,0.8)' : '$textMuted'}
+                                color={isSelected ? 'var(--color-text-inverse)' : '$textMuted'}
                                 fontWeight="600"
                               >
                                 Available
@@ -783,7 +783,7 @@ export function Step2_CourtTime({
                               />
                               <Text 
                                 fontSize="$3" 
-                                color={isSelected ? 'rgba(255,255,255,0.8)' : '$textMuted'}
+                                color={isSelected ? 'var(--color-text-inverse)' : '$textMuted'}
                                 fontWeight="600"
                               >
                                 Booked
@@ -1007,7 +1007,7 @@ export function Step2_CourtTime({
               <Text fontSize="$6" fontWeight="700" color="white" marginBottom="$1">
                 {court.name}
               </Text>
-              <Text fontSize="$4" color="rgba(255,255,255,0.9)" marginBottom="$2" fontWeight="600">
+              <Text fontSize="$4" color="var(--color-text-inverse)" marginBottom="$2" fontWeight="600">
                 {selectedSlot.startTime} - {getEndTime(selectedSlot.startTime, selectedSlot.duration)}
               </Text>
               <XStack gap="$4" flexWrap="wrap" $md={{ flexDirection: 'column', gap: '$2' }}>
@@ -1015,14 +1015,14 @@ export function Step2_CourtTime({
                   <View
                     width={20}
                     height={20}
-                    backgroundColor="rgba(255,255,255,0.2)"
+                    backgroundColor="var(--color-surface-overlay)"
                     borderRadius="$2"
                     alignItems="center"
                     justifyContent="center"
                   >
                     <Icon name="Clock" size={12} color="white" />
                   </View>
-                  <Text fontSize="$3" color="rgba(255,255,255,0.9)" fontWeight="600">
+                  <Text fontSize="$3" color="var(--color-text-inverse)" fontWeight="600">
                     {selectedSlot.duration / 60} hour{selectedSlot.duration / 60 > 1 ? 's' : ''} session
                   </Text>
                 </XStack>
@@ -1030,14 +1030,14 @@ export function Step2_CourtTime({
                   <View
                     width={20}
                     height={20}
-                    backgroundColor="rgba(255,255,255,0.2)"
+                    backgroundColor="var(--color-surface-overlay)"
                     borderRadius="$2"
                     alignItems="center"
                     justifyContent="center"
                   >
                     <Icon name="DollarSign" size={12} color="white" />
                   </View>
-                  <Text fontSize="$3" color="rgba(255,255,255,0.9)" fontWeight="600">
+                  <Text fontSize="$3" color="var(--color-text-inverse)" fontWeight="600">
                     {Math.round(court.priceHourlyLE * selectedSlot.duration / 60)} EGP total
                   </Text>
                 </XStack>

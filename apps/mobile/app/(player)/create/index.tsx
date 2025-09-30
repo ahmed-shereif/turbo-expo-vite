@@ -39,7 +39,7 @@ export default function CreateSessionStep1() {
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
           Create Session
         </Text>
-        <Text style={{ fontSize: 16, color: '#666', marginBottom: 16 }}>
+        <Text style={{ fontSize: 16, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
           Step 1 of 4: Select Day
         </Text>
         
@@ -47,14 +47,14 @@ export default function CreateSessionStep1() {
         <View style={{ 
           width: '100%', 
           height: 8, 
-          backgroundColor: '#e5e7eb', 
+          backgroundColor: 'var(--color-border-primary)', 
           borderRadius: 4,
           marginBottom: 24
         }}>
           <View style={{ 
             width: '25%', 
             height: '100%', 
-            backgroundColor: '#3b82f6', 
+            backgroundColor: 'var(--color-brand-primary)', 
             borderRadius: 4 
           }} />
         </View>
@@ -62,7 +62,7 @@ export default function CreateSessionStep1() {
         <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 8 }}>
           Choose a Day
         </Text>
-        <Text style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+        <Text style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
           Select the date for your training session.
         </Text>
 
@@ -76,27 +76,27 @@ export default function CreateSessionStep1() {
           keyboardType="numeric"
           style={{
             borderWidth: 1,
-            borderColor: '#d1d5db',
+            borderColor: 'var(--color-border-secondary)',
             borderRadius: 8,
             padding: 12,
             fontSize: 16,
             marginBottom: 8,
           }}
         />
-        <Text style={{ fontSize: 12, color: '#666' }}>
+        <Text style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>
           Select a date from today onwards
         </Text>
 
         {dayISO && (
           <View style={{ 
-            backgroundColor: '#dbeafe', 
-            borderColor: '#93c5fd', 
+            backgroundColor: 'var(--color-feedback-info-bg)', 
+            borderColor: 'var(--color-feedback-info-border)', 
             borderWidth: 1, 
             borderRadius: 8, 
             padding: 12, 
             marginTop: 16 
           }}>
-            <Text style={{ fontSize: 14, color: '#1e40af' }}>
+            <Text style={{ fontSize: 14, color: 'var(--color-feedback-info-text)' }}>
               <Text style={{ fontWeight: 'bold' }}>Selected:</Text> {new Date(dayISO).toLocaleDateString('en-US', {
                 weekday: 'long',
                 year: 'numeric',

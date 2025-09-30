@@ -54,7 +54,7 @@ export default function Login() {
               )}
             />
             {errors.email && (
-              <div style={{ color: '#ef4444' }}>{errors.email.message}</div>
+              <div style={{ color: 'var(--color-feedback-error-text)' }}>{errors.email.message}</div>
             )}
           </div>
 
@@ -67,12 +67,12 @@ export default function Login() {
               )}
             />
             {errors.password && (
-              <div style={{ color: '#ef4444' }}>{errors.password.message}</div>
+              <div style={{ color: 'var(--color-feedback-error-text)' }}>{errors.password.message}</div>
             )}
           </div>
 
           {serverError && (
-            <div style={{ color: '#ef4444' }}>{serverError}</div>
+            <div style={{ color: 'var(--color-feedback-error-text)' }}>{serverError}</div>
           )}
 
           <BrandButton disabled={isSubmitting} onPress={handleSubmit(onSubmit)} fullWidth icon="LogIn">

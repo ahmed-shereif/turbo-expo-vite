@@ -135,12 +135,12 @@ export default function SessionScreen() {
                   data={(sessionQ.data as any)?.members || []}
                   keyExtractor={(m: any) => m.playerId}
                   renderItem={({ item }: { item: any }) => (
-                    <View testID={`member-item-${item.playerId}`} style={{ paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: '#eee' }}>
+                    <View testID={`member-item-${item.playerId}`} style={{ paddingVertical: 6, borderBottomWidth: 1, borderBottomColor: 'var(--color-border-primary)' }}>
                       <Text>
                         {(item.name || '•••')} {item.playerId === (user?.id || '') ? '(You)' : ''} — {item.role}
                         {item.rank ? ` — Rank: ${item.rank}` : ''}
                       </Text>
-                      {item.joinedAt ? <Text style={{ color: '#666', fontSize: 12 }}>Joined: {new Date(item.joinedAt).toLocaleString()}</Text> : null}
+                      {item.joinedAt ? <Text style={{ color: 'var(--color-text-tertiary)', fontSize: 12 }}>Joined: {new Date(item.joinedAt).toLocaleString()}</Text> : null}
                     </View>
                   )}
                 />
@@ -172,15 +172,15 @@ export default function SessionScreen() {
                     }
                     variant="outline"
                   >
-                    <Text style={{ color: '#f00' }}>{leaveMut.isPending ? 'Leaving…' : 'Leave Session'}</Text>
+                    <Text style={{ color: 'var(--color-feedback-error-text)' }}>{leaveMut.isPending ? 'Leaving…' : 'Leave Session'}</Text>
                   </BrandButton>
                 )}
               </BrandCard>
             </View>
           )}
           <Modal visible={visible} transparent animationType="fade">
-            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'rgba(0,0,0,0.4)' }}>
-              <View style={{ backgroundColor: 'white', padding: 16, width: '80%' }}>
+            <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: 'var(--color-overlay)' }}>
+              <View style={{ backgroundColor: 'var(--color-surface-primary)', padding: 16, width: '80%' }}>
                 <Text>{modalText}</Text>
                 <BrandButton onPress={() => setVisible(false)} variant="outline" style={{ marginTop: 12 }}>
                   Close

@@ -172,7 +172,7 @@ export default function CreateSessionStep2() {
           <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
             Create Session
           </Text>
-          <Text style={{ fontSize: 16, color: '#666', marginBottom: 16 }}>
+          <Text style={{ fontSize: 16, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
             Step 2 of 4: Pick Court & Time
           </Text>
           <Skeleton style={{ height: 100, marginBottom: 16 }} />
@@ -189,7 +189,7 @@ export default function CreateSessionStep2() {
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
           Create Session
         </Text>
-        <Text style={{ fontSize: 16, color: '#666', marginBottom: 16 }}>
+        <Text style={{ fontSize: 16, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
           Step 2 of 4: Pick Court & Time
         </Text>
         
@@ -197,14 +197,14 @@ export default function CreateSessionStep2() {
         <View style={{ 
           width: '100%', 
           height: 8, 
-          backgroundColor: '#e5e7eb', 
+            backgroundColor: 'var(--color-border-primary)',
           borderRadius: 4,
           marginBottom: 24
         }}>
           <View style={{ 
             width: '50%', 
             height: '100%', 
-            backgroundColor: '#3b82f6', 
+            backgroundColor: 'var(--color-brand-primary)', 
             borderRadius: 4 
           }} />
         </View>
@@ -212,7 +212,7 @@ export default function CreateSessionStep2() {
         <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 8 }}>
           Pick Court & Time
         </Text>
-        <Text style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+        <Text style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
           Choose your preferred court and time slot.
         </Text>
 
@@ -226,7 +226,7 @@ export default function CreateSessionStep2() {
           placeholder="e.g., Maadi, Zamalek"
           style={{
             borderWidth: 1,
-            borderColor: '#d1d5db',
+            borderColor: 'var(--color-border-secondary)',
             borderRadius: 8,
             padding: 12,
             fontSize: 16,
@@ -249,13 +249,13 @@ export default function CreateSessionStep2() {
                 marginHorizontal: 2,
                 borderRadius: 8,
                 borderWidth: 1,
-                borderColor: durationMinutes === duration ? '#3b82f6' : '#d1d5db',
-                backgroundColor: durationMinutes === duration ? '#3b82f6' : '#ffffff',
+                borderColor: durationMinutes === duration ? 'var(--color-brand-primary)' : 'var(--color-border-secondary)',
+                backgroundColor: durationMinutes === duration ? 'var(--color-brand-primary)' : 'var(--color-surface-primary)',
                 alignItems: 'center',
               }}
             >
               <Text style={{
-                color: durationMinutes === duration ? '#ffffff' : '#374151',
+                color: durationMinutes === duration ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
                 fontWeight: '500',
               }}>
                 {duration} min
@@ -268,7 +268,7 @@ export default function CreateSessionStep2() {
       <ScrollView style={{ flex: 1 }}>
         {courts.length === 0 ? (
           <BrandCard style={{ padding: 16, alignItems: 'center' }}>
-            <Text style={{ color: '#666' }}>No courts found in this area.</Text>
+            <Text style={{ color: 'var(--color-text-tertiary)' }}>No courts found in this area.</Text>
           </BrandCard>
         ) : (
           courts.map(courtItem => (
@@ -277,21 +277,21 @@ export default function CreateSessionStep2() {
                 {courtItem.name}
               </Text>
               {courtItem.area && (
-                <Text style={{ fontSize: 14, color: '#666', marginBottom: 4 }}>
+                <Text style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 4 }}>
                   {courtItem.area}
                 </Text>
               )}
               {courtItem.address && (
-                <Text style={{ fontSize: 12, color: '#999', marginBottom: 4 }}>
+                <Text style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginBottom: 4 }}>
                   {courtItem.address}
                 </Text>
               )}
-              <Text style={{ fontSize: 14, fontWeight: '500', color: '#059669', marginBottom: 12 }}>
+              <Text style={{ fontSize: 14, fontWeight: '500', color: 'var(--color-feedback-success-text)', marginBottom: 12 }}>
                 {courtItem.priceHourlyLE} EGP/hour
               </Text>
 
               {/* Time Slots Grid */}
-              <View style={{ borderTopWidth: 1, borderTopColor: '#e5e7eb', paddingTop: 12 }}>
+              <View style={{ borderTopWidth: 1, borderTopColor: 'var(--color-border-primary)', paddingTop: 12 }}>
                 <Text style={{ fontSize: 14, fontWeight: '500', marginBottom: 8 }}>
                   Available Times
                 </Text>
@@ -317,24 +317,24 @@ export default function CreateSessionStep2() {
                           minWidth: 60,
                           alignItems: 'center',
                           backgroundColor: isSelected
-                            ? '#3b82f6'
+                            ? 'var(--color-brand-primary)'
                             : status === 'available'
-                            ? '#dcfce7'
+                            ? 'var(--color-feedback-success-bg)'
                             : status === 'busy'
-                            ? '#fef2f2'
+                            ? 'var(--color-feedback-error-bg)'
                             : status === 'loading'
-                            ? '#f3f4f6'
-                            : '#f3f4f6',
+                            ? 'var(--color-surface-tertiary)'
+                            : 'var(--color-surface-tertiary)',
                           borderColor: isSelected
-                            ? '#1e40af'
+                            ? 'var(--color-brand-primary)'
                             : status === 'available'
-                            ? '#bbf7d0'
+                            ? 'var(--color-feedback-success-border)'
                             : status === 'busy'
-                            ? '#fecaca'
+                            ? 'var(--color-feedback-error-border)'
                             : status === 'loading'
-                            ? '#d1d5db'
-                            : '#d1d5db',
-                          shadowColor: isSelected ? '#3b82f6' : undefined,
+                            ? 'var(--color-border-secondary)'
+                            : 'var(--color-border-secondary)',
+                          shadowColor: isSelected ? 'var(--color-brand-primary)' : undefined,
                           shadowOffset: isSelected ? { width: 0, height: 2 } : undefined,
                           shadowOpacity: isSelected ? 0.3 : undefined,
                           shadowRadius: isSelected ? 4 : undefined,
@@ -345,14 +345,14 @@ export default function CreateSessionStep2() {
                           fontSize: 12,
                           fontWeight: isSelected ? '700' : '500',
                           color: isSelected
-                            ? '#ffffff'
+                            ? 'var(--color-text-inverse)'
                             : status === 'available'
-                            ? '#166534'
+                            ? 'var(--color-feedback-success-text)'
                             : status === 'busy'
-                            ? '#dc2626'
+                            ? 'var(--color-feedback-error-text)'
                             : status === 'loading'
-                            ? '#6b7280'
-                            : '#374151',
+                            ? 'var(--color-text-tertiary)'
+                            : 'var(--color-text-secondary)',
                         }}>
                           {status === 'loading' ? '...' : timeSlot}
                         </Text>
@@ -368,12 +368,12 @@ export default function CreateSessionStep2() {
 
       {court && startTimeHHmm && (
         <BrandCard style={{ 
-          backgroundColor: '#dbeafe', 
-          borderColor: '#3b82f6', 
+          backgroundColor: 'var(--color-feedback-info-bg)', 
+          borderColor: 'var(--color-brand-primary)', 
           borderWidth: 2, 
           padding: 16, 
           marginBottom: 16,
-          shadowColor: '#3b82f6',
+          shadowColor: 'var(--color-brand-primary)',
           shadowOffset: { width: 0, height: 2 },
           shadowOpacity: 0.2,
           shadowRadius: 4,
@@ -383,7 +383,7 @@ export default function CreateSessionStep2() {
             <View style={{
               width: 24,
               height: 24,
-              backgroundColor: '#3b82f6',
+              backgroundColor: 'var(--color-brand-primary)',
               borderRadius: 12,
               alignItems: 'center',
               justifyContent: 'center',
@@ -391,18 +391,18 @@ export default function CreateSessionStep2() {
             }}>
               <Text style={{ color: 'white', fontSize: 12, fontWeight: 'bold' }}>✓</Text>
             </View>
-            <Text style={{ fontSize: 16, fontWeight: '700', color: '#1e40af' }}>
+            <Text style={{ fontSize: 16, fontWeight: '700', color: 'var(--color-brand-primary)' }}>
               Selected Court & Time
             </Text>
           </View>
-          <Text style={{ fontSize: 18, fontWeight: '600', color: '#1e40af', marginBottom: 4 }}>
+          <Text style={{ fontSize: 18, fontWeight: '600', color: 'var(--color-brand-primary)', marginBottom: 4 }}>
             {court.name}
           </Text>
-          <Text style={{ fontSize: 16, color: '#1e40af', marginBottom: 8 }}>
+          <Text style={{ fontSize: 16, color: 'var(--color-brand-primary)', marginBottom: 8 }}>
             {startTimeHHmm} ({durationMinutes} min)
           </Text>
           <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-            <Text style={{ fontSize: 14, color: '#6b7280' }}>
+            <Text style={{ fontSize: 14, color: 'var(--color-text-tertiary)' }}>
               {Math.round(court.priceHourlyLE * durationMinutes / 60)} EGP total
             </Text>
             <TouchableOpacity
@@ -410,7 +410,7 @@ export default function CreateSessionStep2() {
               style={{
                 paddingHorizontal: 12,
                 paddingVertical: 4,
-                backgroundColor: '#3b82f6',
+                backgroundColor: 'var(--color-brand-primary)',
                 borderRadius: 6
               }}
             >

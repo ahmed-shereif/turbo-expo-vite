@@ -56,23 +56,23 @@ export default function Signup() {
         <form onSubmit={handleSubmit(onSubmit)} style={{ display: 'flex', flexDirection: 'column', gap: 12, width: '100%', maxWidth: 520 }}>
           <div>
             <Controller control={control} name="name" render={({ field }) => (<TextField placeholder="Name" fullWidth {...field} />)} />
-            {errors.name && <div style={{ color: '#ef4444' }}>{errors.name.message}</div>}
+            {errors.name && <div style={{ color: 'var(--color-feedback-error-text)' }}>{errors.name.message}</div>}
           </div>
           <div>
             <Controller control={control} name="phone" render={({ field }) => (<TextField placeholder="Phone (+201234567890)" type="tel" fullWidth {...field} />)} />
-            {errors.phone && <div style={{ color: '#ef4444' }}>{errors.phone.message}</div>}
+            {errors.phone && <div style={{ color: 'var(--color-feedback-error-text)' }}>{errors.phone.message}</div>}
           </div>
           <div>
             <Controller control={control} name="email" render={({ field }) => (<TextField placeholder="Email" type="email" fullWidth {...field} />)} />
-            {errors.email && <div style={{ color: '#ef4444' }}>{errors.email.message}</div>}
+            {errors.email && <div style={{ color: 'var(--color-feedback-error-text)' }}>{errors.email.message}</div>}
           </div>
           <div>
             <Controller control={control} name="password" render={({ field }) => (<TextField placeholder="Password" type="password" fullWidth {...field} />)} />
-            {errors.password && <div style={{ color: '#ef4444' }}>{errors.password.message}</div>}
+            {errors.password && <div style={{ color: 'var(--color-feedback-error-text)' }}>{errors.password.message}</div>}
           </div>
           <div>
             <Controller control={control} name="birthday" render={({ field }) => (<TextField placeholder="Birthday (YYYY-MM-DD)" fullWidth {...field} />)} />
-            {errors.birthday && <div style={{ color: '#ef4444' }}>{errors.birthday.message}</div>}
+            {errors.birthday && <div style={{ color: 'var(--color-feedback-error-text)' }}>{errors.birthday.message}</div>}
           </div>
           <div>
             <div>You are a</div>
@@ -87,9 +87,9 @@ export default function Signup() {
                 </div>
               )}
             />
-            {errors.role && <div style={{ color: '#ef4444' }}>{(errors as any).role?.message}</div>}
+            {errors.role && <div style={{ color: 'var(--color-feedback-error-text)' }}>{(errors as any).role?.message}</div>}
           </div>
-          {serverError && <div style={{ color: '#ef4444' }}>{serverError}</div>}
+          {serverError && <div style={{ color: 'var(--color-feedback-error-text)' }}>{serverError}</div>}
           <BrandButton icon="UserPlus" disabled={isSubmitting} onPress={handleSubmit(onSubmit)} fullWidth>{isSubmitting ? 'Signing up…' : 'Sign up'}</BrandButton>
         </form>
         <div style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>

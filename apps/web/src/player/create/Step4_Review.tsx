@@ -70,7 +70,7 @@ export function Step4_Review({
           justifyContent="center"
           marginBottom="$2"
         >
-          <Icon name="CheckCircle" size={16} color="#9333ea" />
+          <Icon name="CheckCircle" size={16} color="$brandAccent" />
         </View>
         <SafeText fontSize="$5" fontWeight="600" color="$textHigh" textAlign="center" marginBottom="$1">Review & Confirm</SafeText>
         <SafeText color="$textMuted" fontSize="$3" textAlign="center" opacity={0.8}>
@@ -86,7 +86,7 @@ export function Step4_Review({
               <Icon name="Clipboard" size={14} color="white" />
               <Text fontSize="$4" fontWeight="600" color="white" marginLeft="$2">Session Details</Text>
             </XStack>
-            <View backgroundColor="rgba(255,255,255,0.2)" paddingHorizontal="$2" paddingVertical="$1" borderRadius="$2">
+            <View backgroundColor="var(--color-surface-overlay)" paddingHorizontal="$2" paddingVertical="$1" borderRadius="$2">
               <Text fontSize="$2" color="white" fontWeight="500">{durationMinutes}min</Text>
             </View>
           </XStack>
@@ -105,7 +105,7 @@ export function Step4_Review({
                 justifyContent="center"
                 marginRight="$2"
               >
-                <Icon name="Calendar" size={12} color="#2563eb" />
+                  <Icon name="Calendar" size={12} color="$brandPrimary" />
               </View>
               <YStack>
                 <Text fontSize="$2" fontWeight="500" color="$textMuted">Date & Time</Text>
@@ -131,7 +131,7 @@ export function Step4_Review({
                   justifyContent="center"
                   marginRight="$2"
                 >
-                  <Icon name="Building" size={10} color="#ea580c" />
+                  <Icon name="Building" size={10} color="$brandAccent" />
                 </View>
                 <Text fontSize="$2" fontWeight="500" color="$textMuted">Court</Text>
               </XStack>
@@ -150,7 +150,7 @@ export function Step4_Review({
                   justifyContent="center"
                   marginRight="$2"
                 >
-                  <Icon name="User" size={10} color="#9333ea" />
+                  <Icon name="User" size={10} color="$brandAccent" />
                 </View>
                 <Text fontSize="$2" fontWeight="500" color="$textMuted">Trainer</Text>
               </XStack>
@@ -173,7 +173,7 @@ export function Step4_Review({
           {/* Seats Total - More compact */}
           <YStack>
             <XStack alignItems="center" marginBottom="$2">
-              <Icon name="Users" size={12} color="#2563eb" />
+                <Icon name="Users" size={12} color="$brandPrimary" />
               <Text fontSize="$3" fontWeight="600" color="$textMuted" marginLeft="$2">Number of Seats</Text>
             </XStack>
             <XStack gap="$2">
@@ -207,7 +207,7 @@ export function Step4_Review({
           <XStack gap="$3" $md={{ flexDirection: 'column' }}>
             <YStack flex={1}>
               <XStack alignItems="center" marginBottom="$2">
-                <Icon name="Lock" size={12} color="#16a34a" />
+                <Icon name="Lock" size={12} color="$brandSecondary" />
                 <Text fontSize="$3" fontWeight="600" color="$textMuted" marginLeft="$2">Session Type</Text>
               </XStack>
               <XStack gap="$2">
@@ -241,7 +241,7 @@ export function Step4_Review({
 
             <YStack flex={1}>
               <XStack alignItems="center" marginBottom="$2">
-                <Icon name="Award" size={12} color="#ea580c" />
+                <Icon name="Award" size={12} color="$brandAccent" />
                 <Text fontSize="$3" fontWeight="600" color="$textMuted" marginLeft="$2">Min Rank</Text>
               </XStack>
               <XStack flexWrap="wrap" gap="$2">
@@ -293,7 +293,7 @@ export function Step4_Review({
               <Icon name="DollarSign" size={14} color="white" />
               <Text fontSize="$4" fontWeight="600" color="white" marginLeft="$2">Pricing Breakdown</Text>
             </XStack>
-            <View backgroundColor="rgba(255,255,255,0.2)" paddingHorizontal="$2" paddingVertical="$1" borderRadius="$2">
+            <View backgroundColor="var(--color-surface-overlay)" paddingHorizontal="$2" paddingVertical="$1" borderRadius="$2">
               <Text fontSize="$2" color="white" fontWeight="500">{formatEGP(intendedShare)}</Text>
             </View>
           </XStack>
@@ -313,7 +313,7 @@ export function Step4_Review({
                     justifyContent="center"
                     marginRight="$2"
                   >
-                    <Icon name="Building" size={12} color="#2563eb" />
+                    <Icon name="Building" size={12} color="$brandPrimary" />
                   </View>
                   <YStack>
                     <Text fontSize="$3" fontWeight="600" color="$textHigh">Court Fee</Text>
@@ -336,7 +336,7 @@ export function Step4_Review({
                     justifyContent="center"
                     marginRight="$2"
                   >
-                    <Icon name="User" size={12} color="#ea580c" />
+                    <Icon name="User" size={12} color="$brandAccent" />
                   </View>
                   <YStack>
                     <Text fontSize="$3" fontWeight="600" color="$textHigh">Trainer Fee</Text>

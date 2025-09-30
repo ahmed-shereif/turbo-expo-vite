@@ -102,7 +102,7 @@ export default function CreateSessionStep4() {
         <Text style={{ fontSize: 20, fontWeight: 'bold', marginBottom: 8 }}>
           Create Session
         </Text>
-        <Text style={{ fontSize: 16, color: '#666', marginBottom: 16 }}>
+        <Text style={{ fontSize: 16, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
           Step 4 of 4: Review & Confirm
         </Text>
         
@@ -110,14 +110,14 @@ export default function CreateSessionStep4() {
         <View style={{ 
           width: '100%', 
           height: 8, 
-          backgroundColor: '#e5e7eb', 
+          backgroundColor: 'var(--color-border-primary)', 
           borderRadius: 4,
           marginBottom: 24
         }}>
           <View style={{ 
             width: '100%', 
             height: '100%', 
-            backgroundColor: '#3b82f6', 
+            backgroundColor: 'var(--color-brand-primary)', 
             borderRadius: 4 
           }} />
         </View>
@@ -125,7 +125,7 @@ export default function CreateSessionStep4() {
         <Text style={{ fontSize: 18, fontWeight: '600', marginBottom: 8 }}>
           Review & Confirm
         </Text>
-        <Text style={{ fontSize: 14, color: '#666', marginBottom: 16 }}>
+        <Text style={{ fontSize: 14, color: 'var(--color-text-tertiary)', marginBottom: 16 }}>
           Review your session details before creating.
         </Text>
       </BrandCard>
@@ -139,31 +139,31 @@ export default function CreateSessionStep4() {
           
           <View style={{ gap: 8 }}>
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ color: '#666' }}>Date & Time:</Text>
+              <Text style={{ color: 'var(--color-text-tertiary)' }}>Date & Time:</Text>
               <Text style={{ fontWeight: '500', textAlign: 'right', flex: 1 }}>
                 {dayISO && startTimeHHmm && formatLocalTime(dayISO, startTimeHHmm)}
               </Text>
             </View>
             
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ color: '#666' }}>Duration:</Text>
+              <Text style={{ color: 'var(--color-text-tertiary)' }}>Duration:</Text>
               <Text style={{ fontWeight: '500' }}>{durationMinutes} minutes</Text>
             </View>
             
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ color: '#666' }}>Court:</Text>
+              <Text style={{ color: 'var(--color-text-tertiary)' }}>Court:</Text>
               <Text style={{ fontWeight: '500' }}>{court?.name}</Text>
             </View>
             
             {court?.area && (
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ color: '#666' }}>Area:</Text>
+                <Text style={{ color: 'var(--color-text-tertiary)' }}>Area:</Text>
                 <Text style={{ fontWeight: '500' }}>{court.area}</Text>
               </View>
             )}
             
             <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-              <Text style={{ color: '#666' }}>Trainer:</Text>
+              <Text style={{ color: 'var(--color-text-tertiary)' }}>Trainer:</Text>
               <Text style={{ fontWeight: '500' }}>{trainer?.name}</Text>
             </View>
           </View>
@@ -190,13 +190,13 @@ export default function CreateSessionStep4() {
                     padding: 12,
                     borderRadius: 8,
                     borderWidth: 1,
-                    borderColor: seatsTotal === seats ? '#3b82f6' : '#d1d5db',
-                    backgroundColor: seatsTotal === seats ? '#3b82f6' : '#ffffff',
+                    borderColor: seatsTotal === seats ? 'var(--color-brand-primary)' : 'var(--color-border-secondary)',
+                    backgroundColor: seatsTotal === seats ? 'var(--color-brand-primary)' : 'var(--color-surface-primary)',
                     alignItems: 'center',
                   }}
                 >
                   <Text style={{
-                    color: seatsTotal === seats ? '#ffffff' : '#374151',
+                    color: seatsTotal === seats ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
                     fontWeight: '500',
                   }}>
                     {seats} seats
@@ -221,13 +221,13 @@ export default function CreateSessionStep4() {
                     padding: 12,
                     borderRadius: 8,
                     borderWidth: 1,
-                    borderColor: type === sessionType ? '#3b82f6' : '#d1d5db',
-                    backgroundColor: type === sessionType ? '#3b82f6' : '#ffffff',
+                    borderColor: type === sessionType ? 'var(--color-brand-primary)' : 'var(--color-border-secondary)',
+                    backgroundColor: type === sessionType ? 'var(--color-brand-primary)' : 'var(--color-surface-primary)',
                     alignItems: 'center',
                   }}
                 >
                   <Text style={{
-                    color: type === sessionType ? '#ffffff' : '#374151',
+                    color: type === sessionType ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
                     fontWeight: '500',
                   }}>
                     {sessionType}
@@ -235,7 +235,7 @@ export default function CreateSessionStep4() {
                 </TouchableOpacity>
               ))}
             </View>
-            <Text style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+            <Text style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 4 }}>
               {type === 'OPEN' 
                 ? 'Other players can join your session'
                 : 'Only invited players can join'
@@ -257,12 +257,12 @@ export default function CreateSessionStep4() {
                     paddingVertical: 8,
                     borderRadius: 8,
                     borderWidth: 1,
-                    borderColor: !minRank ? '#3b82f6' : '#d1d5db',
-                    backgroundColor: !minRank ? '#3b82f6' : '#ffffff',
+                    borderColor: !minRank ? 'var(--color-brand-primary)' : 'var(--color-border-secondary)',
+                    backgroundColor: !minRank ? 'var(--color-brand-primary)' : 'var(--color-surface-primary)',
                   }}
                 >
                   <Text style={{
-                    color: !minRank ? '#ffffff' : '#374151',
+                    color: !minRank ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
                     fontSize: 12,
                     fontWeight: '500',
                   }}>
@@ -278,12 +278,12 @@ export default function CreateSessionStep4() {
                       paddingVertical: 8,
                       borderRadius: 8,
                       borderWidth: 1,
-                      borderColor: minRank === rank ? '#3b82f6' : '#d1d5db',
-                      backgroundColor: minRank === rank ? '#3b82f6' : '#ffffff',
+                      borderColor: minRank === rank ? 'var(--color-brand-primary)' : 'var(--color-border-secondary)',
+                      backgroundColor: minRank === rank ? 'var(--color-brand-primary)' : 'var(--color-surface-primary)',
                     }}
                   >
                     <Text style={{
-                      color: minRank === rank ? '#ffffff' : '#374151',
+                      color: minRank === rank ? 'var(--color-text-inverse)' : 'var(--color-text-secondary)',
                       fontSize: 12,
                       fontWeight: '500',
                     }}>
@@ -305,7 +305,7 @@ export default function CreateSessionStep4() {
           <View style={{ gap: 8 }}>
             {court?.priceHourlyLE && (
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ color: '#666' }}>
+                <Text style={{ color: 'var(--color-text-tertiary)' }}>
                   Court ({formatEGP(court.priceHourlyLE)}/hour):
                 </Text>
                 <Text style={{ fontWeight: '500' }}>
@@ -316,7 +316,7 @@ export default function CreateSessionStep4() {
             
             {trainer?.priceHourlyLE && (
               <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Text style={{ color: '#666' }}>
+                <Text style={{ color: 'var(--color-text-tertiary)' }}>
                   Trainer ({formatEGP(trainer.priceHourlyLE)}/hour):
                 </Text>
                 <Text style={{ fontWeight: '500' }}>
@@ -327,7 +327,7 @@ export default function CreateSessionStep4() {
             
             <View style={{ 
               borderTopWidth: 1, 
-              borderTopColor: '#e5e7eb', 
+              borderTopColor: 'var(--color-border-primary)', 
               paddingTop: 12,
               marginTop: 8
             }}>
@@ -335,11 +335,11 @@ export default function CreateSessionStep4() {
                 <Text style={{ fontSize: 16, fontWeight: '600' }}>
                   Your estimated share:
                 </Text>
-                <Text style={{ fontSize: 16, fontWeight: '600', color: '#059669' }}>
+                <Text style={{ fontSize: 16, fontWeight: '600', color: 'var(--color-feedback-success-text)' }}>
                   {formatEGP(intendedShare)}
                 </Text>
               </View>
-              <Text style={{ fontSize: 12, color: '#666', marginTop: 4 }}>
+              <Text style={{ fontSize: 12, color: 'var(--color-text-tertiary)', marginTop: 4 }}>
                 Final share may change if you choose to start early.
               </Text>
             </View>

@@ -15,7 +15,7 @@ export function BrandCard({ elevated = true, children, ...rest }: BrandCardProps
       borderColor="$color5"
       elevation={elevated ? 3 : 0}
       // Web shadow for depth
-      style={{ boxShadow: elevated ? '0 4px 16px rgba(0,0,0,0.12)' : 'none' }}
+      style={{ boxShadow: elevated ? '0 4px 16px var(--color-shadow-md)' : 'none' }}
       {...rest}
     >
       {children}

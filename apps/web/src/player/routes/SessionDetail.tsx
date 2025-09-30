@@ -109,8 +109,8 @@ export default function SessionDetailPage() {
   if (sessionQ.isPending) return (
     <Screen>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', minHeight: '60vh', flexDirection: 'column', gap: 16 }}>
-        <div style={{ width: 48, height: 48, border: '4px solid #e5e7eb', borderTop: '4px solid #3b82f6', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
-        <div style={{ color: '#6b7280', fontSize: 16 }}>Loading session details...</div>
+        <div style={{ width: 48, height: 48, border: '4px solid var(--color-border-primary)', borderTop: '4px solid var(--color-brand-primary)', borderRadius: '50%', animation: 'spin 1s linear infinite' }} />
+        <div style={{ color: 'var(--color-text-tertiary)', fontSize: 16 }}>Loading session details...</div>
       </div>
     </Screen>
   );
@@ -180,26 +180,26 @@ export default function SessionDetailPage() {
           font-weight: 500;
         }
         .status-pending {
-          background: #fef3c7;
-          color: #92400e;
+          background: var(--color-feedback-warning-bg);
+          color: var(--color-feedback-warning-text);
         }
         .status-confirmed {
-          background: #d1fae5;
-          color: #065f46;
+          background: var(--color-feedback-success-bg);
+          color: var(--color-feedback-success-text);
         }
         .info-item {
           display: flex;
           align-items: center;
           gap: 8px;
           padding: 8px 0;
-          color: #374151;
+          color: var(--color-text-secondary);
         }
         .section-header {
           display: flex;
           align-items: center;
           gap: 8px;
           margin-bottom: 16px;
-          color: #1f2937;
+          color: var(--color-text-primary);
           font-size: 18px;
           font-weight: 600;
         }
@@ -208,21 +208,21 @@ export default function SessionDetailPage() {
           align-items: center;
           gap: 12px;
           padding: 12px;
-          background: #f9fafb;
+          background: var(--color-surface-secondary);
           border-radius: 12px;
           margin-bottom: 8px;
-          border: 1px solid #e5e7eb;
+          border: 1px solid var(--color-border-primary);
           transition: all 0.2s ease;
         }
         .player-card:hover {
-          background: #f3f4f6;
-          border-color: #d1d5db;
+          background: var(--color-surface-tertiary);
+          border-color: var(--color-border-secondary);
         }
         .avatar {
           width: 48px;
           height: 48px;
           border-radius: 24px;
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -230,11 +230,11 @@ export default function SessionDetailPage() {
           font-weight: 600;
           font-size: 16px;
           overflow: hidden;
-          border: 2px solid #e5e7eb;
+          border: 2px solid var(--color-border-primary);
         }
         .rank-badge {
           padding: 4px 8px;
-          background: #3b82f6;
+          background: var(--color-brand-primary);
           color: white;
           border-radius: 12px;
           font-size: 12px;
@@ -242,14 +242,14 @@ export default function SessionDetailPage() {
         }
         .role-badge {
           padding: 2px 8px;
-          background: #10b981;
+          background: var(--color-brand-secondary);
           color: white;
           border-radius: 8px;
           font-size: 11px;
           font-weight: 500;
         }
         .price-highlight {
-          background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+          background: linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%);
           -webkit-background-clip: text;
           -webkit-text-fill-color: transparent;
           font-weight: 700;
@@ -261,17 +261,17 @@ export default function SessionDetailPage() {
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 24 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
           <BrandButton icon="ArrowLeft" variant="outline" onPress={() => navigate(getBackNavigationPath())} />
-          <h1 style={{ margin: 0, color: '#1f2937', fontSize: 24, fontWeight: 700 }}>Session Details</h1>
+          <h1 style={{ margin: 0, color: 'var(--color-text-primary)', fontSize: 24, fontWeight: 700 }}>Session Details</h1>
         </div>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-          {s.status === 'ACTIVE' && <div style={{ width: 8, height: 8, background: '#10b981', borderRadius: '50%', animation: 'pulse 2s infinite' }} />}
-          <span style={{ color: '#6b7280', fontSize: 14, textTransform: 'capitalize' }}>{s.status.toLowerCase()}</span>
+          {s.status === 'ACTIVE' && <div style={{ width: 8, height: 8, background: 'var(--color-brand-secondary)', borderRadius: '50%', animation: 'pulse 2s infinite' }} />}
+          <span style={{ color: 'var(--color-text-tertiary)', fontSize: 14, textTransform: 'capitalize' }}>{s.status.toLowerCase()}</span>
         </div>
       </div>
 
       {/* Court Confirmation Status */}
       {courtQ.isSuccess && (
-        <BrandCard style={{ marginBottom: 24, background: courtQ.data.status === 'CONFIRMED' ? '#f0fdf4' : '#fffbeb', border: `1px solid ${courtQ.data.status === 'CONFIRMED' ? '#bbf7d0' : '#fed7aa'}` }}>
+        <BrandCard style={{ marginBottom: 24, background: courtQ.data.status === 'CONFIRMED' ? 'var(--color-feedback-success-bg)' : 'var(--color-feedback-warning-bg)', border: `1px solid ${courtQ.data.status === 'CONFIRMED' ? 'var(--color-feedback-success-border)' : 'var(--color-feedback-warning-border)'}` }}>
           <div className={`status-badge ${courtQ.data.status === 'CONFIRMED' ? 'status-confirmed' : 'status-pending'}`}>
             {courtQ.data.status === 'PENDING' ? '⏳' : '✅'}
             {courtQ.data.status === 'PENDING' ? 'Awaiting court confirmation' : 'Court confirmed'}
@@ -283,35 +283,35 @@ export default function SessionDetailPage() {
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 24 }}>
         
         {/* Court & Trainer Info */}
-        <BrandCard style={{ background: 'linear-gradient(135deg, #06b6d4 0%, #67e8f9 100%)', color: 'white', border: 'none' }}>
+        <BrandCard style={{ background: 'linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-secondary) 100%)', color: 'white', border: 'none' }}>
           <div className="section-header" style={{ color: 'white' }}>
             🏢 Venue Details
           </div>
           
           <div style={{ marginBottom: 20 }}>
             <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>{s.court.name || 'Unknown court'}</div>
-            <div className="info-item" style={{ color: 'rgba(255,255,255,0.9)' }}>
+            <div className="info-item" style={{ color: 'var(--color-text-inverse)' }}>
               📍 {s.court.area || 'Location not specified'}
             </div>
-            <div className="info-item" style={{ color: 'rgba(255,255,255,0.9)' }}>
-              💰 <span className="price-highlight" style={{ color: '#fef3c7' }}>{formatEGP(s.court.priceHourlyLE ?? 0)}/hr</span>
+            <div className="info-item" style={{ color: 'var(--color-text-inverse)' }}>
+              💰 <span className="price-highlight" style={{ color: 'var(--color-feedback-warning-text)' }}>{formatEGP(s.court.priceHourlyLE ?? 0)}/hr</span>
             </div>
           </div>
           
-          <div style={{ borderTop: '1px solid rgba(255,255,255,0.2)', paddingTop: 16 }}>
+          <div style={{ borderTop: '1px solid var(--color-border-secondary)', paddingTop: 16 }}>
             <div style={{ fontSize: 16, fontWeight: 600, marginBottom: 8, display: 'flex', alignItems: 'center', gap: 8 }}>
               👨‍🏫 Trainer
             </div>
-            <div className="info-item" style={{ color: 'rgba(255,255,255,0.9)' }}>
+            <div className="info-item" style={{ color: 'var(--color-text-inverse)' }}>
               {s.trainer.name || 'No trainer assigned'}
             </div>
             {s.trainer.maxLevel && (
-              <div className="info-item" style={{ color: 'rgba(255,255,255,0.9)' }}>
+              <div className="info-item" style={{ color: 'var(--color-text-inverse)' }}>
                 🏆 Max level: {s.trainer.maxLevel}
               </div>
             )}
-            <div className="info-item" style={{ color: 'rgba(255,255,255,0.9)' }}>
-              💰 <span style={{ color: '#fef3c7', fontWeight: 600 }}>{formatEGP(s.trainer.priceHourlyLE ?? 0)}/hr</span>
+            <div className="info-item" style={{ color: 'var(--color-text-inverse)' }}>
+              💰 <span style={{ color: 'var(--color-feedback-warning-text)', fontWeight: 600 }}>{formatEGP(s.trainer.priceHourlyLE ?? 0)}/hr</span>
             </div>
           </div>
         </BrandCard>
@@ -340,8 +340,8 @@ export default function SessionDetailPage() {
           </div>
           
           {intendedShare != null && user?.roles?.includes('PLAYER') && (
-            <div style={{ background: '#f0f9ff', padding: 12, borderRadius: 8, marginBottom: 20, border: '1px solid #bae6fd' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: '#0369a1' }}>
+            <div style={{ background: 'var(--color-feedback-info-bg)', padding: 12, borderRadius: 8, marginBottom: 20, border: '1px solid var(--color-feedback-info-border)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, color: 'var(--color-feedback-info-text)' }}>
                 💳 <strong>Your share: <span className="price-highlight">{formatEGP(intendedShare)}</span></strong>
               </div>
             </div>
@@ -368,14 +368,14 @@ export default function SessionDetailPage() {
                   </div>
                   <div style={{ flex: 1 }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
-                      <strong style={{ color: '#1f2937' }}>{name}</strong>
-                      {isYou && <span style={{ color: '#3b82f6', fontSize: 12, fontWeight: 600 }}>(You)</span>}
+                      <strong style={{ color: 'var(--color-text-primary)' }}>{name}</strong>
+                      {isYou && <span style={{ color: 'var(--color-brand-primary)', fontSize: 12, fontWeight: 600 }}>(You)</span>}
                       <span className="rank-badge">{rank}</span>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                       <span className="role-badge">{m.role}</span>
                       {m.joinedAt && (
-                        <span style={{ fontSize: 12, color: '#6b7280' }}>
+                        <span style={{ fontSize: 12, color: 'var(--color-text-tertiary)' }}>
                           Joined {formatLocal(m.joinedAt)}
                         </span>
                       )}
@@ -393,7 +393,7 @@ export default function SessionDetailPage() {
                 icon="UserPlus" 
                 onPress={() => joinMut.mutate()} 
                 disabled={joinMut.isPending}
-                style={{ background: 'linear-gradient(135deg, #10b981 0%, #059669 100%)', border: 'none' }}
+                style={{ background: 'linear-gradient(135deg, var(--color-brand-secondary) 0%, var(--color-brand-secondary) 100%)', border: 'none' }}
               >
                 {joinMut.isPending ? '⏳ Joining...' : '🚀 Join Session'}
               </BrandButton>
@@ -403,7 +403,7 @@ export default function SessionDetailPage() {
                 icon="CheckCircle" 
                 onPress={() => confirmMut.mutate()} 
                 disabled={confirmMut.isPending}
-                style={{ background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', border: 'none' }}
+                style={{ background: 'linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-primary) 100%)', border: 'none' }}
               >
                 {confirmMut.isPending ? '⏳ Processing...' : '✅ Confirm with Current Players'}
               </BrandButton>
@@ -414,7 +414,7 @@ export default function SessionDetailPage() {
                 onPress={() => setShowLeaveModal(true)}
                 disabled={leaveMut.isPending}
                 variant="outline"
-                style={{ borderColor: '#ef4444', color: '#ef4444' }}
+                style={{ borderColor: 'var(--color-feedback-error-border)', color: 'var(--color-feedback-error-text)' }}
               >
                 {leaveMut.isPending ? '⏳ Leaving…' : ' Leave Session'}
               </BrandButton>
@@ -431,26 +431,26 @@ export default function SessionDetailPage() {
           left: 0, 
           right: 0, 
           bottom: 0, 
-          background: 'rgba(0,0,0,0.6)', 
+          background: 'var(--color-overlay)', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
           zIndex: 1000
         }}>
           <div style={{ 
-            background: 'white', 
+            background: 'var(--color-surface-primary)', 
             borderRadius: 16, 
             padding: 24, 
             width: '90%', 
             maxWidth: 500,
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            border: '1px solid #e5e7eb'
+            boxShadow: '0 25px 50px -12px var(--color-shadow-lg)',
+            border: '1px solid var(--color-border-primary)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
               <div style={{ 
                 width: 48, 
                 height: 48, 
-                background: 'linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%)', 
+                background: 'linear-gradient(135deg, var(--color-brand-primary) 0%, var(--color-brand-primary) 100%)', 
                 borderRadius: 24, 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -459,11 +459,11 @@ export default function SessionDetailPage() {
               }}>
                 ✅
               </div>
-              <h3 style={{ margin: 0, color: '#1f2937', fontSize: 20, fontWeight: 700 }}>Confirm with Current Players</h3>
+              <h3 style={{ margin: 0, color: 'var(--color-text-primary)', fontSize: 20, fontWeight: 700 }}>Confirm with Current Players</h3>
             </div>
             
-            <div style={{ background: '#f0f9ff', padding: 16, borderRadius: 12, marginBottom: 16, border: '1px solid #bae6fd' }}>
-              <p style={{ margin: 0, color: '#0369a1', lineHeight: 1.5 }}>
+            <div style={{ background: 'var(--color-feedback-info-bg)', padding: 16, borderRadius: 12, marginBottom: 16, border: '1px solid var(--color-feedback-info-border)' }}>
+              <p style={{ margin: 0, color: 'var(--color-feedback-info-text)', lineHeight: 1.5 }}>
                 👥 You'll proceed with the current group ({sessionQ.data?.seats.filled} players).
                 <br />
                 💰 Your share will be <strong>{formatEGP(
@@ -474,11 +474,11 @@ export default function SessionDetailPage() {
               </p>
             </div>
             
-            <div style={{ background: '#fef3c7', padding: 16, borderRadius: 12, marginBottom: 16, border: '1px solid #fcd34d' }}>
-              <div style={{ color: '#92400e', fontWeight: 600, marginBottom: 8 }}>
+            <div style={{ background: 'var(--color-feedback-warning-bg)', padding: 16, borderRadius: 12, marginBottom: 16, border: '1px solid var(--color-feedback-warning-border)' }}>
+              <div style={{ color: 'var(--color-feedback-warning-text)', fontWeight: 600, marginBottom: 8 }}>
                 📊 Consensus Status
               </div>
-              <div style={{ color: '#92400e' }}>
+              <div style={{ color: 'var(--color-feedback-warning-text)' }}>
                 ✅ Accepted: {confirmData.accepted}/{confirmData.required}
                 <br />
                 ⏳ Pending: {confirmData.pending.join(', ')}
@@ -486,7 +486,7 @@ export default function SessionDetailPage() {
             </div>
             
             {confirmData.expiresAt && (
-              <div style={{ color: '#6b7280', fontSize: 14, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div style={{ color: 'var(--color-text-tertiary)', fontSize: 14, marginBottom: 20, display: 'flex', alignItems: 'center', gap: 8 }}>
                 ⏰ Expires at: {formatLocal(confirmData.expiresAt)}
               </div>
             )}
@@ -496,7 +496,7 @@ export default function SessionDetailPage() {
                 variant="outline" 
                 icon="X" 
                 onPress={() => setShowConfirmModal(false)}
-                style={{ borderColor: '#d1d5db', color: '#6b7280' }}
+                style={{ borderColor: 'var(--color-border-secondary)', color: 'var(--color-text-tertiary)' }}
               >
                 Close
               </BrandButton>
@@ -513,26 +513,26 @@ export default function SessionDetailPage() {
           left: 0, 
           right: 0, 
           bottom: 0, 
-          background: 'rgba(0,0,0,0.6)', 
+          background: 'var(--color-overlay)', 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'center',
           zIndex: 1000
         }}>
           <div style={{ 
-            background: 'white', 
+            background: 'var(--color-surface-primary)', 
             borderRadius: 16, 
             padding: 24, 
             width: '90%', 
             maxWidth: 520,
-            boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.25)',
-            border: '1px solid #e5e7eb'
+            boxShadow: '0 25px 50px -12px var(--color-shadow-lg)',
+            border: '1px solid var(--color-border-primary)'
           }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: 12, marginBottom: 20 }}>
               <div style={{ 
                 width: 48, 
                 height: 48, 
-                background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', 
+                background: 'linear-gradient(135deg, var(--color-feedback-error-border) 0%, var(--color-feedback-error-text) 100%)', 
                 borderRadius: 24, 
                 display: 'flex', 
                 alignItems: 'center', 
@@ -541,18 +541,18 @@ export default function SessionDetailPage() {
               }}>
                 ⚠️
               </div>
-              <h3 style={{ margin: 0, color: '#1f2937', fontSize: 20, fontWeight: 700 }}>Leave Session?</h3>
+              <h3 style={{ margin: 0, color: 'var(--color-text-primary)', fontSize: 20, fontWeight: 700 }}>Leave Session?</h3>
             </div>
             
-            <div style={{ background: '#fef2f2', padding: 16, borderRadius: 12, marginBottom: 20, border: '1px solid #fecaca' }}>
-              <div style={{ color: '#991b1b', lineHeight: 1.6 }}>
+            <div style={{ background: 'var(--color-feedback-error-bg)', padding: 16, borderRadius: 12, marginBottom: 20, border: '1px solid var(--color-feedback-error-border)' }}>
+              <div style={{ color: 'var(--color-feedback-error-text)', lineHeight: 1.6 }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 8 }}>
                   ✅ <strong>&gt;24h before start:</strong> Full refund if you already paid
                 </div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 12 }}>
                   ❌ <strong>&lt;24h before start:</strong> No refund; payment redistributed to remaining players
                 </div>
-                <div style={{ fontSize: 14, color: '#7f1d1d' }}>
+                <div style={{ fontSize: 14, color: 'var(--color-feedback-error-text)' }}>
                   Are you sure you want to continue?
                 </div>
               </div>
@@ -564,7 +564,7 @@ export default function SessionDetailPage() {
                 icon="X" 
                 onPress={() => setShowLeaveModal(false)} 
                 disabled={leaveMut.isPending}
-                style={{ borderColor: '#d1d5db', color: '#6b7280' }}
+                style={{ borderColor: 'var(--color-border-secondary)', color: 'var(--color-text-tertiary)' }}
               >
                 Cancel
               </BrandButton>
@@ -572,7 +572,7 @@ export default function SessionDetailPage() {
                 icon="LogOut" 
                 onPress={() => leaveMut.mutate()} 
                 disabled={leaveMut.isPending}
-                style={{ background: 'linear-gradient(135deg, #ef4444 0%, #dc2626 100%)', border: 'none' }}
+                style={{ background: 'linear-gradient(135deg, var(--color-feedback-error-border) 0%, var(--color-feedback-error-text) 100%)', border: 'none' }}
               >
                 {leaveMut.isPending ? '⏳ Leaving…' : ' Confirm Leave'}
               </BrandButton>

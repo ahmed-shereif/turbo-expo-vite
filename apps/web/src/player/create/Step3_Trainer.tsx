@@ -729,7 +729,7 @@ export function Step3_Trainer({
                                 </XStack>
                                 <Text
                                   fontSize="$3"
-                                  color={isSelected ? 'rgba(255,255,255,0.9)' : '$textMuted'}
+                                  color={isSelected ? 'var(--color-text-inverse)' : '$textMuted'}
                                   fontWeight="600"
                                 >
                                   {trainerItem.rating.avgStars.toFixed(1)} ({trainerItem.rating.count} reviews)
@@ -743,7 +743,7 @@ export function Step3_Trainer({
                                 <View
                                   width={16}
                                   height={16}
-                                  backgroundColor={isSelected ? 'rgba(255,255,255,0.2)' : getRankColor(trainerItem.maxLevel)}
+                                  backgroundColor={isSelected ? 'var(--color-surface-overlay)' : getRankColor(trainerItem.maxLevel)}
                                   borderRadius="$2"
                                   alignItems="center"
                                   justifyContent="center"
@@ -756,7 +756,7 @@ export function Step3_Trainer({
                                 </View>
                                 <Text
                                   fontSize="$4"
-                                  color={isSelected ? 'rgba(255,255,255,0.9)' : '$textMuted'}
+                                  color={isSelected ? 'var(--color-text-inverse)' : '$textMuted'}
                                   fontWeight="600"
                                 >
                                   Max Level: {rankLabels[numberToRank(trainerItem.maxLevel)] || 'Unknown'}
@@ -837,7 +837,7 @@ export function Step3_Trainer({
                                   paddingVertical="$1"
                                   borderRadius="$3"
                                   borderWidth={1}
-                                  borderColor={isSelected ? 'rgba(255,255,255,0.3)' : '$color5'}
+                                  borderColor={isSelected ? 'var(--color-border-secondary)' : '$color5'}
                                 >
                                   <Text
                                     fontSize="$3"
@@ -868,7 +868,7 @@ export function Step3_Trainer({
                               </View>
                               <Text
                                 fontSize="$3"
-                                color={isSelected ? 'rgba(255,255,255,0.9)' : '$textMuted'}
+                                color={isSelected ? 'var(--color-text-inverse)' : '$textMuted'}
                                 fontWeight="600"
                               >
                                 Verified Trainer
@@ -880,7 +880,7 @@ export function Step3_Trainer({
                               <View
                                 width={16}
                                 height={16}
-                                backgroundColor={isSelected ? 'rgba(255,255,255,0.2)' : '$color6'}
+                                backgroundColor={isSelected ? 'var(--color-surface-overlay)' : '$color6'}
                                 borderRadius="$2"
                                 alignItems="center"
                                 justifyContent="center"
@@ -889,7 +889,7 @@ export function Step3_Trainer({
                               </View>
                               <Text
                                 fontSize="$3"
-                                color={isSelected ? 'rgba(255,255,255,0.9)' : '$textMuted'}
+                                color={isSelected ? 'var(--color-text-inverse)' : '$textMuted'}
                                 fontWeight="600"
                               >
                                 Since {new Date(trainerItem.createdAt).getFullYear()}
@@ -902,7 +902,7 @@ export function Step3_Trainer({
                       {/* Availability Status */}
                       <YStack
                         borderTopWidth={1}
-                        borderTopColor={isSelected ? 'rgba(255,255,255,0.2)' : '$color4'}
+                        borderTopColor={isSelected ? 'var(--color-border-secondary)' : '$color4'}
                         paddingTop="$4"
                         marginTop="$3"
                       >
@@ -925,13 +925,13 @@ export function Step3_Trainer({
                                   width={20}
                                   height={20}
                                   borderWidth={2}
-                                  borderColor={isSelected ? 'rgba(255,255,255,0.5)' : '$color6'}
+                                  borderColor={isSelected ? 'var(--color-border-primary)' : '$color6'}
                                   borderTopColor={isSelected ? 'white' : '$primary'}
                                   borderRadius="$round"
                                 />
                                 <Text
                                   fontSize="$4"
-                                  color={isSelected ? 'rgba(255,255,255,0.8)' : '$textMuted'}
+                                  color={isSelected ? 'var(--color-text-inverse)' : '$textMuted'}
                                   fontWeight="600"
                                 >
                                   Checking...
@@ -952,7 +952,7 @@ export function Step3_Trainer({
                                 </View>
                                 <Text
                                   fontSize="$4"
-                                  color={isSelected ? 'rgba(255,255,255,0.9)' : '$textHigh'}
+                                  color={isSelected ? 'var(--color-text-inverse)' : '$textHigh'}
                                   fontWeight="600"
                                 >
                                   Available
@@ -973,7 +973,7 @@ export function Step3_Trainer({
                                 </View>
                                 <Text
                                   fontSize="$4"
-                                  color={isSelected ? 'rgba(255,255,255,0.8)' : '$textMuted'}
+                                  color={isSelected ? 'var(--color-text-inverse)' : '$textMuted'}
                                   fontWeight="600"
                                 >
                                   Busy
@@ -1063,7 +1063,7 @@ export function Step3_Trainer({
               <Text fontSize="$6" fontWeight="700" color="white" marginBottom="$1">
                 {trainer.name}
               </Text>
-              <Text fontSize="$4" color="rgba(255,255,255,0.9)" marginBottom="$2" fontWeight="600">
+              <Text fontSize="$4" color="var(--color-text-inverse)" marginBottom="$2" fontWeight="600">
                 {startTimeHHmm} • {durationMinutes} minutes
               </Text>
               <XStack gap="$4" flexWrap="wrap" $md={{ flexDirection: 'column', gap: '$2' }}>
@@ -1071,14 +1071,14 @@ export function Step3_Trainer({
                   <View
                     width={20}
                     height={20}
-                    backgroundColor="rgba(255,255,255,0.2)"
+                    backgroundColor="var(--color-surface-overlay)"
                     borderRadius="$2"
                     alignItems="center"
                     justifyContent="center"
                   >
                     <Icon name="Clock" size={12} color="white" />
                   </View>
-                  <Text fontSize="$3" color="rgba(255,255,255,0.9)" fontWeight="600">
+                  <Text fontSize="$3" color="var(--color-text-inverse)" fontWeight="600">
                     {(durationMinutes / 60)} hour{(durationMinutes / 60) > 1 ? 's' : ''} session
                   </Text>
                 </XStack>
@@ -1087,14 +1087,14 @@ export function Step3_Trainer({
                     <View
                       width={20}
                       height={20}
-                      backgroundColor="rgba(255,255,255,0.2)"
+                      backgroundColor="var(--color-surface-overlay)"
                       borderRadius="$2"
                       alignItems="center"
                       justifyContent="center"
                     >
                       <Icon name="DollarSign" size={12} color="white" />
                     </View>
-                    <Text fontSize="$3" color="rgba(255,255,255,0.9)" fontWeight="600">
+                    <Text fontSize="$3" color="var(--color-text-inverse)" fontWeight="600">
                       {Math.round(((trainer.hourlyPrice || trainer.priceHourlyLE || 0) * durationMinutes) / 60)} EGP total
                     </Text>
                   </XStack>
