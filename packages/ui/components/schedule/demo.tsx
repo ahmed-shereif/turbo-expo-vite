@@ -12,6 +12,16 @@ export function CalendarDemo() {
 
   const mockSessions = [
     {
+      id: 'session-30min',
+      type: 'OPEN' as const,
+      status: 'ACTIVE',
+      startAt: dayjs().hour(9).minute(30).toISOString(),
+      durationMinutes: 30, // 0.5 hours - testing ultra-compact layout
+      seats: { filled: 1, total: 2 },
+      court: { id: 'court-1', name: 'Quick Court', area: 'Downtown' },
+      creator: { playerId: 'player-1', name: 'John Doe' }
+    },
+    {
       id: 'session-123',
       type: 'OPEN' as const,
       status: 'ACTIVE',
@@ -26,10 +36,30 @@ export function CalendarDemo() {
       type: 'OPEN' as const,
       status: 'ACTIVE',
       startAt: dayjs().hour(14).minute(0).toISOString(),
-      durationMinutes: 90,
+      durationMinutes: 90, // 1.5 hours - this should now display properly
       seats: { filled: 1, total: 3 },
       court: { id: 'court-2', name: 'Court B', area: 'Uptown' },
       creator: { playerId: 'player-2', name: 'Jane Smith' }
+    },
+    {
+      id: 'session-789',
+      type: 'OPEN' as const,
+      status: 'ACTIVE',
+      startAt: dayjs().hour(16).minute(30).toISOString(),
+      durationMinutes: 90, // Another 1.5 hour session
+      seats: { filled: 3, total: 4 },
+      court: { id: 'court-3', name: 'Court C', area: 'Midtown' },
+      creator: { playerId: 'player-3', name: 'Bob Wilson' }
+    },
+    {
+      id: 'session-long',
+      type: 'PRIVATE' as const,
+      status: 'ACTIVE',
+      startAt: dayjs().hour(18).minute(0).toISOString(),
+      durationMinutes: 180, // 3 hours - testing full layout
+      seats: { filled: 2, total: 4 },
+      court: { id: 'court-4', name: 'Premium Court', area: 'Uptown' },
+      creator: { playerId: 'player-4', name: 'Alice Johnson' }
     }
   ];
 
