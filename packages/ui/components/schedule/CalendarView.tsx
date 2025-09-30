@@ -176,61 +176,65 @@ export function CalendarView({
                       minWidth={120}
                       maxWidth={200}
                       width={150}
-                      padding="$2"
+                      padding="$1"
                       marginHorizontal="$1"
                       backgroundColor={
                         hasSession 
-                          ? '$accent' 
+                          ? '$color2' 
                           : isAvailable 
-                            ? '$secondary' 
-                            : '$red9'
+                            ? '$color3' 
+                            : '$red2'
                       }
-                      borderRadius="$2"
+                      borderRadius="$3"
                       borderWidth={1}
                       borderColor={
                         hasSession 
                           ? '$accent' 
                           : isAvailable 
-                            ? '$secondary' 
-                            : '$red9'
+                            ? '$color6' 
+                            : '$red6'
                       }
                       cursor="pointer"
                       onPress={() => !hasSession && onToggleHourAvailability(date, hour)}
                       pressStyle={{ opacity: 0.8 }}
-                      opacity={hasSession ? 0.7 : 1}
                       height={60}
                       justifyContent="center"
                       overflow="hidden"
-                      boxShadow="inset 0 0 0 1px $color6"
+                      shadowColor="$shadowColor"
+                      shadowOffset={{ width: 0, height: 1 }}
+                      shadowOpacity={0.05}
+                      shadowRadius={2}
+                      elevation={1}
                     >
                       {hasSession && (
                         <YStack space="$1" width="100%" height="100%" justifyContent="center">
                           {sessionsForHour.map((session, idx) => (
                             <YStack 
                               key={idx} 
-                              padding="$1" 
-                              backgroundColor="$surface" 
-                              borderRadius="$2" 
+                              padding="$2" 
+                              backgroundColor="$accent" 
+                              borderRadius="$3" 
                               width="100%" 
                               flex={1} 
                               justifyContent="center" 
-                              boxShadow="inset 0 0 0 1px $color6"
+                              borderWidth={1}
+                              borderColor="$accent"
                               cursor={onSessionClick ? "pointer" : "default"}
                               onPress={onSessionClick ? () => onSessionClick(session) : undefined}
-                              pressStyle={onSessionClick ? { opacity: 0.8, scale: 0.98 } : undefined}
-                              hoverStyle={onSessionClick ? { backgroundColor: "$color3" } : undefined}
+                              pressStyle={onSessionClick ? { opacity: 0.9, scale: 0.98 } : undefined}
+                              hoverStyle={onSessionClick ? { backgroundColor: "$accent", opacity: 0.9 } : undefined}
+                              shadowColor="$shadowColor"
+                              shadowOffset={{ width: 0, height: 2 }}
+                              shadowOpacity={0.1}
+                              shadowRadius={4}
+                              elevation={2}
                             >
-                              <SafeText textAlign="center" fontSize="$2" fontWeight="600" color="$textHigh" numberOfLines={1}>
+                              <SafeText textAlign="center" fontSize="$3" fontWeight="700" color="$white" numberOfLines={1}>
                                 {session.court?.name || 'Session'}
                               </SafeText>
-                              <SafeText textAlign="center" fontSize="$1" color="$textMuted" numberOfLines={1}>
+                              <SafeText textAlign="center" fontSize="$2" color="$white" opacity={0.9} numberOfLines={1}>
                                 {dayjs(session.startAt).format('HH:mm')} - {dayjs(session.startAt).add(session.durationMinutes, 'minutes').format('HH:mm')}
                               </SafeText>
-                              {session.durationMinutes > 60 && (
-                                <SafeText textAlign="center" fontSize="$1" color="$textMuted" numberOfLines={1}>
-                                  ({session.durationMinutes}min)
-                                </SafeText>
-                              )}
                             </YStack>
                           ))}
                         </YStack>
@@ -253,19 +257,19 @@ export function CalendarView({
           </SafeText>
           <XStack space="$4" flexWrap="wrap">
             <XStack space="$2" alignItems="center">
-              <YStack width={20} height={20} backgroundColor="$secondary" borderRadius="$2" />
+              <YStack width={20} height={20} backgroundColor="$color3" borderRadius="$3" borderWidth={1} borderColor="$color6" />
               <SafeText textAlign="left" fontSize="$3" color="$textMuted">
                 Available (from template)
               </SafeText>
             </XStack>
             <XStack space="$2" alignItems="center">
-              <YStack width={20} height={20} backgroundColor="$accent" borderRadius="$2" />
+              <YStack width={20} height={20} backgroundColor="$accent" borderRadius="$3" borderWidth={1} borderColor="$accent" />
               <SafeText textAlign="left" fontSize="$3" color="$textMuted">
-                Has Session
+                Booked Session
               </SafeText>
             </XStack>
             <XStack space="$2" alignItems="center">
-              <YStack width={20} height={20} backgroundColor="$red9" borderRadius="$2" />
+              <YStack width={20} height={20} backgroundColor="$red2" borderRadius="$3" borderWidth={1} borderColor="$red6" />
               <SafeText textAlign="left" fontSize="$3" color="$textMuted">
                 Not Available
               </SafeText>
